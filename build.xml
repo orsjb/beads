@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Sep 24, 2008 8:20:30 PM                                                        
+     Beads - a computer music and sound art library for Java.                                                            
+     ====================================================================== -->
+<project name="beads" default="default">
+	<description>
+    	Beads - a computer music and sound art library for Java.
+    </description>
+	<!-- directory from which to copy package related data (such as readmes, etc.) -->
+	<property name="packages" value="packages" />
+	<!-- directory to build packages and set up zips and docs for export -->
+	<property name="build" value="build" />
+	<!-- stuff that lasts a very short time (a tmp build folder) -->
+	<property name="tmp" value="${build}/tmp" />
+	<!-- an export folder -->
+	<property name="exportdir" value="${tmp}/export">
+	</property>
+	<!-- compile for 1.5 jvm, as osx has limited 1.6 support. -->
+	<property name="ant.build.javac.target" value="1.5">
+	</property>
+	<tstamp>
+		<format property="TODAY" pattern="yyyyMMdd" />
+	</tstamp>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" description="combine compile main and doc main" depends="compile main">
+	</target>
+	
+	<!-- ================================= 
+	      target: compile examples              
+	     ================================= -->
+
+	<!-- ================================= 
+          target: compile main              
+         ================================= -->
+	<target name="compile main" description="compiles main beads project to beads.jar" depends="doc main">
+		<!-- BUILD ALL CLASS FILES (THEY ARE TEMPORARY) -->
+		<property name="buildmain" value="${tmp}/main" />
+		<property name="buildio" value="${tmp}/io" />
+		<mkdir dir="${buildmain}" />
+		<mkdir dir="${buildio}" />
+		<!-- MAIN BEADS SRC -->
+		<javac srcdir="src/beads_main" destdir="${buildmain}" debug="off">
+			<classpath>
+				<pathelement location="dependencies/tritonus_share.jar" />
+			</classpath>
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+		<!-- IO SRC -->
+		<javac srcdir="src/beads_io" destdir="${buildio}" debug="off">
+			<classpath>
+				<pathelement location="dependencies/tritonus_share.jar" />
+				<pathelement location="dependencies/org-jaudiolibs-audioservers.jar" />
+				<pathelement location="dependencies/org-jaudiolibs-audioservers-jack.jar" />
+				<pathelement location="dependencies/org-jaudiolibs-audioservers-javasound.jar" />
+				<pathelement location="${buildmain}" />
+			</classpath>
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+		
+		<!-- BUILD THE STANDARD JAVA VERSION OF BEADS PACKAGE (ALSO ECLIPSE PROJECT) -->
+		
+		<property name="beadsdir" value="${build}/beads" />
+		<property name="libdir" value="${beadsdir}/library" />
+		<mkdir dir="${libdir}" />
+        <jar jarfile="${libdir}/beads.jar" basedir="${buildmain}" />
+        <jar jarfile="${libdir}/beads-io.jar" basedir="${buildio}" />
+		<copy file="dependencies/jl1.0.1.jar" toFile="${libdir}/jl1.0.1.jar" />
+		<copy file="dependencies/mp3spi1.9.4.jar" toFile="${libdir}/mp3spi1.9.4.jar" />
+		<copy file="dependencies/tritonus_share.jar" toFile="${libdir}/tritonus_share.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers.jar" toFile="${libdir}/org-jaudiolibs-audioservers.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${libdir}/org-jaudiolibs-audioservers-jack.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${libdir}/org-jaudiolibs-audioservers-javasound.jar" />
+		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${libdir}/org-jaudiolibs-jnajack.jar" />
+		<!-- tutorial and audio files -->
+		<copy todir="${beadsdir}/tutorial">
+			<fileset dir="packages/Beads/beads_tutorial" />
+		</copy>
+		<delete dir="${beadsdir}/tutorial/.svn" />
+		<copy todir="${beadsdir}/audio">
+			<fileset dir="audio" />
+		</copy>				
+		<delete dir="${beadsdir}/audio/.svn" />
+		<!-- copy documentation -->
+		<mkdir dir="${beadsdir}/doc" />
+		<copy todir="${beadsdir}/doc">
+			<fileset dir="${build}/doc" />
+		</copy>
+		<!-- copy readme and project files -->
+		<copy file="${packages}/Beads/README.txt" toDir="${beadsdir}/" />
+		<!-- copy eclipse project files -->
+		<copy file="${packages}/Beads/.project" toDir="${beadsdir}/" />
+		<copy file="${packages}/Beads/.classpath" toDir="${beadsdir}/" />
+		
+		<!-- BUILD THE PROCESSING VERSION OF BEADS PACKAGE -->
+		
+		<!-- Following the guidelines here: http://dev.processing.org/libraries/basics.html  -->
+		<property name="processing" location="${build}/beads_processing" />
+		<property name="proclib" location="${processing}/beads/library" />
+		<mkdir dir="${proclib}" />
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="dependencies/jarjar-1.0.jar" />
+		<jarjar jarfile="${proclib}/beads.jar">
+			<fileset dir="${buildmain}" />
+			<fileset dir="${buildio}" />
+			<rule pattern="net.beadsproject.beads.*.*.**" result="beads.@3" />
+			<rule pattern="net.beadsproject.beads.*.**" result="beads.@2" />
+		</jarjar>
+		<copy file="dependencies/jl1.0.1.jar" toFile="${proclib}/jl1.0.1.jar" />
+		<copy file="dependencies/mp3spi1.9.4.jar" toFile="${proclib}/mp3spi1.9.4.jar" />
+		<copy file="dependencies/tritonus_share.jar" toFile="${proclib}/tritonus_share.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers.jar" toFile="${proclib}/org-jaudiolibs-audioservers.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${proclib}/org-jaudiolibs-audioservers-jack.jar" />
+		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${proclib}/org-jaudiolibs-audioservers-javasound.jar" />
+		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${proclib}/org-jaudiolibs-jnajack.jar" />
+		<!-- copy tutorials into an "examples" directory -->
+		<copy todir="${processing}/beads/tutorial">
+			<fileset dir="${packages}/Processing/tutorial" />
+		</copy>	
+		<delete dir="${processing}/beads/tutorial/.svn" />
+		<!-- copy documentation -->
+		<mkdir dir="${processing}/beads/doc" />
+		<copy todir="${processing}/beads/doc">
+			<fileset dir="${build}/doc" />
+		</copy>
+		<!-- copy readme and notes -->
+		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />	
+	</target>
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+	<target name="clean" description="clean up">
+		<delete dir="${build}/beads" />
+		<delete dir="${build}/doc" />
+		<delete dir="${build}/beads_processing" />
+		<delete dir="${build}/ref" />
+		<delete dir="${build}/tmp" />
+	</target>
+
+	<!-- ================================= 
+          target: doc main              
+         ================================= -->
+	<target name="doc main" description="generate docs for main" depends="clean">
+		<javadoc sourcepath="src/beads_main" destdir="${build}/doc">
+			<tag name="beads.category" enabled="False" />
+			<classpath>
+				<pathelement location="dependencies/tritonus_share.jar" />
+			</classpath>
+		</javadoc>
+		<!-- generate quick reference -->
+		<mkdir dir="${tmp}" />
+		<javac srcdir="src/beads_doc" destdir="${tmp}" />
+		<mkdir dir="${build}/ref" />
+		<copy todir="${build}/ref">
+			<fileset dir="${packages}/ref" />
+		</copy>
+		<delete dir="${build}/ref/.svn" />
+		<javadoc doclet="BeadsDoclet" docletpath="${tmp}" sourcepath="src/beads_main" destdir="${build}/ref">
+			<classpath>
+				<pathelement location="dependencies/tritonus_share.jar" />
+			</classpath>
+		</javadoc>
+		<delete dir="${tmp}" />
+	</target>
+
+	<!-- ================================= 
+          target: generate packages       
+         ================================= -->
+	<target name="make packages" description="generate packages and put in build/tmp" depends="compile main">
+		<mkdir dir="${exportdir}"/>
+		<!-- main Beads dir -->
+		<zip basedir="${build}/beads" destfile="${exportdir}/Beads.zip" />
+		<copy file="${exportdir}/Beads.zip" tofile="${exportdir}/Beads${TODAY}.zip" />
+		<!-- Beads Processing Tutorial -->
+		<zip basedir="${build}/beads_processing" destfile="${exportdir}/Beads_Processing.zip" />
+		<copy file="${exportdir}/Beads_Processing.zip" tofile="${exportdir}/Beads_Processing${TODAY}.zip" />
+	</target>
+	
+	<!-- ================================= 
+          target: commit packages (project admin only)            
+         ================================= -->
+	<target name="commit packages" description="commit generated packages (only possible if you're Ollie)" depends="make packages">
+		<!-- main Beads dir -->
+		<exec executable="scp">
+			<arg line="${exportdir}/Beads.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
+		</exec>
+		<exec executable="scp">
+			<arg line="${exportdir}/Beads${TODAY}.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
+		</exec>
+		<!-- Beads Processing Tutorial -->
+		<exec executable="scp">
+			<arg line="${exportdir}/Beads_Processing.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
+		</exec>
+		<exec executable="scp">
+			<arg line="${exportdir}/Beads_Processing${TODAY}.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
+		</exec>		
+		<!-- Documentation -->
+		<exec executable="scp">
+			<arg line="-r ${build}/doc orsjb@beadsproject.net:beadsproject.net/" />
+		</exec>
+		<exec executable="scp">
+			<arg line="-r ${build}/ref orsjb@beadsproject.net:beadsproject.net/" />
+		</exec>
+		<!-- Assuming everything works, then clean up -->
+		<delete dir="${build}/beads" />
+		<delete dir="${build}/doc" />
+		<delete dir="${build}/processing" />
+		<delete dir="${build}/ref" />
+		<delete dir="${build}/tmp" />
+	</target>
+
+</project>
