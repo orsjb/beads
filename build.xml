@@ -136,7 +136,6 @@
 		<delete dir="${build}/beads" />
 		<delete dir="${build}/doc" />
 		<delete dir="${build}/beads_processing" />
-		<delete dir="${build}/ref" />
 		<delete dir="${build}/tmp" />
 	</target>
 
@@ -146,19 +145,6 @@
 	<target name="doc main" description="generate docs for main" depends="clean">
 		<javadoc sourcepath="src/beads_main" destdir="${build}/doc">
 			<tag name="beads.category" enabled="False" />
-			<classpath>
-				<pathelement location="dependencies/tritonus_share.jar" />
-			</classpath>
-		</javadoc>
-		<!-- generate quick reference -->
-		<mkdir dir="${tmp}" />
-		<javac srcdir="src/beads_doc" destdir="${tmp}" />
-		<mkdir dir="${build}/ref" />
-		<copy todir="${build}/ref">
-			<fileset dir="${packages}/ref" />
-		</copy>
-		<delete dir="${build}/ref/.svn" />
-		<javadoc doclet="BeadsDoclet" docletpath="${tmp}" sourcepath="src/beads_main" destdir="${build}/ref">
 			<classpath>
 				<pathelement location="dependencies/tritonus_share.jar" />
 			</classpath>
@@ -179,37 +165,6 @@
 		<copy file="${exportdir}/Beads_Processing.zip" tofile="${exportdir}/Beads_Processing${TODAY}.zip" />
 	</target>
 	
-	<!-- ================================= 
-          target: commit packages (project admin only)            
-         ================================= -->
-	<target name="commit packages" description="commit generated packages (only possible if you're Ollie)" depends="make packages">
-		<!-- main Beads dir -->
-		<exec executable="scp">
-			<arg line="${exportdir}/Beads.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
-		</exec>
-		<exec executable="scp">
-			<arg line="${exportdir}/Beads${TODAY}.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
-		</exec>
-		<!-- Beads Processing Tutorial -->
-		<exec executable="scp">
-			<arg line="${exportdir}/Beads_Processing.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
-		</exec>
-		<exec executable="scp">
-			<arg line="${exportdir}/Beads_Processing${TODAY}.zip orsjb@beadsproject.net:beadsproject.net/downloads/" />
-		</exec>		
-		<!-- Documentation -->
-		<exec executable="scp">
-			<arg line="-r ${build}/doc orsjb@beadsproject.net:beadsproject.net/" />
-		</exec>
-		<exec executable="scp">
-			<arg line="-r ${build}/ref orsjb@beadsproject.net:beadsproject.net/" />
-		</exec>
-		<!-- Assuming everything works, then clean up -->
-		<delete dir="${build}/beads" />
-		<delete dir="${build}/doc" />
-		<delete dir="${build}/processing" />
-		<delete dir="${build}/ref" />
-		<delete dir="${build}/tmp" />
-	</target>
+
 
 </project>

@@ -103,9 +103,16 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
     * @author Neil C Smith <http://neilcsmith.net>
     */
    public static class Jack extends AudioServerIO {
+	   
+	private String name = "Beads";
      
    	public Jack() {
    		super();
+   	}
+   	
+   	public Jack(String name) {
+   		super();
+   		this.name = name;
    	}
 
        protected boolean start() {
@@ -116,7 +123,7 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
                    context.getAudioFormat().outputs,
                    context.getBufferSize(),
                    true);
-   		server = JackAudioServer.create("Beads", config, true, this);
+   		server = JackAudioServer.create(name, config, true, this);
            return runThread();
    	}
    	

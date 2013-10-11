@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/beads_player"/>
 	<classpathentry kind="src" path="src/beads_io"/>
 	<classpathentry kind="src" path="src/beads_main"/>
-	<classpathentry kind="src" path="src/beads_doc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="dependencies/mp3spi1.9.4.jar"/>
 	<classpathentry kind="lib" path="dependencies/tritonus_share.jar"/>
