@@ -198,16 +198,20 @@ public class AudioContext {
 
 	/** callback from AudioIO. */
 	protected void update() {
-		bufStoreIndex = 0;
-		Arrays.fill(zeroBuf, 0f);
-		out.update(); // this will propagate all of the updates
-		timeStep++;
-		if (Thread.interrupted()) {
-			System.out.println("Thread interrupted");
-		}
-		if (logTime && timeStep % 100 == 0) {
-			System.out.println(samplesToMs(timeStep * bufferSizeInFrames)
-					/ 1000f + " (seconds)");
+		try {
+			bufStoreIndex = 0;
+			Arrays.fill(zeroBuf, 0f);
+			out.update(); // this will propagate all of the updates
+			timeStep++;
+			if (Thread.interrupted()) {
+				System.out.println("Thread interrupted");
+			}
+			if (logTime && timeStep % 100 == 0) {
+				System.out.println(samplesToMs(timeStep * bufferSizeInFrames)
+						/ 1000f + " (seconds)");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
