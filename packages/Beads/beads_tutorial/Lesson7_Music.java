@@ -39,7 +39,7 @@ public class Lesson7_Music {
 							WavePlayer wp = new WavePlayer(ac, (float) Math
 									.random() * 3000 + 100, Buffer.SINE);
 							Gain g = new Gain(ac, 1, new Envelope(ac, 0.1f));
-							((Envelope) g.getGainEnvelope()).addSegment(0,
+							((Envelope) g.getGainUGen()).addSegment(0,
 									1000, new KillTrigger(g));
 							g.addInput(wp);
 							ac.out.addInput(g);

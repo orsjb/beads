@@ -30,7 +30,7 @@ public class Lesson6_Trigger {
 		 * All we have to do is tell the Envelope what listener to trigger. In
 		 * this case, this will kill the audio.
 		 */
-		((Envelope) g.getGainEnvelope()).addSegment(0, 5000,
+		((Envelope) g.getGainUGen()).addSegment(0, 5000,
 				new AudioContextStopTrigger(ac));
 		g.addInput(wp);
 		ac.out.addInput(g);
