@@ -33,7 +33,7 @@ public class Lesson8_Granulation {
 		// control the rate of grain firing
 		Envelope grainIntervalEnvelope = new Envelope(ac, 100);
 		grainIntervalEnvelope.addSegment(20, 10000);
-		player.setGrainIntervalUgen(grainIntervalEnvelope);
+		player.setGrainInterval(grainIntervalEnvelope);
 		// control the playback rate
 		Envelope rateEnvelope = new Envelope(ac, 1);
 		rateEnvelope.addSegment(1, 5000);
