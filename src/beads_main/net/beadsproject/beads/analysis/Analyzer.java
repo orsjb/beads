@@ -1,5 +1,6 @@
 /*
  * This file is part of Beads. See http://www.beadsproject.net for all information.
+ * *
  */
 package net.beadsproject.beads.analysis;
 
