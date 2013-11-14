@@ -76,7 +76,7 @@ public class Add extends UGen {
 				float[] bi = bufIn[j];
 				float[] bo = bufOut[j];
 				for (int i = 0; i < bufferSize; i++) {
-					bo[i] = bi[j] + adder;
+					bo[i] = bi[i] + adder;
 				}
 			}
 		} else {
