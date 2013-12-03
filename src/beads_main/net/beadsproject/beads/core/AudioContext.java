@@ -208,7 +208,9 @@ public class AudioContext {
 		try {
 			bufStoreIndex = 0;
 			Arrays.fill(zeroBuf, 0f);
+			sendBeforeFrameMessages();
 			out.update(); // this will propagate all of the updates
+			sendAfterFrameMessages();
 			timeStep++;
 			if (Thread.interrupted()) {
 				System.out.println("Thread interrupted");
