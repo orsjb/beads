@@ -4,12 +4,8 @@
 package net.beadsproject.beads.data;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
-
-import net.beadsproject.beads.core.AudioUtils;
-import net.beadsproject.beads.data.audiofile.AudioFile;
+import net.beadsproject.beads.data.audiofile.*;
 
 /**
  * A Sample encapsulates audio data, either loaded from an audio file (such as
@@ -37,37 +33,50 @@ import net.beadsproject.beads.data.audiofile.AudioFile;
  * @see net.beadsproject.beads.ugens.RecordToSample
  * @author Beads Team
  */
+@SuppressWarnings("unchecked")
 public class Sample {
 
-	// Sample stuff
-	private AudioFile audioFile;
-	private SampleAudioFormat audioFormat;
+	private float sampleRate;
 	private int nChannels;
 	private long nFrames;
-	private double length; // length in ms
 	private String simpleName;
+	private String filename = null;
+	private float[][] theSampleData; // theSampleData[0] first channel, theSampleData[1] second channel, etc..
+	private float[] current, next;   // used as temp buffers whilst calculating interpolation
 
-	// the class that handles audio file IO
-	// if null then any read/write operations will attempt to use JavaSound via
-	// reflection
-	private Class<? extends AudioFile> audioFileHandlerClass = null;
-	private static Class<? extends AudioFile> defaultAudioFileHandlerClass;
+	// These are the classes that handle audio file IO
+	private Class<? extends AudioFileReader> audioFileReaderClass = null;
+	private Class<? extends AudioFileWriter> audioFileWriterClass = null;
+	private static Class<? extends AudioFileReader> defaultAudioFileReaderClass;
+	private static Class<? extends AudioFileWriter> defaultAudioFileWriterClass;
+	
+	/*
+	 * Try to set the defaultAudioFileReaderClass to JavaSoundAudioFile if available, and if not, use WavFileReaderWriter which
+	 * should always be available in beads_main.
+	 */
 	static {
 		try {
-			defaultAudioFileHandlerClass = (Class<? extends AudioFile>) Class
-					.forName("net.beadsproject.beads.data.audiofile.JavaSoundAudioFile");
+			defaultAudioFileReaderClass = (Class<? extends AudioFileReader>) Class.forName("net.beadsproject.beads.data.audiofile.JavaSoundAudioFile");
 		} catch (ClassNotFoundException e) {
-			// snuff
-			defaultAudioFileHandlerClass = null;
+			try {
+				defaultAudioFileReaderClass = (Class<? extends AudioFileReader>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+			} catch (ClassNotFoundException e2) {
+				defaultAudioFileReaderClass = null;
+			}
 		}
 	}
-
-	private float[][] theSampleData; // f_sampleData[0] first channel,
-										// f_sampleData[1] second channel, etc..
-
-	private float[] current, next; // used as temp buffers whilst calculating
-									// interpolation
-
+	
+	/*
+	 * Set the defaultAudioFileWriterClass to WavFileReaderWriter which should always be available in beads_main.
+	 */
+	static {
+		try {
+			defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+		} catch (ClassNotFoundException e) {
+			defaultAudioFileReaderClass = null;
+		}
+	}
+	
 	/**
 	 * Instantiates a new writable sample with specified length and default
 	 * audio format: 44.1KHz, 16 bit, stereo.
@@ -76,7 +85,7 @@ public class Sample {
 	 *            the length in ms.
 	 */
 	public Sample(double length) {
-		this(new SampleAudioFormat(44100, 16, 2), length);
+		this(length, 2, 44100f);
 	}
 
 	/**
@@ -86,19 +95,21 @@ public class Sample {
 	 * The sample isn't initialised, so may contain junk. Use {@link #clear()}
 	 * to clear it.
 	 * 
-	 * @param audioFormat
-	 *            the audio format.
 	 * @param length
 	 *            The length of the sample in ms.
+	 * @param nChannels
+	 * 			  The number of channels
+	 * @param sampleRate
+	 * 			  The sampleRate
 	 */
-	public Sample(SampleAudioFormat audioFormat, double length) {
-		this.audioFormat = audioFormat;
-		nChannels = audioFormat.channels;
+	public Sample(double length, int nChannels, float sampleRate) {
+		this.nChannels = nChannels;
+		this.sampleRate = sampleRate;
 		current = new float[nChannels];
 		next = new float[nChannels];
 		nFrames = (long) msToSamples(length);
 		theSampleData = new float[nChannels][(int) nFrames];
-		length = 1000f * nFrames / audioFormat.sampleRate;
+		length = 1000f * nFrames / this.sampleRate;
 	}
 
 	/**
@@ -110,55 +121,52 @@ public class Sample {
 	 * @throws AudioFileUnsupportedException
 	 */
 	public Sample(String filename) throws IOException {
-		setFile(filename);
+		loadAudioFile(filename);
+		this.filename = filename;
 	}
 
 	/**
-	 * Create a sample from an input stream. This constructor immediately loads
-	 * the entire audio file into memory.
-	 * 
-	 * @throws UnsupportedAudioFileException
-	 * @throws IOException
-	 * @throws AudioFileUnsupportedException
-	 */
-	public Sample(InputStream is) throws IOException {
-		setExistingFile(is);
-	}
-
-	/**
-	 * Create a sample from an Audio File, using the default buffering scheme.
-	 * 
-	 * @throws UnsupportedAudioFileException
-	 * @throws IOException
-	 * @throws AudioFileUnsupportedException
-	 */
-	public Sample(AudioFile af) throws IOException {
-		setExistingFile(af);
-	}
-
-	/**
-	 * Gets the current AudioFileHandlerClass. This is an instantiation of
-	 * {@link AudioFile} that Sample will use for file IO operations. If unset
-	 * or set to null Sample will attempt to find a default implementation:
-	 * JavaSoundAudioFile.
+	 * Gets the current AudioFileReaderClass. This is an instantiation of
+	 * a class that implements {@link AudioFileReader} that Sample will use for file reading operations. 
+	 * If unset or set to null Sample will use a default.
 	 * 
 	 * @return
 	 */
-	public Class<? extends AudioFile> getAudioFileHandlerClass() {
-		return audioFileHandlerClass;
+	public Class<? extends AudioFileReader> getAudioFileReaderClass() {
+		return audioFileReaderClass;
+	}
+	
+	/**
+	 * Gets the current AudioFileWriterClass. This is an instantiation of
+	 * a class that implements {@link AudioFileWriter} that Sample will use for file writing operations. 
+	 * If unset or set to null Sample will use a default.
+	 * 
+	 * @return
+	 */
+	public Class<? extends AudioFileWriter> getAudioFileWriterClass() {
+		return audioFileWriterClass;
 	}
 
 	/**
-	 * Set the audioFileHandlerClass. This is an instantiation of
-	 * {@link AudioFile} that Sample will use for file IO operations. If unset
-	 * or set to null Sample will attempt to find a default implementation:
-	 * JavaSoundAudioFile.
+	 * Set the audioFileReaderClass. This is an instantiation of
+	 * a class that implements {@link AudioFileReader} that Sample will use for file reading operations. 
+	 * If unset or set to null Sample use a default.
 	 * 
-	 * @param audioFileHandlerClass
+	 * @param audioFileReaderClass
 	 */
-	public void setAudioFileHandlerClass(
-			Class<? extends AudioFile> audioFileHandlerClass) {
-		this.audioFileHandlerClass = audioFileHandlerClass;
+	public void setAudioFileReaderClass(Class<? extends AudioFileReader> audioFileReaderClass) {
+		this.audioFileReaderClass = audioFileReaderClass;
+	}
+	
+	/**
+	 * Set the audioFileWriterClass. This is an instantiation of
+	 * a class that implements {@link AudioFileWriter} that Sample will use for file writing operations. 
+	 * If unset or set to null Sample use a default.
+	 * 
+	 * @param audioFileWriterClass
+	 */
+	public void setAudioFileWriterClass(Class<? extends AudioFileWriter> audioFileWriterClass) {
+		this.audioFileWriterClass = audioFileWriterClass;
 	}
 
 	/**
@@ -394,9 +402,9 @@ public class Sample {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void write(String fn) throws Exception {
-		write(fn, AudioFile.Type.WAV);
+		write(fn, AudioFileType.WAV);
 	}
-
+	
 	/**
 	 * This records the sample to a file with the specified
 	 * AudioFile.Type. It is BLOCKING.
@@ -409,17 +417,32 @@ public class Sample {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void write(String fn, AudioFile.Type type) throws Exception {		
-		if(audioFile == null) {
-			Class<? extends AudioFile> theRealHandler = audioFileHandlerClass == null ? defaultAudioFileHandlerClass
-					: audioFileHandlerClass;
-			if(theRealHandler == null) {
-				throw new IOException(
-						"Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
-			}
-			audioFile = (AudioFile)theRealHandler.getConstructor(SampleAudioFormat.class).newInstance(audioFormat);
+	public void write(String fn, AudioFileType type) throws Exception {
+		write(fn, type, new SampleAudioFormat(this.sampleRate, 16, this.nChannels));
+	}
+
+	/**
+	 * This records the sample to a file with the specified
+	 * AudioFile.Type. It is BLOCKING.
+	 * 
+	 * @param fn
+	 *            The filename.
+	 * @param type
+	 *            The type (AIFF, WAVE, etc.)
+	 * @param saf
+	 * 			  The SampleAudioFormat
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void write(String fn, AudioFileType type, SampleAudioFormat saf) throws Exception {		
+		Class<? extends AudioFileWriter> theRealAudioFileWriterClass = audioFileWriterClass == null ? defaultAudioFileWriterClass : audioFileWriterClass;
+		if(theRealAudioFileWriterClass == null) {
+			throw new IOException("Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
 		}
-		audioFile.write(fn, type, theSampleData);
+		
+		AudioFileWriter audioFileWriter = theRealAudioFileWriterClass.getConstructor().newInstance();
+		audioFileWriter.writeAudioFile(theSampleData, fn, type, saf);
 	}
 
 	/**
@@ -444,7 +467,6 @@ public class Sample {
 			System.arraycopy(olddata[i], 0, theSampleData[i], 0,
 					framesToCopy);
 		nFrames = frames;
-		length = (float) samplesToMs(nFrames);
 	}
 
 	/**
@@ -456,17 +478,6 @@ public class Sample {
 	 */
 	public void resizeWithZeros(long frames) {
 		nFrames = frames;
-		length = (float) samplesToMs(nFrames);
-	}
-
-	/**
-	 * Prints audio format info to System.out.
-	 */
-	public void printAudioFormatInfo() {
-		System.out.println("Sample Rate: " + audioFormat.sampleRate);
-		System.out.println("Channels: " + nChannels);
-		System.out.println("Big Endian: " + audioFormat.bigEndian);
-		System.out.println("Signed: " + audioFormat.signed);
 	}
 
 	/**
@@ -479,7 +490,7 @@ public class Sample {
 	 * @return the time in samples.
 	 */
 	public double msToSamples(double msTime) {
-		return msTime * audioFormat.sampleRate / 1000.0f;
+		return msTime * this.sampleRate / 1000.0f;
 	}
 
 	/**
@@ -492,7 +503,7 @@ public class Sample {
 	 * @return the time in milliseconds.
 	 */
 	public double samplesToMs(double sampleTime) {
-		return sampleTime / audioFormat.sampleRate * 1000.0f;
+		return sampleTime / this.sampleRate * 1000.0f;
 	}
 
 	/*
@@ -510,9 +521,9 @@ public class Sample {
 	 * @return the file path.
 	 */
 	public String getFileName() {
-		if (audioFile == null)
+		if (filename == null)
 			return null;
-		return audioFile.getName();
+		return filename;
 	}
 
 	/**
@@ -540,39 +551,37 @@ public class Sample {
 		this.simpleName = simpleName;
 	}
 
-	public AudioFile getAudioFile() {
-		return audioFile;
+	/**
+	 * Get the sample rate
+	 * @return
+	 */
+	public float getSampleRate() {
+		return this.sampleRate;
 	}
 
-	public SampleAudioFormat getAudioFormat() {
-		return audioFormat;
-	}
-
+	/**
+	 * Get the number of channels
+	 * @return
+	 */
 	public int getNumChannels() {
 		return nChannels;
 	}
 
+	/**
+	 * Get the number of frames
+	 * @return
+	 */
 	public long getNumFrames() {
 		return nFrames;
 	}
 
 	/**
-	 * @return The number of bytes this sample uses to store each sample. May be
-	 *         different than audioFile.audioFormat.
+	 * Return length of sample in ms
+	 * @return
 	 */
-	public int getBytesPerSample() {
-		return Float.SIZE / 8;
-	}
-
 	public double getLength() {
-		return length;
+		return 1000f * this.nFrames / this.sampleRate;
 	}
-
-	public float getSampleRate() {
-		return audioFormat.sampleRate;
-	}
-
-
 
 	/**
 	 * Specify an audio file that the Sample reads from.
@@ -582,110 +591,22 @@ public class Sample {
 	 * @throws AudioFileUnsupportedException
 	 * 
 	 */
-	private void setFile(String file) throws IOException {
+	private void loadAudioFile(String file) throws IOException {
 
-		Class<? extends AudioFile> theRealHandler = audioFileHandlerClass == null ? defaultAudioFileHandlerClass
-				: audioFileHandlerClass;
+		Class<? extends AudioFileReader> theRealAudioFileReaderClass = audioFileReaderClass == null ? defaultAudioFileReaderClass : audioFileReaderClass;
+		AudioFileReader audioFileReader;
 		try {
-			audioFile = (AudioFile) theRealHandler.getConstructor(String.class)
-					.newInstance(file);
+			audioFileReader = theRealAudioFileReaderClass.getConstructor().newInstance();
+		} catch (Exception e1) {
+			throw new IOException("Sample: No AudioFileReader Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
+		} 
+		try {
+			this.theSampleData = audioFileReader.readAudioFile(file);
 		} catch (Exception e) {
-//			System.out.println("problem loading file " + file);
-//			if(e instanceof IOException) {
-//				throw (IOException)e;
-//			} else {
-//				e.printStackTrace();
-//			}
 			throw new IOException("Problem loading file " + file);
-//			throw new IOException(
-//					"Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting setFile(). You may need to link to beads-io.jar");
 		}
-		setExistingFile(audioFile);
+		this.sampleRate = audioFileReader.getSampleAudioFormat().sampleRate;
+		this.nChannels = theSampleData.length;
+		this.nFrames = theSampleData[0].length;
 	}
-
-	/**
-	 * Specify an audio file that the Sample reads from.
-	 * 
-	 * This will block until the sample is loaded.
-	 * 
-	 * @throws AudioFileUnsupportedException
-	 * 
-	 */
-	private void setExistingFile(InputStream is) throws IOException {
-		Class<? extends AudioFile> theRealHandler = audioFileHandlerClass == null ? defaultAudioFileHandlerClass
-				: audioFileHandlerClass;
-		try {
-			audioFile = (AudioFile) theRealHandler.getConstructor(
-					InputStream.class).newInstance(is);
-		} catch (Exception e) {
-			throw new IOException(
-					"Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting setFile(). You may need to link to beads-io.jar");
-		}
-		setExistingFile(audioFile);
-	}
-
-	/**
-	 * Specify an explicit AudioFile that the Sample reads from. NOTE: Only one
-	 * sample should reference a particular AudioFile.
-	 * 
-	 * This will block until the sample is loaded.
-	 * 
-	 * @throws IOException.
-	 * 
-	 */
-	private void setExistingFile(AudioFile af) throws IOException {
-		audioFile = af;
-		audioFile.open();
-		audioFormat = audioFile.getFormat();
-		nFrames = audioFile.getNumFrames();
-		nChannels = audioFile.getNumChannels();
-		current = new float[nChannels];
-		next = new float[nChannels];
-		length = audioFile.getLength();
-		loadEntireSample();
-	}
-
-	// a helper function, loads the entire sample into sampleData
-	private void loadEntireSample() throws IOException {
-		final int BUFFERSIZE = 4096;
-		byte[] audioBytes = new byte[BUFFERSIZE];
-
-		int sampleBufferSize = 4096;
-		byte[] data = new byte[sampleBufferSize];
-
-		int bytesRead;
-		int totalBytesRead = 0;
-		while ((bytesRead = audioFile.read(audioBytes)) != -1) {
-			// resize buf if necessary
-			if (bytesRead > (sampleBufferSize - totalBytesRead)) {
-				sampleBufferSize = Math.max(sampleBufferSize * 2,
-						sampleBufferSize + bytesRead);
-				// resize buffer
-				byte[] newBuf = new byte[sampleBufferSize];
-				System.arraycopy(data, 0, newBuf, 0, data.length);
-				data = newBuf;
-			}
-			System.arraycopy(audioBytes, 0, data, totalBytesRead, bytesRead);
-			totalBytesRead += bytesRead;
-		}
-		// resize buf to proper length
-		// resize buf if necessary
-		if (sampleBufferSize > totalBytesRead) {
-			sampleBufferSize = totalBytesRead;
-			// resize buffer
-			byte[] newBuf = new byte[sampleBufferSize];
-			System.arraycopy(data, 0, newBuf, 0, sampleBufferSize);
-			data = newBuf;
-		}
-		this.nFrames = sampleBufferSize / (2 * nChannels);
-		this.length = 1000f * nFrames / audioFormat.sampleRate;
-		// copy and deinterleave entire data
-		theSampleData = new float[nChannels][(int) nFrames];
-		float[] interleaved = new float[(int) (nChannels * nFrames)];
-		AudioUtils.byteToFloat(interleaved, data, audioFormat.bigEndian);
-		AudioUtils.deinterleave(interleaved, nChannels, (int) nFrames,
-				theSampleData);
-		audioFile.close();
-	}
-
 }

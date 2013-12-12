@@ -17,7 +17,6 @@ import net.beadsproject.beads.core.AudioIO;
 import net.beadsproject.beads.core.AudioUtils;
 import net.beadsproject.beads.core.IOAudioFormat;
 import net.beadsproject.beads.core.UGen;
-import net.beadsproject.beads.ugens.Noise;
 
 public class JavaSoundAudioIO extends AudioIO {
 

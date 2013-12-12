@@ -5,8 +5,6 @@ package net.beadsproject.beads.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -50,29 +48,6 @@ public class SampleManager {
 	public static Sample sample(String fn) {
 		return sample(fn, fn);
 	}
-	
-	/**
-	 * Returns a new Sample from the given filename. If the Sample has already
-	 * been loaded, it will not be loaded again, but will simply be retrieved
-	 * from the static repository.
-	 * 
-	 * @param is the InputStream.
-	 * 
-	 * @return the sample.
-	 */
-	public static Sample sample(InputStream is) {
-		Sample sample = samples.get(is.toString());
-		if (sample == null) {
-			try {
-				sample = new Sample(is);
-				samples.put(is.toString(), sample);
-				if(verbose) System.out.println("Loaded " + is.toString());
-			} catch (Exception e) {
-				 //swallow exception
-			} 
-		}
-		return sample;
-	}
 
 	/**
 	 * Adds a sample by name to the sample list. This lets you load samples with a different buffering regime.
@@ -104,28 +79,6 @@ public class SampleManager {
 				samples.put(ref, sample);
 				if(verbose) System.out.println("Loaded " + fn);
 			} catch (Exception e) {
-				//swallow exception
-			}
-		}
-		return sample;
-	}
-	
-	/**
-	 * Like {@link SampleManager#sample(String)} but with the option to specify the name with which this {@link Sample} is indexed.
-	 * 
-	 * @param ref the name with which to index this Sample.
-	 * @param is the InputStream.
-	 * 
-	 * @return the sample.
-	 */
-	public static Sample sample(String ref, InputStream is) {
-		Sample sample = samples.get(ref);
-		if (sample == null) {	
-			try {
-				sample = new Sample(is);
-				samples.put(ref, sample);
-				if(verbose) System.out.println("Loaded " + ref);
-			} catch(Exception e) {
 				//swallow exception
 			}
 		}
