@@ -13,7 +13,6 @@ import java.util.Set;
 
 import net.beadsproject.beads.core.io.NonrealtimeIO;
 import net.beadsproject.beads.data.Sample;
-import net.beadsproject.beads.data.SampleAudioFormat;
 import net.beadsproject.beads.events.AudioContextStopTrigger;
 import net.beadsproject.beads.ugens.DelayTrigger;
 import net.beadsproject.beads.ugens.Gain;
@@ -61,7 +60,9 @@ public class AudioContext {
 	private float[] zeroBuf;
 
 	/** Used for testing for dropped frames. */
+	@SuppressWarnings("unused")
 	private long nanoLeap;
+	@SuppressWarnings("unused")
 	private boolean lastFrameGood;
 
 	/**
@@ -71,6 +72,7 @@ public class AudioContext {
 	 * The libraries are decoupled like this so that the core beads library doesn't depend on JavaSound, which is not supported in various contexts, such as Android. At the moment there are in fact some
 	 * JavaSound dependencies still to be removed before this process is complete. Pro-users should familiarise themselves with the different IO options, particularly Jack.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AudioContext() {
 		//attempt to find the default (JavaSound) AudioIO by reflection
 		AudioIO ioSystem = null;
@@ -486,8 +488,7 @@ public class AudioContext {
 	 * @see Sample sample
 	 **/
 	public void record(double timeMS, String filename) throws Exception {
-		SampleAudioFormat saf = new SampleAudioFormat(audioFormat.sampleRate, audioFormat.bitDepth, audioFormat.outputs);
-		Sample s = new Sample(saf, (int)timeMS);
+		Sample s = new Sample(timeMS, audioFormat.outputs, audioFormat.sampleRate); 
 		RecordToSample r;
 		try {
 			r = new RecordToSample(this, s);
