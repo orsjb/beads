@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.beadsproject.beads.core.io.NonrealtimeIO;
 import net.beadsproject.beads.data.Sample;
@@ -65,6 +66,12 @@ public class AudioContext {
 	@SuppressWarnings("unused")
 	private boolean lastFrameGood;
 
+	/** Used for concurrency-friendly method execution. */
+	private final ConcurrentLinkedQueue<Bead> beforeFrameQueue = new ConcurrentLinkedQueue<Bead>();
+	private final ConcurrentLinkedQueue<Bead> afterFrameQueue = new ConcurrentLinkedQueue<Bead>();
+	private final ConcurrentLinkedQueue<Bead> beforeEveryFrameList = new ConcurrentLinkedQueue<Bead>();
+	private final ConcurrentLinkedQueue<Bead> afterEveryFrameList = new ConcurrentLinkedQueue<Bead>();
+	
 	/**
 	 * This constructor creates the default AudioContext, which means org.jaudiolibs.beads.AudioServerIO$JavaSound if it can find it, or net.beadsproject.beads.core.io.NonrealtimeIO otherwise.
 	 * To get the former, link to the jaudiolibs-beads.jar file.
@@ -203,7 +210,9 @@ public class AudioContext {
 		try {
 			bufStoreIndex = 0;
 			Arrays.fill(zeroBuf, 0f);
+			sendBeforeFrameMessages();
 			out.update(); // this will propagate all of the updates
+			sendAfterFrameMessages();
 			timeStep++;
 			if (Thread.interrupted()) {
 				System.out.println("Thread interrupted");
@@ -562,4 +571,103 @@ public class AudioContext {
 		return audioIO;
 	}
 
+	/**
+	 * Queues the specified Bead to be messaged upon the next audio frame
+	 * completion. The Bead will be messaged only once.
+	 * 
+	 * @param target
+	 *            The Bead to message.
+	 * @return This AudioContext.
+	 */
+	public AudioContext invokeAfterFrame(Bead target) {
+		afterFrameQueue.offer(target);
+		return this;
+	}
+
+	/**
+	 * Queues the specified Bead to be messaged after every audio frame.
+	 * 
+	 * @param target
+	 *            The Bead to message.
+	 * @return This AudioContext.
+	 */
+	public AudioContext invokeAfterEveryFrame(Bead target) {
+		afterEveryFrameList.offer(target);
+		return this;
+	}
+
+	/**
+	 * Removes the specified Bead from the list of Beads that are messaged after
+	 * every audio frame.
+	 * 
+	 * @param target
+	 *            The Bead to stop messaging.
+	 * @return Whether the Bead was being messaged.
+	 */
+	public boolean stopInvokingAfterEveryFrame(Bead target) {
+		return afterEveryFrameList.remove(target);
+	}
+
+	/**
+	 * Queues the specified bead to be messaged before the next audio frame. The
+	 * Bead will be messaged only once.
+	 * 
+	 * @param target
+	 *            The Bead to message.
+	 * @return This AudioContext.
+	 */
+	public AudioContext invokeBeforeFrame(Bead target) {
+		beforeFrameQueue.add(target);
+		return this;
+	}
+
+	/**
+	 * Queues the specified Bead to be messaged before every audio frame.
+	 * 
+	 * @param target
+	 *            The Bead to message.
+	 * @return This AudioContext.
+	 */
+	public AudioContext invokeBeforeEveryFrame(Bead target) {
+		beforeEveryFrameList.offer(target);
+		return this;
+	}
+
+	/**
+	 * Removes the specified Bead from the list of Beads that are messaged
+	 * before every audio frame.
+	 * 
+	 * @param target
+	 *            The Bead to stop messaging.
+	 * @return Whether the Bead was being messaged.
+	 */
+	public boolean stopInvokingBeforeEveryFrame(Bead target) {
+		return beforeEveryFrameList.remove(target);
+	}
+
+	/**
+	 * Used to send messages before the audio frame is done.
+	 */
+	private void sendBeforeFrameMessages() {
+		Bead target;
+		while((target = beforeFrameQueue.poll()) != null) {
+			target.message(null);
+		}
+		for (Bead bead: beforeEveryFrameList) {
+			bead.message(null);
+		}
+	}
+
+	/**
+	 * Used to send messages after the audio frame is done.
+	 */
+	private void sendAfterFrameMessages() {
+		Bead target;
+		while ((target = afterFrameQueue.poll()) != null) {
+			target.message(null);
+		}
+		for (Bead bead : afterEveryFrameList) {
+			bead.message(null);
+		}
+	}
 }

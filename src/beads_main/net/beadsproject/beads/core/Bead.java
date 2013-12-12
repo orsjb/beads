@@ -64,6 +64,7 @@ public abstract class Bead {
 	 */
 	@Override
 	public String toString() {
+		String name = this.name;
 		if(name != null) {
 			return getClass().toString() + " name=" + name;
 		} else {
@@ -105,6 +106,7 @@ public abstract class Bead {
 	public void kill() {
 		if(!deleted) {
 			deleted = true;
+			Bead killListener = this.killListener;
 			if(killListener != null) {
 				killListener.message(this);
 			}
@@ -147,7 +149,6 @@ public abstract class Bead {
     	return killListener;
     }
 
-
 	/**
 	 * Determines if this Bead is deleted.
 	 * 
@@ -157,5 +158,4 @@ public abstract class Bead {
 		return deleted;
 	}
 	
-
 }
