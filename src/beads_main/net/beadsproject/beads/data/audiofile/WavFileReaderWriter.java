@@ -109,6 +109,10 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	 */
 	public float[][] readAudioFile(String filename) throws IOException, OperationUnsupportedException, FileFormatException {
 
+		if(!(filename.endsWith(".wav") || filename.endsWith(".WAV"))) {
+			throw new OperationUnsupportedException("Only wav files (ending in .wav or .WAV) are supported");
+		}
+		
 		this.file = new File(filename);
 		float[][] data = null;
 		
