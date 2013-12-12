@@ -20,7 +20,7 @@ public interface AudioFileReader {
 	 * @param filename - the name of the file to be read
 	 * @param saf      - upon return, this will point to a SampleAudioFormat object containing the details of the sample data that was read.
 	 */
-	public float[][] readAudioFile(String filename) throws IOException;
+	public float[][] readAudioFile(String filename) throws IOException, OperationUnsupportedException, FileFormatException;
 	
 	/**
 	 * After reading, the SampleAudioFormat can be obtained.

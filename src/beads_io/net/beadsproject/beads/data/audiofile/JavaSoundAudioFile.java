@@ -67,7 +67,14 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 	/**
 	 * See {@link net.beadsproject.beads.data.audiofile.AudioFileWriter#writeAudioFile}
 	 */
-	public void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException {
+	public void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException, OperationUnsupportedException {
+		
+		if(!this.getSupportedFileTypesForWriting().contains(type)) {
+			throw new OperationUnsupportedException("Unsupported file type for writing: " + type);
+		}
+		if (saf.bitDepth > 16) {
+			throw new OperationUnsupportedException("Unsupported bit depth. Javasound cannot write WAV or AIFF files with bit depth > 16.");
+		}
 
 		int chans = data.length;
 		int frames = data[0].length;

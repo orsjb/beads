@@ -71,10 +71,10 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	/**
 	 * See {@link net.beadsproject.beads.data.audiofile.AudioFileWriter#writeAudioFile}
 	 */
-	public void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException {
+	public void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException, OperationUnsupportedException, FileFormatException {
 
-		if(!getSupportedFileTypesForWriting().contains(type)) {
-			throw new IOException("Unsupported file type.");
+		if (!getSupportedFileTypesForWriting().contains(type)) {
+			throw new OperationUnsupportedException("Unsupported file type for writing: " + type);
 		}
 		
 		this.sampleRate = (long) saf.sampleRate;
@@ -88,9 +88,11 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 			writeHeader();
 			writeData(data);
 			close();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new IOException("Could not write audio file: " + e.getMessage());
-		}
+		} catch (FileFormatException e) {
+			throw new FileFormatException("Could not write audio file: " + e.getMessage());
+		} 
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	/**
 	 * See {@link net.beadsproject.beads.data.audiofile.AudioFileReader#readAudioFile}
 	 */
-	public float[][] readAudioFile(String filename) throws IOException{
+	public float[][] readAudioFile(String filename) throws IOException, OperationUnsupportedException, FileFormatException {
 
 		this.file = new File(filename);
 		float[][] data = null;
@@ -114,8 +116,12 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 			readHeader();
 			data = readData();
 			close();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new IOException("Could not read audio file: " + e.getMessage());
+		} catch (FileFormatException e) {
+			throw new FileFormatException("Could not read audio file: " + e.getMessage());
+		} catch (OperationUnsupportedException e) {
+			throw new OperationUnsupportedException("Could not write audio file: " + e.getMessage());
 		}
 		return data;
 	}
@@ -141,16 +147,16 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	 * @throws IOException
 	 * @throws WavFileException
 	 */
-	private void writeHeader() throws IOException
+	private void writeHeader() throws IOException, FileFormatException
 	{
 		bytesPerSample = (validBits + 7) / 8;
 		blockAlign = bytesPerSample * numChannels;
 
 		// Sanity checks
-		if (numChannels < 1 || numChannels > 65535) throw new IOException("Illegal number of channels, valid range 1 to 65536");
-		if (numFrames < 0) throw new IOException("Number of frames must be positive");
-		if (validBits < 2 || validBits > 65535) throw new IOException("Illegal number of valid bits, valid range 2 to 65536");
-		if (sampleRate < 0) throw new IOException("Sample rate must be positive");
+		if (numChannels < 1 || numChannels > 65535) throw new FileFormatException("Illegal number of channels, valid range 1 to 65536");
+		if (numFrames < 0) throw new FileFormatException("Number of frames must be positive");
+		if (validBits < 2 || validBits > 65535) throw new FileFormatException("Illegal number of valid bits, valid range 2 to 65536");
+		if (sampleRate < 0) throw new FileFormatException("Sample rate must be positive");
 
 		// Set the compression code: if 32 or 64 bits, automatically use floating point format
 		if ( validBits == 32 || validBits == 64 ) {
@@ -266,14 +272,14 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	 * Read the header of the wav file.
 	 * @throws IOException
 	 */
-	private void readHeader() throws IOException {
+	private void readHeader() throws IOException, FileFormatException, OperationUnsupportedException {
 		
 		// Create a new file input stream for reading file data
 		iStream = new FileInputStream(file);
 
 		// Read the first 12 bytes of the file
 		int bytesRead = iStream.read(buffer, 0, 12);
-		if (bytesRead != 12) throw new IOException("Not enough wav file bytes for header");
+		if (bytesRead != 12) throw new FileFormatException("Not enough wav file bytes for header");
 
 		// Extract parts from the header
 		long riffChunkID = getLE(buffer, 0, 4);
@@ -281,12 +287,12 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		long riffTypeID = getLE(buffer, 8, 4);
 
 		// Check the header bytes contains the correct signature
-		if (riffChunkID != RIFF_CHUNK_ID) throw new IOException("Invalid Wav Header data, incorrect riff chunk ID");
-		if (riffTypeID != RIFF_TYPE_ID) throw new IOException("Invalid Wav Header data, incorrect riff type ID");
+		if (riffChunkID != RIFF_CHUNK_ID) throw new FileFormatException("Invalid Wav Header data, incorrect riff chunk ID");
+		if (riffTypeID != RIFF_TYPE_ID) throw new FileFormatException("Invalid Wav Header data, incorrect riff type ID");
 
 		// Check that the file size matches the number of bytes listed in header
 		if (file.length() != chunkSize+8) {
-			throw new IOException("Header chunk size (" + chunkSize + ") does not match file size (" + file.length() + ")");
+			throw new FileFormatException("Header chunk size (" + chunkSize + ") does not match file size (" + file.length() + ")");
 		}
 
 		boolean foundFormat = false;
@@ -297,8 +303,8 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		{
 			// Read the first 8 bytes of the chunk (ID and chunk size)
 			bytesRead = iStream.read(buffer, 0, 8);
-			if (bytesRead == -1) throw new IOException("Reached end of file without finding format chunk");
-			if (bytesRead != 8) throw new IOException("Could not read chunk header");
+			if (bytesRead == -1) throw new FileFormatException("Reached end of file without finding format chunk");
+			if (bytesRead != 8) throw new FileFormatException("Could not read chunk header");
 
 			// Extract the chunk ID and Size
 			long chunkID = getLE(buffer, 0, 4);
@@ -321,7 +327,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 				// Check this is uncompressed data
 				int compressionCode = (int) getLE(buffer, 0, 2);
 				if (compressionCode != WAVE_FORMAT_PCM && compressionCode != WAVE_FORMAT_IEEE_FLOAT ) {
-					throw new IOException("Compression Code " + compressionCode + " not supported");
+					throw new OperationUnsupportedException("Compression Code " + compressionCode + " not supported");
 				}
 				this.compressionCode = compressionCode;
 
@@ -331,16 +337,16 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 				this.blockAlign = (int) getLE(buffer, 12, 2);
 				this.validBits = (int) getLE(buffer, 14, 2);
 
-				if (this.numChannels == 0) throw new IOException("Number of channels specified in header is equal to zero");
-				if (this.blockAlign == 0) throw new IOException("Block Align specified in header is equal to zero");
-				if (this.validBits < 2) throw new IOException("Valid Bits specified in header is less than 2");
-				if (this.validBits > 64) throw new IOException("Valid Bits specified in header is greater than 64, this is greater than a long can hold");
+				if (this.numChannels == 0) throw new FileFormatException("Number of channels specified in header is equal to zero");
+				if (this.blockAlign == 0) throw new FileFormatException("Block Align specified in header is equal to zero");
+				if (this.validBits < 2) throw new FileFormatException("Valid Bits specified in header is less than 2");
+				if (this.validBits > 64) throw new FileFormatException("Valid Bits specified in header is greater than 64, this is greater than a long can hold");
 				if (this.compressionCode == WAVE_FORMAT_IEEE_FLOAT && validBits != 32 && validBits != 64) throw new IOException("Only 32-bit and 64-bit Floating Point PCM files are supported");
 
 				// Calculate the number of bytes required to hold 1 sample
 				this.bytesPerSample = (this.validBits + 7) / 8;
 				if (this.bytesPerSample * this.numChannels != this.blockAlign)
-					throw new IOException("Block Align does not agree with bytes required for validBits and number of channels");
+					throw new FileFormatException("Block Align does not agree with bytes required for validBits and number of channels");
 
 				// Account for number of format bytes and then skip over
 				// any extra format bytes
@@ -352,11 +358,11 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 				// Check if we've found the format chunk,
 				// If not, throw an exception as we need the format information
 				// before we can read the data chunk
-				if (foundFormat == false) throw new IOException("Data chunk found before Format chunk");
+				if (foundFormat == false) throw new FileFormatException("Data chunk found before Format chunk");
 
 				// Check that the chunkSize (wav data length) is a multiple of the
 				// block align (bytes per frame)
-				if (chunkSize % this.blockAlign != 0) throw new IOException("Data Chunk size is not multiple of Block Align");
+				if (chunkSize % this.blockAlign != 0) throw new FileFormatException("Data Chunk size is not multiple of Block Align");
 
 				// Calculate the number of frames
 				this.numFrames = chunkSize / this.blockAlign;
@@ -374,7 +380,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		}
 
 		// Throw an exception if no data chunk has been found
-		if (foundData == false) throw new IOException("Did not find a data chunk");
+		if (foundData == false) throw new FileFormatException("Did not find a data chunk");
 
 		// Calculate the scaling factor for converting to a normalised double
 		// These factors will only be used for linear PCM (not floating point)
@@ -462,7 +468,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	 */
 	private int writeFrames(float[][] sampleBuffer, int offset, int numFramesToWrite) throws IOException
 	{
-		if (ioState != IOState.WRITING) throw new IOException("Cannot read from WavFile instance");
+		if (ioState != IOState.WRITING) throw new IOException("Incorrect IOState");
 		
 		if ( compressionCode == WAVE_FORMAT_IEEE_FLOAT && this.validBits == 32 ) {
 			for (int f=0 ; f<numFramesToWrite ; f++) {
@@ -516,7 +522,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	@SuppressWarnings("unused")
 	private int writeFrames(double[][] sampleBuffer, int offset, int numFramesToWrite) throws IOException
 	{
-		if (ioState != IOState.WRITING) throw new IOException("Cannot write to WavFile instance");
+		if (ioState != IOState.WRITING) throw new IOException("Incorrect IOState");
 
 		if ( compressionCode == WAVE_FORMAT_IEEE_FLOAT && this.validBits == 32 ) {
 			for (int f=0 ; f<numFramesToWrite ; f++) {
@@ -587,7 +593,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	 */
 	private int readFrames(float[][] sampleBuffer, int offset, int numFramesToRead) throws IOException
 	{
-		if (ioState != IOState.READING) throw new IOException("Cannot read from WavFile instance");
+		if (ioState != IOState.READING) throw new IOException("Incorrect IOState");
 
 		if ( compressionCode == WAVE_FORMAT_IEEE_FLOAT && this.validBits == 32 ){
 			for (int f=0 ; f<numFramesToRead ; f++) {
@@ -641,7 +647,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	@SuppressWarnings("unused")
 	private int readFrames(double[][] sampleBuffer, int offset, int numFramesToRead) throws IOException
 	{
-		if (ioState != IOState.READING) throw new IOException("Cannot read from WavFile instance");
+		if (ioState != IOState.READING) throw new IOException("Incorrect IOState");
 
 		if ( compressionCode == WAVE_FORMAT_IEEE_FLOAT && this.validBits == 32 ){
 			for (int f=0 ; f<numFramesToRead ; f++) {
