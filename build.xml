@@ -126,7 +126,8 @@
 			<fileset dir="${build}/doc" />
 		</copy>
 		<!-- copy readme and notes -->
-		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />	
+		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />
+		<copy file="${packages}/Processing/library.properties" toDir="${processing}/beads/" />
 	</target>
 
 	<!-- ================================= 
