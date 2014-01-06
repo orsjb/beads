@@ -159,11 +159,12 @@
 	<target name="make packages" description="generate packages and put in build/tmp" depends="compile main">
 		<mkdir dir="${exportdir}"/>
 		<!-- main Beads dir -->
-		<zip basedir="${build}/beads" destfile="${exportdir}/Beads.zip" />
+		<zip basedir="${build}/beads" destfile="${exportdir}/Beads.zip" excludes=".DS_Store" />
 		<copy file="${exportdir}/Beads.zip" tofile="${exportdir}/Beads${TODAY}.zip" />
 		<!-- Beads Processing Tutorial -->
-		<zip basedir="${build}/beads_processing" destfile="${exportdir}/Beads_Processing.zip" />
+		<zip basedir="${build}/beads_processing" destfile="${exportdir}/Beads_Processing.zip" excludes=".DS_Store" />
 		<copy file="${exportdir}/Beads_Processing.zip" tofile="${exportdir}/Beads_Processing${TODAY}.zip" />
+		<copy file="${packages}/Processing/library.properties" toFile="${exportdir}/Beads_Processing.txt" />
 	</target>
 	
 
