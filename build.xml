@@ -162,9 +162,11 @@
 		<zip basedir="${build}/beads" destfile="${exportdir}/Beads.zip" excludes=".DS_Store" />
 		<copy file="${exportdir}/Beads.zip" tofile="${exportdir}/Beads${TODAY}.zip" />
 		<!-- Beads Processing Tutorial -->
-		<zip basedir="${build}/beads_processing" destfile="${exportdir}/Beads_Processing.zip" excludes=".DS_Store" />
+		<zip destfile="${exportdir}/Beads_Processing.zip" excludes=".DS_Store">
+			<zipfileset prefix="beads" dir="${build}/beads_processing/beads/"/>
+		</zip>
 		<copy file="${exportdir}/Beads_Processing.zip" tofile="${exportdir}/Beads_Processing${TODAY}.zip" />
-		<copy file="${packages}/Processing/library.properties" toFile="${exportdir}/Beads_Processing.txt" />
+		<copy file="${packages}/Processing/library.properties" toFile="${exportdir}/beads.txt" />
 	</target>
 	
 
