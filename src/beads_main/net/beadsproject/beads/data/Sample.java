@@ -225,8 +225,7 @@ public class Sample {
 				getFrame(frame_floor, current);
 				getFrame(frame_floor + 1, next);
 				for (int i = 0; i < nChannels; i++) {
-					result[i] = (float) ((1 - frame_frac) * current[i] + frame_frac
-							* next[i]);
+					result[i] = (float) ((1 - frame_frac) * current[i] + frame_frac * next[i]);
 				}
 			}
 		} else {
@@ -603,10 +602,12 @@ public class Sample {
 		try {
 			this.theSampleData = audioFileReader.readAudioFile(file);
 		} catch (Exception e) {
-			throw new IOException("Problem loading file " + file);
+			throw new IOException("Problem loading file " + file + ", " + e.getMessage());
 		}
 		this.sampleRate = audioFileReader.getSampleAudioFormat().sampleRate;
 		this.nChannels = theSampleData.length;
 		this.nFrames = theSampleData[0].length;
+		this.current = new float[nChannels];
+        this.next = new float[nChannels];
 	}
 }
