@@ -124,19 +124,24 @@
 		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${proclib}/org-jaudiolibs-audioservers-javasound.jar" />
 		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${proclib}/org-jaudiolibs-jnajack.jar" />
 		<!-- copy tutorials into an "examples" directory -->
-		<copy todir="${processing}/beads/tutorial">
+		<copy todir="${processing}/beads/examples">
 			<fileset dir="${packages}/Processing/tutorial" />
 		</copy>	
 		<delete dir="${processing}/beads/tutorial/.svn" />
-		<!-- copy documentation -->
-		<mkdir dir="${processing}/beads/doc" />
-		<copy todir="${processing}/beads/doc">
+		<!-- copy documentation to a "reference" directory -->
+		<copy todir="${processing}/beads/reference">
 			<fileset dir="${build}/doc" />
+		</copy>
+		<!-- copy src -->
+		<copy todir="${processing}/beads/src">
+			<fileset dir="src" />
 		</copy>
 		<!-- copy readme and notes -->
 		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />
 		<copy file="${packages}/Processing/library.properties" toDir="${processing}/beads/" />
+		
 	</target>
+	
 
 	<!-- ================================= 
           target: clean              
