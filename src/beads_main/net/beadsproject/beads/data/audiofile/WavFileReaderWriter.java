@@ -9,7 +9,7 @@ import java.util.HashSet;
 import net.beadsproject.beads.data.SampleAudioFormat;
 
 /**
- * This class supports 'one-shot' reading and writing of wav files.
+ * This class supports 'one-shot'  reading and writing of wav files.
  * It has no dependencies on 3rd party libraries so it should work on all platforms.
  * 
  * Based on WavFile IO class by: A.Greensted (http://www.labbookpages.co.uk)
