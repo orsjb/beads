@@ -4,6 +4,7 @@
 package net.beadsproject.beads.analysis;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
 

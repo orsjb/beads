@@ -3,7 +3,8 @@
  */
 package net.beadsproject.beads.ugens;
 
-import net.beadsproject.beads.core.*;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.UGen;
 
 /**
  * Outputs the change in the input signal from the previous sample to the current one.

@@ -112,10 +112,8 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		if(!(filename.endsWith(".wav") || filename.endsWith(".WAV"))) {
 			throw new OperationUnsupportedException("Only wav files (ending in .wav or .WAV) are supported");
 		}
-		
 		this.file = new File(filename);
 		float[][] data = null;
-		
 		try {
 			readHeader();
 			data = readData();
@@ -125,7 +123,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		} catch (FileFormatException e) {
 			throw new FileFormatException("Could not read audio file: " + e.getMessage());
 		} catch (OperationUnsupportedException e) {
-			throw new OperationUnsupportedException("Could not write audio file: " + e.getMessage());
+			throw new OperationUnsupportedException("Could not read audio file: " + e.getMessage());
 		}
 		return data;
 	}

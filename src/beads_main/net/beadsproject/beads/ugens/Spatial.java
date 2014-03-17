@@ -12,10 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 import net.beadsproject.beads.core.AudioContext;
-import net.beadsproject.beads.core.AudioUtils;
 import net.beadsproject.beads.core.UGen;
 
 /**

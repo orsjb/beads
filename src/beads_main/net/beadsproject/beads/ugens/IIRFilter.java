@@ -3,7 +3,8 @@
  */
 package net.beadsproject.beads.ugens;
 
-import net.beadsproject.beads.core.*;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.UGen;
 
 /**
  * An abstract class that provides methods for analyzing infinite impulse

@@ -3,8 +3,10 @@
  */
 package net.beadsproject.beads.ugens;
 
-import net.beadsproject.beads.core.*;
-import net.beadsproject.beads.data.*;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.UGenChain;
+import net.beadsproject.beads.data.DataBead;
+import net.beadsproject.beads.data.DataBeadReceiver;
 
 /**
  * A basic reverb unit with adjustable room size, high-frequency damping, and

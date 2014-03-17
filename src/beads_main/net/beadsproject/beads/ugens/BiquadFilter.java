@@ -3,10 +3,11 @@
  */
 package net.beadsproject.beads.ugens;
 
+import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.Bead;
 import net.beadsproject.beads.core.UGen;
-import net.beadsproject.beads.core.AudioContext;
-import net.beadsproject.beads.data.*;
+import net.beadsproject.beads.data.DataBead;
+import net.beadsproject.beads.data.DataBeadReceiver;
 
 /**
  * A simple implementation of a multi-channel biquad filter. It calculates

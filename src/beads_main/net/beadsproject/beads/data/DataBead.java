@@ -3,10 +3,14 @@
  */
 package net.beadsproject.beads.data;
 
-import net.beadsproject.beads.core.*;
-
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
+
+import net.beadsproject.beads.core.Bead;
+import net.beadsproject.beads.core.UGen;
 
 /**
  * A bead that stores properties as key/value pairs. Keys must be Strings, and

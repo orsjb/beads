@@ -5,6 +5,7 @@ package net.beadsproject.beads.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.TimeStamp;
 import net.beadsproject.beads.core.UGen;

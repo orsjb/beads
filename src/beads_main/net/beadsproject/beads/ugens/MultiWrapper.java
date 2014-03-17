@@ -7,7 +7,8 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.Bead;
 import net.beadsproject.beads.core.UGen;
 import net.beadsproject.beads.core.UGenChain;
-import net.beadsproject.beads.data.*;
+import net.beadsproject.beads.data.DataBead;
+import net.beadsproject.beads.data.DataBeadReceiver;
 
 /**
  * A generalized multi-channel wrapper for UGens. Can either be used to treat an

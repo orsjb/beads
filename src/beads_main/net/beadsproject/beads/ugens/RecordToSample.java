@@ -81,7 +81,7 @@ public class RecordToSample extends UGen {
 	 *            the Sample.
      * @throws Exception if sample is not writeable.
 	 */
-    public RecordToSample(AudioContext context, Sample sample) throws Exception {
+    public RecordToSample(AudioContext context, Sample sample) {
         this(context, sample, Mode.FINITE);
     }
     
@@ -96,7 +96,7 @@ public class RecordToSample extends UGen {
 	 *            the Recording Mode to use.
      * @throws Exception if sample is not writeable.
 	 */
-    public RecordToSample(AudioContext context, Sample sample, Mode mode) throws Exception {
+    public RecordToSample(AudioContext context, Sample sample, Mode mode) {
         this(context, sample.getNumChannels());
         this.mode = mode;
         setSample(sample);
@@ -122,9 +122,8 @@ public class RecordToSample extends UGen {
 	 * 
 	 * @param sample
 	 *            the new Sample.
-     * @throws Exception if sample isn't writeable
 	 */
-    public void setSample(Sample sample) throws Exception {
+    public void setSample(Sample sample) {
         this.sample = sample;
         framesWritten = 0;
         position = 0;
@@ -144,9 +143,7 @@ public class RecordToSample extends UGen {
      * length to the recorded data. 
      */
     public void clip() {
-    	try {
-			sample.resize(framesWritten);
-		} catch (Exception e) { /* won't happen */ }
+		sample.resize(framesWritten);
     }
     
     /**

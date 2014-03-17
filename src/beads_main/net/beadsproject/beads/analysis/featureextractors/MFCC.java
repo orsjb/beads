@@ -5,6 +5,7 @@
 package net.beadsproject.beads.analysis.featureextractors;
 
 import java.util.Arrays;
+
 import net.beadsproject.beads.analysis.FeatureExtractor;
 import net.beadsproject.beads.core.TimeStamp;
 

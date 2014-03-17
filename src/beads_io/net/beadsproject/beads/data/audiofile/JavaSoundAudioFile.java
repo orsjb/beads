@@ -12,10 +12,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.tritonus.share.sampled.file.TAudioFileFormat;
-
 import net.beadsproject.beads.core.AudioUtils;
 import net.beadsproject.beads.data.SampleAudioFormat;
+
+import org.tritonus.share.sampled.file.TAudioFileFormat;
 
 /**
  * Read and write audio files using the Javasound library. Only 'one-shot' reading and writing is supported (i.e. no streaming).
@@ -36,6 +36,7 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 	private boolean isEncoded = false;
 	private SampleAudioFormat audioFormat;
 	private float[][] sampleData;
+	private WavFileReaderWriter wavBackup = new WavFileReaderWriter();	
 
 	public JavaSoundAudioFile() {
 	}
@@ -108,8 +109,7 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 	 * See {@link net.beadsproject.beads.data.audiofile.AudioFileReader#readAudioFile}
 	 */
 	public float[][] readAudioFile(String name) throws IOException {
-
-		// first try to interpret string as URL, then as local file
+		//First try to interpret string as URL, then as local file
 		try {
 			url = new URL(name);
 			file = null;
@@ -120,18 +120,6 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 			this.name = file.getAbsolutePath();
 		}
 		audioInputStream = null;
-
-		// Sometimes non-mp3 files get detected as mp3s so we eradicate them
-		if (!name.endsWith(".mp3")) {
-			try {
-				if ((url != null && AudioSystem.getAudioFileFormat(url) instanceof TAudioFileFormat) || (file != null && AudioSystem.getAudioFileFormat(file) instanceof TAudioFileFormat)) {
-					throw new IOException("Cannot read \"" + name + "\". " + "If it is a .wav then try re-converting it in a different audio program.");
-				}
-			} catch (Exception e) {
-				throw new IOException("Cannot read \"" + name + "\". " + "If it is a .wav then try re-converting it in a different audio program.");
-			}
-		}
-
 		try {
 			prepareForReading();
 			readEntireFile();

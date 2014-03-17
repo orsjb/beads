@@ -2,7 +2,8 @@ package net.beadsproject.beads.ugens;
 
 
 import net.beadsproject.beads.core.AudioContext;
-import net.beadsproject.beads.data.*;
+import net.beadsproject.beads.data.DataBead;
+import net.beadsproject.beads.data.DataBeadReceiver;
 
 /**
  * DelayData waits for a specified duration and then sends a DataBead message to

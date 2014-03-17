@@ -1,7 +1,8 @@
 package net.beadsproject.beads.data.audiofile;
 
-import java.util.HashSet;
 import java.io.IOException;
+import java.util.HashSet;
+
 import net.beadsproject.beads.data.SampleAudioFormat;
 
 /**

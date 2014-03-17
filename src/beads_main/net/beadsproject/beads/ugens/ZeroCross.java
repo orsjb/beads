@@ -3,7 +3,8 @@
  */
 package net.beadsproject.beads.ugens;
 
-import net.beadsproject.beads.core.*;
+import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.core.UGen;
 
 /**
  * Counts and outputs as a signal the number of zero crossings in its input

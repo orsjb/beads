@@ -5,7 +5,12 @@ package net.beadsproject.beads.data;
 
 import java.io.IOException;
 import java.util.Arrays;
-import net.beadsproject.beads.data.audiofile.*;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import net.beadsproject.beads.data.audiofile.AudioFileReader;
+import net.beadsproject.beads.data.audiofile.AudioFileType;
+import net.beadsproject.beads.data.audiofile.AudioFileWriter;
 
 /**
  * A Sample encapsulates audio data, either loaded from an audio file (such as
@@ -71,9 +76,13 @@ public class Sample {
 	 */
 	static {
 		try {
-			defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+			defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.JavaSoundAudioFile");
 		} catch (ClassNotFoundException e) {
-			defaultAudioFileReaderClass = null;
+			try {
+				defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+			} catch (ClassNotFoundException e2) {
+				defaultAudioFileReaderClass = null;
+			}
 		}
 	}
 	
@@ -434,12 +443,19 @@ public class Sample {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void write(String fn, AudioFileType type, SampleAudioFormat saf) throws Exception {		
+	public void write(String fn, AudioFileType type, SampleAudioFormat saf) throws Exception {	
 		Class<? extends AudioFileWriter> theRealAudioFileWriterClass = audioFileWriterClass == null ? defaultAudioFileWriterClass : audioFileWriterClass;
+		//JavaSound can only write 16-bit, but we can use WavFileReaderWriter for >16-bit wavs, hence always write wavs this way
+		if(type == AudioFileType.WAV) {
+			try {
+				theRealAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+			} catch (ClassNotFoundException e) {
+				//worth continuing in case the default manages it.
+			}
+		}
 		if(theRealAudioFileWriterClass == null) {
 			throw new IOException("Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
 		}
-		
 		AudioFileWriter audioFileWriter = theRealAudioFileWriterClass.getConstructor().newInstance();
 		audioFileWriter.writeAudioFile(theSampleData, fn, type, saf);
 	}
@@ -591,8 +607,17 @@ public class Sample {
 	 * 
 	 */
 	private void loadAudioFile(String file) throws IOException {
-
+		//we have to deal with a bug in Tritonus: JavaSound doesn't accept 24-bit wav but strangely Tritonus 
+		//interprets 24-bit wavs as mp3s. So we intercept all wavs and send them to the WavFileReaderWriter.
+		//In the first instance we can only use the file suffix as a clue to this, not the header.		
 		Class<? extends AudioFileReader> theRealAudioFileReaderClass = audioFileReaderClass == null ? defaultAudioFileReaderClass : audioFileReaderClass;
+		if(file.endsWith(".wav") || file.endsWith(".WAV")) {
+			try {
+				theRealAudioFileReaderClass = (Class<? extends AudioFileReader>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
+			} catch (ClassNotFoundException e) {
+				//worth continuing in case the default manages it.
+			}
+		}
 		AudioFileReader audioFileReader;
 		try {
 			audioFileReader = theRealAudioFileReaderClass.getConstructor().newInstance();
@@ -602,7 +627,7 @@ public class Sample {
 		try {
 			this.theSampleData = audioFileReader.readAudioFile(file);
 		} catch (Exception e) {
-			throw new IOException("Problem loading file " + file + ", " + e.getMessage());
+			throw new IOException("Problem loading file (class=" + audioFileReader.getClass() + ") " + file + ", " + e.getMessage());
 		}
 		this.sampleRate = audioFileReader.getSampleAudioFormat().sampleRate;
 		this.nChannels = theSampleData.length;

@@ -6,6 +6,7 @@ package net.beadsproject.beads.ugens;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Toolkit;
+
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.UGen;
 
