@@ -16,8 +16,11 @@
 	<!-- an export folder -->
 	<property name="exportdir" value="${tmp}/export">
 	</property>
-	<!-- compile for 1.5 jvm, as osx has limited 1.6 support. -->
-	<property name="ant.build.javac.target" value="1.5">
+	<property name="ant.build.javac.target" value="1.6">
+	</property>
+	<property name="ant.build.javac.source" value="1.6">
+	</property>
+	<property name="ant.build.javac.compiler" value="javac1.6">
 	</property>
 	<tstamp>
 		<format property="TODAY" pattern="yyyyMMdd" />
@@ -43,14 +46,19 @@
 		<mkdir dir="${buildmain}" />
 		<mkdir dir="${buildio}" />
 		<!-- MAIN BEADS SRC -->
-		<javac srcdir="src/beads_main" destdir="${buildmain}" debug="off">
+		<javac srcdir="src/beads_main" destdir="${buildmain}" debug="off" compiler="javac1.6">
+		    
+		    
+		    <!-- 
 			<classpath>
 				<pathelement location="dependencies/tritonus_share.jar" />
-			</classpath>
+			</classpath> -->
+			
+			
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 		<!-- IO SRC -->
-		<javac srcdir="src/beads_io" destdir="${buildio}" debug="off">
+		<javac srcdir="src/beads_io" destdir="${buildio}" debug="off" compiler="javac1.6">
 			<classpath>
 				<pathelement location="dependencies/tritonus_share.jar" />
 				<pathelement location="dependencies/org-jaudiolibs-audioservers.jar" />
