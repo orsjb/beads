@@ -20,5 +20,10 @@ zip -r Beads_Processing.zip beads_processing
 cp Beads.zip Beads${NOW}.zip
 cp Beads_Processing.zip Beads_Processing${NOW}.zip
 scp *.zip orsjb@beadsproject.net:beadsproject.net/downloads/
+cd ..
 
+# upload the docs
+
+cd build
+scp -r doc orsjb@beadsproject.net:beadsproject.net/
 cd ..
