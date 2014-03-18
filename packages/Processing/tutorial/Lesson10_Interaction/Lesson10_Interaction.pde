@@ -1,4 +1,5 @@
 import beads.*;
+import java.util.Arrays; 
 
 AudioContext ac;
 Glide carrierFreq, modFreqRatio;
@@ -50,6 +51,7 @@ void draw() {
     //then work out the pixel height of the audio data at that point
     int vOffset = (int)((1 + ac.out.getValue(0, buffIndex)) * height / 2);
     //draw into Processing's convenient 1-D array of pixels
+    vOffset = min(vOffset, height);
     pixels[vOffset * height + i] = fore;
   }
   updatePixels();

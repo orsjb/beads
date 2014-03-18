@@ -1,4 +1,5 @@
 import beads.*;
+import java.util.Arrays; 
 
 AudioContext ac;
 PeakDetector od;
@@ -12,14 +13,18 @@ int time; // tracks the time
 void setup() {
   size(300,300);
   time = millis();
+  ac = new AudioContext();
+  selectInput("Select an audio file:", "fileSelected");
+}
+
+void fileSelected(File selection) {
   
   /*
    * Set up the context and load a sample.
    */
-  
-  ac = new AudioContext();
-  String audioFile = selectInput();
-  SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFile));
+  String audioFileName = selection.getAbsolutePath();
+  Sample sample = SampleManager.sample(audioFileName);
+  SamplePlayer player = new SamplePlayer(ac, sample);
   Gain g = new Gain(ac, 2, 0.2);
   g.addInput(player);
   ac.out.addInput(g);
@@ -70,7 +75,6 @@ void setup() {
   ac.start();
 }
 
-
 /*
  * Draw a circle whenever we hear an onset change.
  */
@@ -78,13 +82,12 @@ void draw() {
 	background(0);
 	fill(brightness*255);
 	ellipse(width/2,height/2,width/2,height/2);  
-	
+        if(od == null) return;
 	// decrease brightness over time
 	int dt = millis() - time;
 	brightness -= (dt*0.01);
 	if (brightness < 0) brightness = 0;
 	time += dt;
-	
 	// set threshold and alpha to the mouse position
 	od.setThreshold((float)mouseX/width);
 	od.setAlpha((float)mouseY/height);
