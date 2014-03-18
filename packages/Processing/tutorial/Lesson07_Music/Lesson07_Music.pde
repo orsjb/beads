@@ -17,7 +17,7 @@ ac = new AudioContext();
   * This example is more sophisticated than the previous
   * ones. It uses nested code.
   */
- Clock clock = new Clock(ac, 300);
+ Clock clock = new Clock(ac, 700);
  clock.addMessageListener(
   //this is the on-the-fly bead
   new Bead() {
@@ -37,11 +37,11 @@ ac = new AudioContext();
           ((Envelope)g.getGainEnvelope()).addSegment(0.1, random(200));
           ((Envelope)g.getGainEnvelope()).addSegment(0, random(7000), new KillTrigger(g));
        }
-       if(c.getCount() % 6 == 0) {
+       if(c.getCount() % 4 == 0) {
            //choose some nice frequencies
           int pitchAlt = pitch;
           if(random(1) < 0.2) pitchAlt = Pitch.forceToScale((int)random(12), Pitch.dorian) + (int)random(2) * 12;
-          float freq = Pitch.mtof(pitch + 32);
+          float freq = Pitch.mtof(pitchAlt + 32);
           WavePlayer wp = new WavePlayer(ac, freq, Buffer.SQUARE);
           Gain g = new Gain(ac, 1, new Envelope(ac, 0));
           g.addInput(wp);
@@ -58,7 +58,7 @@ ac = new AudioContext();
           Panner p = new Panner(ac, random(0.5, 1));
           p.addInput(g);
           ac.out.addInput(p);
-          ((Envelope)g.getGainEnvelope()).addSegment(0, random(40), new KillTrigger(p));
+          ((Envelope)g.getGainEnvelope()).addSegment(0, random(100), new KillTrigger(p));
        }
      }
    }
