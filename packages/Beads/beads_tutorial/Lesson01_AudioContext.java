@@ -4,7 +4,7 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.Noise;
 
-public class Lesson1_AudioContext {
+public class Lesson01_AudioContext {
 
 	public static void main(String[] args) {
 

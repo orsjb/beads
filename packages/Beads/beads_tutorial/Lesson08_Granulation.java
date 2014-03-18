@@ -7,7 +7,7 @@ import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.GranularSamplePlayer;
 import net.beadsproject.beads.ugens.SamplePlayer;
 
-public class Lesson8_Granulation {
+public class Lesson08_Granulation {
 
 	public static void main(String[] args) {
 

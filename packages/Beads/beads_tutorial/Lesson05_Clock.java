@@ -5,7 +5,7 @@ import net.beadsproject.beads.ugens.Clock;
 import net.beadsproject.beads.ugens.Envelope;
 
 
-public class Lesson5_Clock {
+public class Lesson05_Clock {
 
 	public static void main(String[] args) {
 

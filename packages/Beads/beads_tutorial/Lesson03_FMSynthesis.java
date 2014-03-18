@@ -7,7 +7,7 @@ import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.WavePlayer;
 
 
-public class Lesson3_FMSynthesis {
+public class Lesson03_FMSynthesis {
 
 	public static void main(String[] args) {
 		AudioContext ac;

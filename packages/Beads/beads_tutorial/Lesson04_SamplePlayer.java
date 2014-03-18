@@ -6,7 +6,7 @@ import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.SamplePlayer;
 
 
-public class Lesson4_SamplePlayer {
+public class Lesson04_SamplePlayer {
 
 	public static void main(String[] args) {
 

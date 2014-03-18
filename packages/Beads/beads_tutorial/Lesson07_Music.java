@@ -9,7 +9,7 @@ import net.beadsproject.beads.ugens.Envelope;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.WavePlayer;
 
-public class Lesson7_Music {
+public class Lesson07_Music {
 
 	public static void main(String[] args) {
 

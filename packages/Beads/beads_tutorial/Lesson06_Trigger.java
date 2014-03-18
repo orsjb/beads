@@ -8,7 +8,7 @@ import net.beadsproject.beads.ugens.Envelope;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.WavePlayer;
 
-public class Lesson6_Trigger {
+public class Lesson06_Trigger {
 
 	public static void main(String[] args) {
 
