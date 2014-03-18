@@ -8,6 +8,7 @@ cd build/beads_processing
 zip -r beads.zip beads
 scp beads.zip orsjb@beadsproject.net:beadsproject.net/library/
 scp beads/library.properties orsjb@beadsproject.net:beadsproject.net/library/beads.txt
+rm beads.zip
 cd ../..
 
 # create and upload the two zip packages
@@ -20,6 +21,7 @@ zip -r Beads_Processing.zip beads_processing
 cp Beads.zip Beads${NOW}.zip
 cp Beads_Processing.zip Beads_Processing${NOW}.zip
 scp *.zip orsjb@beadsproject.net:beadsproject.net/downloads/
+rm *.zip
 cd ..
 
 # upload the docs

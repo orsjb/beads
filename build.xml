@@ -97,6 +97,10 @@
 		<copy todir="${beadsdir}/doc">
 			<fileset dir="${build}/doc" />
 		</copy>
+		<!-- copy src -->
+		<copy todir="${beadsdir}/src">
+			<fileset dir="src" />
+		</copy>
 		<!-- copy readme and project files -->
 		<copy file="${packages}/Beads/README.txt" toDir="${beadsdir}/" />
 		<!-- copy eclipse project files -->
