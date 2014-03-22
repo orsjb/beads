@@ -88,7 +88,7 @@ public class Sample {
 	
 	/**
 	 * Instantiates a new writable sample with specified length and default
-	 * audio format: 44.1KHz, 16 bit, stereo.
+	 * audio format: 44.1KHz, float, stereo.
 	 * 
 	 * @param length
 	 *            the length in ms.
