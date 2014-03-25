@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# only run this from the folder it lives in
+# only run this from the folder it lives in.
 
 # create and upload the Processing 2.0 official distro (which lives at http://www.beadsproject.net/library/)
 
