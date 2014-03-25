@@ -31,10 +31,6 @@
          ================================= -->
 	<target name="default" description="combine compile main and doc main" depends="compile main">
 	</target>
-	
-	<!-- ================================= 
-	      target: compile examples              
-	     ================================= -->
 
 	<!-- ================================= 
           target: compile main              
@@ -47,14 +43,6 @@
 		<mkdir dir="${buildio}" />
 		<!-- MAIN BEADS SRC -->
 		<javac srcdir="src/beads_main" destdir="${buildmain}" debug="off" compiler="javac1.6">
-		    
-		    
-		    <!-- 
-			<classpath>
-				<pathelement location="dependencies/tritonus_share.jar" />
-			</classpath> -->
-			
-			
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 		<!-- IO SRC -->
@@ -170,22 +158,6 @@
 		<delete dir="${tmp}" />
 	</target>
 
-	<!-- ================================= 
-          target: generate packages       
-         ================================= -->
-	<target name="make packages" description="generate packages and put in build/tmp" depends="compile main">
-		<mkdir dir="${exportdir}"/>
-		<!-- main Beads dir -->
-		<zip basedir="${build}/beads" destfile="${exportdir}/Beads.zip" excludes=".DS_Store" />
-		<copy file="${exportdir}/Beads.zip" tofile="${exportdir}/Beads${TODAY}.zip" />
-		<!-- Beads Processing Tutorial -->
-		<zip destfile="${exportdir}/Beads_Processing.zip" excludes=".DS_Store">
-			<zipfileset prefix="beads" dir="${build}/beads_processing/beads/"/>
-		</zip>
-		<copy file="${exportdir}/Beads_Processing.zip" tofile="${exportdir}/Beads_Processing${TODAY}.zip" />
-		<copy file="${packages}/Processing/library.properties" toFile="${exportdir}/beads.txt" />
-	</target>
-	
 
 
 </project>
