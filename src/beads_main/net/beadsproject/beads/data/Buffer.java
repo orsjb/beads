@@ -16,7 +16,7 @@ import net.beadsproject.beads.data.buffers.TriangleBuffer;
  * A Buffer stores a one-dimensional buffer of floats for use as a wavetable or a window. Buffer does not perform any interpolation in this version, you should just make sure your buffer 
  * is high-res enough for what you need. Could add interpolation easily if needed. 
  * 
- * @beads.category data
+ * @beads.category data 
  * @see Sample BufferFactory
  * @author ollie
  */
