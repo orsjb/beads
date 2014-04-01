@@ -96,6 +96,21 @@ public class Sample {
 	public Sample(double length) {
 		this(length, 2, 44100f);
 	}
+	
+	
+	/**
+	 * Instantiates a new writable sample with specified length and number of channels and default
+	 * audio format: 44.1KHz, float.
+	 * 
+	 * @param length
+	 *            the length in ms.
+	 *            
+	 * @param nChannels
+	 * 			  the number of channels.
+	 */
+	public Sample(double length, int nChannels) {
+		this(length, nChannels, 44100f);
+	}
 
 	/**
 	 * Instantiates a new writeable Sample with the specified audio format and

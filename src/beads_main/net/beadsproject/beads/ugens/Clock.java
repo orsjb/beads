@@ -141,11 +141,23 @@ public class Clock extends UGen implements IntegerBead {
     }
     
     /**
+     * Deprecated. Use {getIntervalUGen()} instead.
+     * Gets the interval envelope.
+     * 
+     * @return the interval envelope.
+     * 
+     * @deprecated
+     */
+    public UGen getIntervalEnvelope() {
+    	return intervalEnvelope;    	
+    }
+    
+    /**
      * Gets the interval envelope.
      * 
      * @return the interval envelope.
      */
-    public UGen getIntervalEnvelope() {
+    public UGen getIntervalUGen() {
     	return intervalEnvelope;    	
     }
     
