@@ -73,21 +73,34 @@ public class AudioContext {
 	private final ConcurrentLinkedQueue<Bead> afterEveryFrameList = new ConcurrentLinkedQueue<Bead>();
 	
 	/**
-	 * This constructor creates the default AudioContext, which means org.jaudiolibs.beads.AudioServerIO$JavaSound if it can find it, or net.beadsproject.beads.core.io.NonrealtimeIO otherwise.
+	 * This constructor creates the default AudioContext, which means net.beadsproject.beads.core.io.JavaSoundAudioIO if it can find it, or net.beadsproject.beads.core.io.NonrealtimeIO otherwise.
 	 * To get the former, link to the jaudiolibs-beads.jar file.
 	 * 
 	 * The libraries are decoupled like this so that the core beads library doesn't depend on JavaSound, which is not supported in various contexts, such as Android. At the moment there are in fact some
 	 * JavaSound dependencies still to be removed before this process is complete. Pro-users should familiarise themselves with the different IO options, particularly Jack.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public AudioContext() {
+		this(DEFAULT_BUFFER_SIZE);
+	}
+
+	/**
+	 * This constructor creates the default AudioContext, which means net.beadsproject.beads.core.io.JavaSoundAudioIO if it can find it, or net.beadsproject.beads.core.io.NonrealtimeIO otherwise.
+	 * To get the former, link to the jaudiolibs-beads.jar file.
+	 * 
+	 * The libraries are decoupled like this so that the core beads library doesn't depend on JavaSound, which is not supported in various contexts, such as Android. At the moment there are in fact some
+	 * JavaSound dependencies still to be removed before this process is complete. Pro-users should familiarise themselves with the different IO options, particularly Jack.
+	 * 
+	 * @param bufferSize the number of samples calculated during one frame of audio processing. Higher numbers mean more latency and more stability. Typically use powers of 2. Default is 512.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public AudioContext(int bufferSize) {
 		//attempt to find the default (JavaSound) AudioIO by reflection
 		AudioIO ioSystem = null;
 		try {
-			Class javaSoundAudioIOClass = Class.forName("org.jaudiolibs.beads.AudioServerIO$JavaSound");	
+			Class javaSoundAudioIOClass = Class.forName("net.beadsproject.beads.core.io.JavaSoundAudioIO");		//alt choice is org.jaudiolibs.beads.AudioServerIO$JavaSound.
 			Constructor noArgsConstructor = javaSoundAudioIOClass.getConstructor();
 			ioSystem = (AudioIO)noArgsConstructor.newInstance();
-			System.out.println("AudioContext : no AudioIO specified, using default => AudioServerIO.JavaSound.");
+			System.out.println("AudioContext : no AudioIO specified, using default => " + javaSoundAudioIOClass.getName() + ".");
 		} catch (Exception e) {
 			//if fail, print warning and revert to NonrealtimeIO.
 			System.out.println("AudioContext : warning : unable to find default (JavaSound) AudioIO.");
@@ -102,7 +115,7 @@ public class AudioContext {
 		// set audio format
 		this.audioFormat = audioFormat;
 		// set buffer size
-		setBufferSize(DEFAULT_BUFFER_SIZE);
+		setBufferSize(bufferSize);
 		// set up basic stuff
 		logTime = false;
 		maxReserveBufs = 50;
