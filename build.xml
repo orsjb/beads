@@ -90,6 +90,7 @@
 		</copy>
 		<!-- copy readme and project files -->
 		<copy file="${packages}/Beads/README.txt" toDir="${beadsdir}/" />
+		<copy file="${packages}/release_notes.txt" toDir="${beadsdir}/" />
 		<!-- copy eclipse project files -->
 		<copy file="${packages}/Beads/.project" toDir="${beadsdir}/" />
 		<copy file="${packages}/Beads/.classpath" toDir="${beadsdir}/" />
@@ -130,6 +131,7 @@
 		<!-- copy readme and notes -->
 		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />
 		<copy file="${packages}/Processing/library.properties" toDir="${processing}/beads/" />
+		<copy file="${packages}/release_notes.txt" toDir="${processing}/beads/" />
 		
 	</target>
 	
