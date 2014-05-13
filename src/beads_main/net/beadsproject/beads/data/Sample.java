@@ -424,7 +424,7 @@ public class Sample {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void write(String fn) throws Exception {
+	public void write(String fn) throws IOException {
 		write(fn, AudioFileType.WAV);
 	}
 	
@@ -440,7 +440,7 @@ public class Sample {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void write(String fn, AudioFileType type) throws Exception {
+	public void write(String fn, AudioFileType type) throws IOException {
 		write(fn, type, new SampleAudioFormat(this.sampleRate, 16, this.nChannels));
 	}
 
@@ -458,7 +458,7 @@ public class Sample {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void write(String fn, AudioFileType type, SampleAudioFormat saf) throws Exception {	
+	public void write(String fn, AudioFileType type, SampleAudioFormat saf) throws IOException {	
 		Class<? extends AudioFileWriter> theRealAudioFileWriterClass = audioFileWriterClass == null ? defaultAudioFileWriterClass : audioFileWriterClass;
 		//JavaSound can only write 16-bit, but we can use WavFileReaderWriter for >16-bit wavs, hence always write wavs this way
 		if(type == AudioFileType.WAV) {
@@ -471,8 +471,12 @@ public class Sample {
 		if(theRealAudioFileWriterClass == null) {
 			throw new IOException("Sample: No AudioFile Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
 		}
-		AudioFileWriter audioFileWriter = theRealAudioFileWriterClass.getConstructor().newInstance();
-		audioFileWriter.writeAudioFile(theSampleData, fn, type, saf);
+		try {
+			AudioFileWriter audioFileWriter = theRealAudioFileWriterClass.getConstructor().newInstance();
+			audioFileWriter.writeAudioFile(theSampleData, fn, type, saf);
+		} catch(Exception e) {
+			throw new IOException("Sample: Unable to create or use the AudioFileWriter class.", e);
+		}
 	}
 
 	/**
@@ -486,8 +490,6 @@ public class Sample {
 	 * 
 	 * @param frames
 	 *            The total number of frames the sample should have.
-	 * @throws Exception
-	 *             Thrown if the sample isn't writeable.
 	 */
 	public void resize(long frames) {
 		int framesToCopy = (int) Math.min(frames, nFrames);

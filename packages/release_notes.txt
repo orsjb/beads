@@ -1,0 +1,12 @@
+
+-----------
+-- V1.02 --
+-----------
+
+ * Fixed Sample so that write methods throw IOExceptions rather than Exceptions.
+
+-----------
+-- V1.01 --
+-----------
+
+ * Release notes started from V1.01.
