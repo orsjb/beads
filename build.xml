@@ -70,6 +70,10 @@
 		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${libdir}/org-jaudiolibs-audioservers-jack.jar" />
 		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${libdir}/org-jaudiolibs-audioservers-javasound.jar" />
 		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${libdir}/org-jaudiolibs-jnajack.jar" />
+		<copy file="dependencies/jarjar-1.0.jar" toFile="${libdir}/jarjar-1.0.jar" />
+		<copy file="dependencies/jna.jar" toFile="${libdir}/jna.jar" />
+		<copy file="dependencies/tools.jar" toFile="${libdir}/tools.jar" />
+		<copy file="dependencies/tritonus_aos-0.3.6.jar" toFile="${libdir}/tritonus_aos-0.3.6.jar" />
 		<!-- tutorial and audio files -->
 		<copy todir="${beadsdir}/tutorial">
 			<fileset dir="packages/Beads/beads_tutorial" />
@@ -115,6 +119,10 @@
 		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${proclib}/org-jaudiolibs-audioservers-jack.jar" />
 		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${proclib}/org-jaudiolibs-audioservers-javasound.jar" />
 		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${proclib}/org-jaudiolibs-jnajack.jar" />
+		<copy file="dependencies/jarjar-1.0.jar" toFile="${proclib}/jarjar-1.0.jar" />
+		<copy file="dependencies/jna.jar" toFile="${proclib}/jna.jar" />
+		<copy file="dependencies/tools.jar" toFile="${proclib}/tools.jar" />
+		<copy file="dependencies/tritonus_aos-0.3.6.jar" toFile="${proclib}/tritonus_aos-0.3.6.jar" />
 		<!-- copy tutorials into an "examples" directory -->
 		<copy todir="${processing}/beads/examples">
 			<fileset dir="${packages}/Processing/tutorial" />
