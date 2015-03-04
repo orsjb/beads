@@ -97,6 +97,14 @@ public class TimeStamp {
 		return false;
 	}
 	
+	/**
+	 * Returns the time stamp formatted as <tt>timeStep-index</tt>, useful
+	 * for debugging purposes.
+	 */
+	public String toString() {
+		return timeStep + "-" + index;
+	}
+	
 	public static TimeStamp subtract(AudioContext ac, TimeStamp a, TimeStamp b) {
 		return new TimeStamp(ac, a.getTimeSamples() - b.getTimeSamples());
 	}
