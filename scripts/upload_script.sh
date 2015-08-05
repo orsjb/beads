@@ -4,7 +4,7 @@
 
 # create and upload the Processing 2.0 official distro (which lives at http://www.beadsproject.net/library/)
 
-cd build/beads_processing
+cd ../build/beads_processing
 zip -r beads.zip beads
 scp beads.zip orsjb@beadsproject.net:beadsproject.net/library/
 scp beads/library.properties orsjb@beadsproject.net:beadsproject.net/library/beads.txt
