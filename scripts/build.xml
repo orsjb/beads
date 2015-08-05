@@ -7,9 +7,9 @@
     	Beads - a computer music and sound art library for Java.
     </description>
 	<!-- directory from which to copy package related data (such as readmes, etc.) -->
-	<property name="packages" value="packages" />
+	<property name="packages" value="../packages" />
 	<!-- directory to build packages and set up zips and docs for export -->
-	<property name="build" value="build" />
+	<property name="build" value="../build" />
 	<!-- stuff that lasts a very short time (a tmp build folder) -->
 	<property name="tmp" value="${build}/tmp" />
 	<!-- an export folder -->
@@ -41,16 +41,16 @@
 		<mkdir dir="${buildmain}" />
 		<mkdir dir="${buildio}" />
 		<!-- MAIN BEADS SRC -->
-		<javac srcdir="src/beads_main" destdir="${buildmain}" debug="off" compiler="javac1.6">
+		<javac srcdir="../src/beads_main" destdir="${buildmain}" debug="off" compiler="javac1.6">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 		<!-- IO SRC -->
-		<javac srcdir="src/beads_io" destdir="${buildio}" debug="off" compiler="javac1.6">
+		<javac srcdir="../src/beads_io" destdir="${buildio}" debug="off" compiler="javac1.6">
 			<classpath>
-				<pathelement location="dependencies/tritonus_share.jar" />
-				<pathelement location="dependencies/org-jaudiolibs-audioservers.jar" />
-				<pathelement location="dependencies/org-jaudiolibs-audioservers-jack.jar" />
-				<pathelement location="dependencies/org-jaudiolibs-audioservers-javasound.jar" />
+				<pathelement location="../dependencies/tritonus_share.jar" />
+				<pathelement location="../dependencies/org-jaudiolibs-audioservers.jar" />
+				<pathelement location="../dependencies/org-jaudiolibs-audioservers-jack.jar" />
+				<pathelement location="../dependencies/org-jaudiolibs-audioservers-javasound.jar" />
 				<pathelement location="${buildmain}" />
 			</classpath>
 			<compilerarg value="-Xlint:unchecked" />
@@ -63,24 +63,24 @@
 		<mkdir dir="${libdir}" />
         <jar jarfile="${libdir}/beads.jar" basedir="${buildmain}" />
         <jar jarfile="${libdir}/beads-io.jar" basedir="${buildio}" />
-		<copy file="dependencies/jl1.0.1.jar" toFile="${libdir}/jl1.0.1.jar" />
-		<copy file="dependencies/mp3spi1.9.4.jar" toFile="${libdir}/mp3spi1.9.4.jar" />
-		<copy file="dependencies/tritonus_share.jar" toFile="${libdir}/tritonus_share.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers.jar" toFile="${libdir}/org-jaudiolibs-audioservers.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${libdir}/org-jaudiolibs-audioservers-jack.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${libdir}/org-jaudiolibs-audioservers-javasound.jar" />
-		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${libdir}/org-jaudiolibs-jnajack.jar" />
-		<copy file="dependencies/jarjar-1.0.jar" toFile="${libdir}/jarjar-1.0.jar" />
-		<copy file="dependencies/jna.jar" toFile="${libdir}/jna.jar" />
-		<copy file="dependencies/tools.jar" toFile="${libdir}/tools.jar" />
-		<copy file="dependencies/tritonus_aos-0.3.6.jar" toFile="${libdir}/tritonus_aos-0.3.6.jar" />
+		<copy file="../dependencies/jl1.0.1.jar" toFile="${libdir}/jl1.0.1.jar" />
+		<copy file="../dependencies/mp3spi1.9.4.jar" toFile="${libdir}/mp3spi1.9.4.jar" />
+		<copy file="../dependencies/tritonus_share.jar" toFile="${libdir}/tritonus_share.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers.jar" toFile="${libdir}/org-jaudiolibs-audioservers.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${libdir}/org-jaudiolibs-audioservers-jack.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${libdir}/org-jaudiolibs-audioservers-javasound.jar" />
+		<copy file="../dependencies/org-jaudiolibs-jnajack.jar" toFile="${libdir}/org-jaudiolibs-jnajack.jar" />
+		<copy file="../dependencies/jarjar-1.0.jar" toFile="${libdir}/jarjar-1.0.jar" />
+		<copy file="../dependencies/jna.jar" toFile="${libdir}/jna.jar" />
+		<copy file="../dependencies/tools.jar" toFile="${libdir}/tools.jar" />
+		<copy file="../dependencies/tritonus_aos-0.3.6.jar" toFile="${libdir}/tritonus_aos-0.3.6.jar" />
 		<!-- tutorial and audio files -->
 		<copy todir="${beadsdir}/tutorial">
-			<fileset dir="packages/Beads/beads_tutorial" />
+			<fileset dir="../packages/Beads/beads_tutorial" />
 		</copy>
 		<delete dir="${beadsdir}/tutorial/.svn" />
 		<copy todir="${beadsdir}/audio">
-			<fileset dir="audio" />
+			<fileset dir="../audio" />
 		</copy>				
 		<delete dir="${beadsdir}/audio/.svn" />
 		<!-- copy documentation -->
@@ -90,7 +90,7 @@
 		</copy>
 		<!-- copy src -->
 		<copy todir="${beadsdir}/src">
-			<fileset dir="src" />
+			<fileset dir="../src" />
 		</copy>
 		<!-- copy readme and project files -->
 		<copy file="${packages}/Beads/README.txt" toDir="${beadsdir}/" />
@@ -105,24 +105,24 @@
 		<property name="processing" location="${build}/beads_processing" />
 		<property name="proclib" location="${processing}/beads/library" />
 		<mkdir dir="${proclib}" />
-		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="dependencies/jarjar-1.0.jar" />
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="../dependencies/jarjar-1.0.jar" />
 		<jarjar jarfile="${proclib}/beads.jar">
 			<fileset dir="${buildmain}" />
 			<fileset dir="${buildio}" />
 			<rule pattern="net.beadsproject.beads.*.*.**" result="beads.@3" />
 			<rule pattern="net.beadsproject.beads.*.**" result="beads.@2" />
 		</jarjar>
-		<copy file="dependencies/jl1.0.1.jar" toFile="${proclib}/jl1.0.1.jar" />
-		<copy file="dependencies/mp3spi1.9.4.jar" toFile="${proclib}/mp3spi1.9.4.jar" />
-		<copy file="dependencies/tritonus_share.jar" toFile="${proclib}/tritonus_share.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers.jar" toFile="${proclib}/org-jaudiolibs-audioservers.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${proclib}/org-jaudiolibs-audioservers-jack.jar" />
-		<copy file="dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${proclib}/org-jaudiolibs-audioservers-javasound.jar" />
-		<copy file="dependencies/org-jaudiolibs-jnajack.jar" toFile="${proclib}/org-jaudiolibs-jnajack.jar" />
-		<copy file="dependencies/jarjar-1.0.jar" toFile="${proclib}/jarjar-1.0.jar" />
-		<copy file="dependencies/jna.jar" toFile="${proclib}/jna.jar" />
-		<copy file="dependencies/tools.jar" toFile="${proclib}/tools.jar" />
-		<copy file="dependencies/tritonus_aos-0.3.6.jar" toFile="${proclib}/tritonus_aos-0.3.6.jar" />
+		<copy file="../dependencies/jl1.0.1.jar" toFile="${proclib}/jl1.0.1.jar" />
+		<copy file="../dependencies/mp3spi1.9.4.jar" toFile="${proclib}/mp3spi1.9.4.jar" />
+		<copy file="../dependencies/tritonus_share.jar" toFile="${proclib}/tritonus_share.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers.jar" toFile="${proclib}/org-jaudiolibs-audioservers.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers-jack.jar" toFile="${proclib}/org-jaudiolibs-audioservers-jack.jar" />
+		<copy file="../dependencies/org-jaudiolibs-audioservers-javasound.jar" toFile="${proclib}/org-jaudiolibs-audioservers-javasound.jar" />
+		<copy file="../dependencies/org-jaudiolibs-jnajack.jar" toFile="${proclib}/org-jaudiolibs-jnajack.jar" />
+		<copy file="../dependencies/jarjar-1.0.jar" toFile="${proclib}/jarjar-1.0.jar" />
+		<copy file="../dependencies/jna.jar" toFile="${proclib}/jna.jar" />
+		<copy file="../dependencies/tools.jar" toFile="${proclib}/tools.jar" />
+		<copy file="../dependencies/tritonus_aos-0.3.6.jar" toFile="${proclib}/tritonus_aos-0.3.6.jar" />
 		<!-- copy tutorials into an "examples" directory -->
 		<copy todir="${processing}/beads/examples">
 			<fileset dir="${packages}/Processing/tutorial" />
@@ -134,7 +134,7 @@
 		</copy>
 		<!-- copy src -->
 		<copy todir="${processing}/beads/src">
-			<fileset dir="src" />
+			<fileset dir="../src" />
 		</copy>
 		<!-- copy readme and notes -->
 		<copy file="${packages}/Processing/README.txt" toDir="${processing}/" />
@@ -161,7 +161,7 @@
 		<javadoc sourcepath="src/beads_main" destdir="${build}/doc">
 			<tag name="beads.category" enabled="False" />
 			<classpath>
-				<pathelement location="dependencies/tritonus_share.jar" />
+				<pathelement location="../dependencies/tritonus_share.jar" />
 			</classpath>
 		</javadoc>
 		<delete dir="${tmp}" />
