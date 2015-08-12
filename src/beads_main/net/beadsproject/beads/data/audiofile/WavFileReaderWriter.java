@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 
 import net.beadsproject.beads.data.SampleAudioFormat;
@@ -112,19 +114,30 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 		if(!(filename.endsWith(".wav") || filename.endsWith(".WAV"))) {
 			throw new OperationUnsupportedException("Only wav files (ending in .wav or .WAV) are supported");
 		}
-		this.file = new File(filename);
+        //first try loading as a URI. Compatible with file identifier that comes from getResource().
+//        try {
+//            URI uri = new URI(filename);
+//            this.file = new File(uri);
+//            System.out.println("File exists? " + this.file.exists());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+            this.file = new File(filename);
+//            if(!this.file.exists()) {
+//                throw new IOException("Could not find audio file: " + filename);
+//            }
+//        }
 		float[][] data = null;
-		try {
+//		try {
 			readHeader();
 			data = readData();
 			close();
-		} catch (IOException e) {
-			throw new IOException("Could not read audio file: " + e.getMessage());
-		} catch (FileFormatException e) {
-			throw new FileFormatException("Could not read audio file: " + e.getMessage());
-		} catch (OperationUnsupportedException e) {
-			throw new OperationUnsupportedException("Could not read audio file: " + e.getMessage());
-		}
+//		} catch (IOException e) {
+//			throw new IOException("Could not read audio file: " + e.getMessage());
+//		} catch (FileFormatException e) {
+//			throw new FileFormatException("Could not read audio file: " + e.getMessage());
+//		} catch (OperationUnsupportedException e) {
+//			throw new OperationUnsupportedException("Could not read audio file: " + e.getMessage());
+//		}
 		return data;
 	}
 	
@@ -147,7 +160,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	/**
 	 * Write the wav file header.
 	 * @throws IOException
-	 * @throws WavFileException
+	 * @throws FileFormatException
 	 */
 	private void writeHeader() throws IOException, FileFormatException
 	{

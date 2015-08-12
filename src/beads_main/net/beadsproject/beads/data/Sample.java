@@ -142,7 +142,6 @@ public class Sample {
 	 * 
 	 * @throws UnsupportedAudioFileException
 	 * @throws IOException
-	 * @throws AudioFileUnsupportedException
 	 */
 	public Sample(String filename) throws IOException {
 		loadAudioFile(filename);
@@ -513,8 +512,7 @@ public class Sample {
 	}
 
 	/**
-	 * Converts from milliseconds to samples based on the sample rate specified
-	 * by {@link #audioFormat}.
+	 * Converts from milliseconds to samples based on the sample rate.
 	 * 
 	 * @param msTime
 	 *            the time in milliseconds.
@@ -526,8 +524,7 @@ public class Sample {
 	}
 
 	/**
-	 * Converts from samples to milliseconds based on the sample rate specified
-	 * by {@link #audioFormat}.
+	 * Converts from samples to milliseconds based on the sample rate.
 	 * 
 	 * @param sampleTime
 	 *            the time in samples.
@@ -620,7 +617,7 @@ public class Sample {
 	 * 
 	 * If BufferedRegime is TOTAL, this will block until the sample is loaded.
 	 * 
-	 * @throws AudioFileUnsupportedException
+	 * @throws IOException
 	 * 
 	 */
 	private void loadAudioFile(String file) throws IOException {
@@ -644,7 +641,7 @@ public class Sample {
 		try {
 			this.theSampleData = audioFileReader.readAudioFile(file);
 		} catch (Exception e) {
-			throw new IOException("Problem loading file (class=" + audioFileReader.getClass() + ") " + file + ", " + e.getMessage());
+			throw new IOException(e);
 		}
 		this.sampleRate = audioFileReader.getSampleAudioFormat().sampleRate;
 		this.nChannels = theSampleData.length;
