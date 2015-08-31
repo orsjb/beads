@@ -295,8 +295,11 @@ public class AudioContext {
 			while (out != null && !stopped) {
 				bufStoreIndex = 0;
 				Arrays.fill(zeroBuf, 0f);
-				if (!out.isPaused())
+				if (!out.isPaused()) {
+					sendBeforeFrameMessages();
 					out.update();
+					sendAfterFrameMessages();
+				}
 				timeStep++;
 				if (logTime && timeStep % 100 == 0) {
 					System.out.println(samplesToMs(timeStep
