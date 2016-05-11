@@ -12,10 +12,19 @@
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <version>1.6</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>1.5.0</version>
+                        <scope>system</scope>
+                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
-                        <phase>process-resources</phase>
+                        <phase>compile</phase>
                         <configuration>
                             <target>
                                 <ant antfile="build.xml" target="default" />
@@ -43,8 +52,8 @@
                             <groupId>com.github.samgwise</groupId>
                             <artifactId>beads</artifactId>
                             <version>${project.version}</version>
-                            <file>build/lib/beads.jar</file>
-                            <packaging>zip</packaging>
+                            <file>build/libs/beads.jar</file>
+                            <packaging>jar</packaging>
                         </configuration>
                     </execution>
                 </executions>

@@ -119,11 +119,11 @@
 
 		<!-- tutorial and audio files -->
 		<copy todir="${beadsoutdir}/tutorial">
-			<fileset dir="../packages/Beads/beads_tutorial" />
+			<fileset dir="./packages/Beads/beads_tutorial" />
 		</copy>
 		<delete dir="${beadsoutdir}/tutorial/.svn" />
 		<copy todir="${beadsoutdir}/audio">
-			<fileset dir="../audio" />
+			<fileset dir="./audio" />
 		</copy>
 		<delete dir="${beadsoutdir}/audio/.svn" />
 		<!-- copy documentation -->
