@@ -49,7 +49,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <groupId>com.github.samgwise</groupId>
+                            <groupId>net.beadsproject</groupId>
                             <artifactId>beads</artifactId>
                             <version>${project.version}</version>
                             <file>build/beads/library/beads.jar</file>
