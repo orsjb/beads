@@ -52,7 +52,7 @@
                             <groupId>com.github.samgwise</groupId>
                             <artifactId>beads</artifactId>
                             <version>${project.version}</version>
-                            <file>build/libs/beads.jar</file>
+                            <file>build/beads/library/beads.jar</file>
                             <packaging>jar</packaging>
                         </configuration>
                     </execution>
