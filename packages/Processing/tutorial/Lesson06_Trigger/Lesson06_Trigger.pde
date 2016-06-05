@@ -107,7 +107,7 @@ void draw() {
     int vOffset = (int)((1 + ac.out.getValue(0, buffIndex)) * height / 2);
     //draw into Processing's convenient 1-D array of pixels
     vOffset = min(vOffset, height);
-    pixels[vOffset * height + i] = fore;
+    pixels[vOffset * width + i] = fore;
   }
   updatePixels();
 }

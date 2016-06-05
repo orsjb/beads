@@ -381,6 +381,12 @@ public class GranularSamplePlayer extends SamplePlayer {
 		}
 	}
 
+	@Override
+	public void reset() {
+		super.reset();
+		firstGrain = true;
+	}
+
 	/** Flag to indicate special case for the first grain. */
 	private boolean firstGrain = true;
 
