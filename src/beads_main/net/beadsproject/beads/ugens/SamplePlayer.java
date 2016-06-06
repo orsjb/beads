@@ -484,24 +484,24 @@ public class SamplePlayer extends UGen {
 		this.interpolationType = interpolationType;
 	}
 
-	/**
-	 * Gets the loop cross fade.
-	 * 
-	 * @return the loop cross fade in milliseconds.
-	 */
-	public float getLoopCrossFade() {
-		return loopCrossFade;
-	}
+//	/**
+//	 * Gets the loop cross fade.
+//	 *
+//	 * @return the loop cross fade in milliseconds.
+//	 */
+//	public float getLoopCrossFade() {
+//		return loopCrossFade;
+//	}
 
-	/**
-	 * Sets the loop cross fade.
-	 * 
-	 * @param loopCrossFade
-	 *            the new loop cross fade in milliseconds.
-	 */
-	public void setLoopCrossFade(float loopCrossFade) {
-		this.loopCrossFade = loopCrossFade;
-	}
+//	/**
+//	 * Sets the loop cross fade.
+//	 *
+//	 * @param loopCrossFade
+//	 *            the new loop cross fade in milliseconds.
+//	 */
+//	public void setLoopCrossFade(float loopCrossFade) {
+//		this.loopCrossFade = loopCrossFade;
+//	}
 
 	/**
 	 * Gets the loop end envelope.
@@ -654,7 +654,6 @@ public class SamplePlayer extends UGen {
 			} else {
 				// major speed up possible here if these envelopes are all
 				// either null or paused
-				// (can we pause Envelope when it is not doing anything?).
 				// if this holds true we can tell buffer to just grab the whole
 				// frame at the given rate
 				// and then update the position all at once.
@@ -662,48 +661,39 @@ public class SamplePlayer extends UGen {
 				loopStartEnvelope.update();
 				loopEndEnvelope.update();
 			}
-
 			// depending on the envelope type, we either copy whole chunks of
 			// data (COARSE), or step per frame (FINE)
 			if (envelopeType == EnvelopeType.COARSE) {
 				// from the envelopes (if they exist)
 				// compute the position and rate
 				// and number of frames to get from Sample
-
 				if (positionEnvelope != null) {
 					// use the first and last values in the current envelope
 					// and provide a linear interpolation between them
 					float startPosition = positionEnvelope.getValue(0, 0);
 					float endPosition = positionEnvelope.getValue(0,
 							bufferSize - 1);
-
 					long startPosInSamples = (long) (sample
 							.msToSamples((float) startPosition));
 					long endPosInSamples = (long) (sample
 							.msToSamples((float) endPosition));
-
 					long numSamples = 1 + Math.abs(endPosInSamples
 							- startPosInSamples);
-
 					if (endPosInSamples >= startPosInSamples) {
 						float[][] samples = new float[getOuts()][(int) numSamples];
 						sample.getFrames((int) startPosInSamples, samples);
 						AudioUtils.stretchBuffer(samples, bufOut);
-					} else // endPosInSamples < startPosInSamples (i.e., rate is
-							// negative)
-					{
+					} else { // endPosInSamples < startPosInSamples (i.e., rate is
+							 // negative)
 						float[][] samples = new float[getOuts()][(int) numSamples];
 						sample.getFrames((int) endPosInSamples, samples);
 						AudioUtils.reverseBuffer(samples);
 						AudioUtils.stretchBuffer(samples, bufOut);
 					}
-
 					position = endPosition;
-				} else // use the position variable and rate envelopes
-				{
+				} else { // use the position variable and rate envelopes
 					// coarsely sample the rate envelope
 					rate = rateEnvelope.getValue(0, 0);
-
 					switch (loopType) {
 					case NO_LOOP_FORWARDS:
 					case NO_LOOP_BACKWARDS: {
@@ -711,7 +701,6 @@ public class SamplePlayer extends UGen {
 								: -rate;
 						long numSamples = (long) (Math.abs(rate) * bufferSize);
 						double numMs = sample.samplesToMs(numSamples);
-
 						boolean isPlayingForwards;
 						if (normalisedRate >= 0) // we are playing forwards
 						{
@@ -728,11 +717,9 @@ public class SamplePlayer extends UGen {
 										.msToSamples(position);
 							}
 						}
-
 						if (numSamples <= 0)
 							return;
 						float[][] frames = new float[outs][(int) numSamples];
-
 						if (isPlayingForwards) {
 							sample.getFrames(
 									(int) sample.msToSamples(position), frames);
@@ -744,9 +731,7 @@ public class SamplePlayer extends UGen {
 							AudioUtils.reverseBuffer(frames);
 							position -= numMs;
 						}
-
 						AudioUtils.stretchBuffer(frames, bufOut);
-
 						if (position > sample.getLength() || position < 0)
 							atEnd();
 						break;
@@ -757,7 +742,6 @@ public class SamplePlayer extends UGen {
 						kill();
 					}
 					}
-
 				}
 			} else // envelopeType==EnvelopeType.FINE
 			{
@@ -785,6 +769,7 @@ public class SamplePlayer extends UGen {
 					}
 					for (int j = 0; j < outs; j++) {
 						bufOut[j][i] = frame[j % sample.getNumChannels()];
+						//TODO loop crossfades here?
 					}
 					// update the position, loop state, direction
 					calculateNextPosition(i);
@@ -833,8 +818,7 @@ public class SamplePlayer extends UGen {
 	 * the end. This occurs when the SamplePlayer's position reaches then end
 	 * when playing forwards in a non-looping mode, or reaches the the beginning
 	 * when playing backwards in a non-looping mode. It is never triggered in a
-	 * looping mode. As an alternative, you can use the method {@link
-	 * Bead.#setKillListener(Bead)} as long as {@link #setKillOnEnd(boolean)} is
+	 * looping mode. As an alternative, you can use the method {@link Bead.#setKillListener(Bead)} as long as {@link #setKillOnEnd(boolean)} is
 	 * set to true. In other words, you set this SamplePlayer to kill itself
 	 * when it reaches the end of the sample, and then use the functionality of
 	 * {@link Bead}, which allows you to create a trigger whenever a Bead is

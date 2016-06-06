@@ -5,6 +5,7 @@ package net.beadsproject.beads.ugens;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.beadsproject.beads.core.AudioContext;
@@ -30,8 +31,7 @@ import net.beadsproject.beads.core.UGen;
 public class Envelope extends UGen {
 
     /** The queue of segments. */
-	//TODO this should be a queue!
-    private ArrayList<Segment> segments;
+    private LinkedList<Segment> segments;
     
     /** The current start value. */
     private float currentStartValue;
@@ -100,7 +100,7 @@ public class Envelope extends UGen {
 	 */
     public Envelope(AudioContext context) {
         super(context, 1);
-        segments = new ArrayList<Segment>();
+        segments = new LinkedList<Segment>();
         currentStartValue = 0;
         currentValue = 0;
         currentSegment = null;
@@ -243,7 +243,7 @@ public class Envelope extends UGen {
 	 */
     public synchronized Envelope clear() { //synchronized
     	if(!lock) {
-    		segments = new ArrayList<Segment>();
+    		segments = new LinkedList<Segment>();
         	currentSegment = null;
     	} 
     	return this;
@@ -258,18 +258,13 @@ public class Envelope extends UGen {
         if(currentSegment != null) {
             currentStartValue = currentSegment.endValue;
             currentValue = currentStartValue;
-            segments.remove(currentSegment);
             if(currentSegment.trigger != null) {
             	currentSegment.trigger.message(this);
             }
         } else {
         	currentStartValue = currentValue;
         }
-        if(segments.size() > 0) {
-            currentSegment = segments.get(0);
-        } else {
-            currentSegment = null;
-        }
+		currentSegment = segments.pollFirst();
         currentTime = 0;
     }
     
