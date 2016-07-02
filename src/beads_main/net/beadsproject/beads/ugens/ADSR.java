@@ -45,6 +45,9 @@ public class ADSR extends UGen {
     public void calculateBuffer() {
         env.update();
         gain.update();
+        /*
+         * simple transfer of audio buffers, per channel, from gain to this.
+         */
         for(int i = 0; i < ins; i++) {
             bufOut[i] = gain.getOutBuffer(i);
         }
@@ -52,8 +55,17 @@ public class ADSR extends UGen {
 
     @Override
     public synchronized void addInput(int inputIndex, UGen sourceUGen, int sourceOutputIndex) {
+        /*
+         * Forward any incoming connections to the gain. This works for addInput(UGen) too because that one forwards to this method.
+         */
         gain.addInput(inputIndex, sourceUGen, sourceOutputIndex);
     }
 
-
+    @Override
+    public synchronized boolean removeConnection(int inputChannel, UGen sourceUGen, int sourceOutputChannel) {
+        /*
+         * As with addInput().
+         */
+        return gain.removeConnection(inputChannel, sourceUGen, sourceOutputChannel);
+    }
 }
