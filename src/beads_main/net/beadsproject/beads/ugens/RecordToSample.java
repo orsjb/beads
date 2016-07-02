@@ -14,7 +14,7 @@ import net.beadsproject.beads.data.Sample;
  * how it behaves when the end of the sample is reached:
  * <ul>
  * <li>FINITE (the default): The recorder kills itself.</li>
- * <li>LOOPING: The recorder loop back to the beginning of the sample.</li>
+ * <li>LOOPING: The recorder loops back to the beginning of the sample.</li>
  * <li>INFINITE: The recorder increases the size of the sample.</li>
  * </ul>
  *

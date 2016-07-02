@@ -43,13 +43,9 @@ public class RMS extends UGen {
 
 	@Override
 	public void calculateBuffer() {
-
 		float[] bo = bufOut[0];
-
 		for (int i = 0; i < bufferSize; i++) {
-
 			float x, newMem = 0;
-
 			for (int j = 0; j < channels; j++) {
 				x = bufIn[j][i];
 				newMem += x * x;
@@ -60,11 +56,8 @@ public class RMS extends UGen {
 			if (sum < 0)
 				sum = 0;
 			index = (index + 1) % memorySize;
-
 			bo[i] = (float) Math.sqrt(sum * memScale);
-
 		}
-
 		// System.out.println("cb: " + sum);
 	}
 
