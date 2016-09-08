@@ -517,6 +517,19 @@ public abstract class UGen extends Bead {
 		}
 		return connectedInputs;
 	}
+
+	/**
+	 * Returns a flat Set (i.e. no copies) of all the UGens connected to the inputs of this one.
+	 *
+	 * @return set of UGens
+	 */
+	public synchronized Set<UGen> getConnectedInputsAtChannel(int i) {
+		Set<UGen> connectedInputs = new HashSet<UGen>();
+		for(BufferPointer bp : inputsAtChannel[i]) {
+			connectedInputs.add(bp.ugen);
+		}
+		return connectedInputs;
+	}
 	
 	private static Hashtable<Class<?>, Hashtable<String, Method>> envelopeGetterMethods = new Hashtable<Class<?>, Hashtable<String,Method>>();
 	
@@ -708,7 +721,7 @@ public abstract class UGen extends Bead {
 	}
 	
 	/**
-	 * Gets the value of the buffer, assuming that the buffer only has one value. This is mainly a convenience method for use with {@link net.beadsproject.beads.ugens.Static Static} type UGens. It is equivalent to {@link #getValue(0, 0)}.
+	 * Gets the value of the buffer, assuming that the buffer only has one value. This is mainly a convenience method for use with {@link net.beadsproject.beads.ugens.Static Static} type UGens. It is equivalent to {@link #getValue(int, int)} with zero args.
 	 * 
 	 * @return the value.
 	 */
@@ -730,7 +743,7 @@ public abstract class UGen extends Bead {
 	}
 	
 	/**
-	 * Gets the value as a double. Only overridden by certain classes that generate info in doubles. Gets the value of the buffer, assuming that the buffer only has one value. This is mainly a convenience method for use with {@link net.beadsproject.beads.ugens.Static Static} type UGens. It is equivalent to {@link #getValue(0, 0)}.
+	 * Gets the value as a double. Only overridden by certain classes that generate info in doubles. Gets the value of the buffer, assuming that the buffer only has one value. This is mainly a convenience method for use with {@link net.beadsproject.beads.ugens.Static Static} type UGens. It is equivalent to {@link #getValue(int, int)} with zero args.
 	 * 
 	 * @return the value.
 	 */
