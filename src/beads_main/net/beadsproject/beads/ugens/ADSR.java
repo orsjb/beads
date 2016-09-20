@@ -37,7 +37,7 @@ public class ADSR extends UGen {
         env = new Envelope(context, 0);
         gain = new Gain(context, inouts, env);
         for(int i = 0; i < adsr.length - 1; i += 2) {
-            env.addSegment(i, i+1);
+            env.addSegment(adsr[i], adsr[i+1]);
         }
         env.addSegment(0, adsr[adsr.length - 1], new KillTrigger(this));
     }
