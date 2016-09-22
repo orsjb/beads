@@ -627,6 +627,11 @@ public abstract class UGen extends Bead {
 				}
 			}
 			if (inputCount == 0) {
+				// include inputs on all channels in count
+				for (ArrayList<BufferPointer> ch : inputsAtChannel)
+					inputCount += ch.size();
+			}
+			if (inputCount == 0) {
 				noInputs = true;
 				zeroIns();
 			}
