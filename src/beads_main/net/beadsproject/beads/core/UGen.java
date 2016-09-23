@@ -4,11 +4,7 @@
 package net.beadsproject.beads.core;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.beadsproject.beads.events.KillTrigger;
 import net.beadsproject.beads.ugens.Clock;
@@ -519,18 +515,17 @@ public abstract class UGen extends Bead {
 	}
 
 	/**
-	 * Returns a flat Set (i.e. no copies) of all the UGens connected to the inputs of this one.
+	 * Returns a List of BufferPointers representing connected UGens and their output channels connected to the given input channel.
 	 *
-	 * @return set of UGens
+	 * @param index input channel index
+	 *
+	 * @return List of BufferPointers (UGen and output channel)
 	 */
-	public synchronized Set<UGen> getConnectedInputsAtChannel(int i) {
-		Set<UGen> connectedInputs = new HashSet<UGen>();
-		for(BufferPointer bp : inputsAtChannel[i]) {
-			connectedInputs.add(bp.ugen);
-		}
-		return connectedInputs;
+	@SuppressWarnings("unchecked")
+	public synchronized List<BufferPointer> getBufferPointers(int index) {
+		return (List<BufferPointer>) inputsAtChannel[index].clone();
 	}
-	
+
 	private static Hashtable<Class<?>, Hashtable<String, Method>> envelopeGetterMethods = new Hashtable<Class<?>, Hashtable<String,Method>>();
 	
 	private void findEnvelopeGetterMethods() {
@@ -801,15 +796,15 @@ public abstract class UGen extends Bead {
 	}
 
 	/**
-	 * BufferPointer is a private nested class used by UGens to keep track of the output buffers of other UGens connected to their inputs.
+	 * BufferPointer is a nested class used by UGens to keep track of the output buffers of other UGens connected to their inputs.
 	 */
-	private class BufferPointer {
+	public class BufferPointer {
 
 		/** The UGen that owns the output buffer. */
-		final UGen ugen;
+		public final UGen ugen;
 		
 		/** The index of the output buffer. */
-		final int index;
+		public final int index;
 
 		/**
 		 * Instantiates a new buffer pointer.
