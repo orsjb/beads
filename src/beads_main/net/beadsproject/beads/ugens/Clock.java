@@ -62,7 +62,7 @@ public class Clock extends UGen implements IntegerBead {
     }
     
     /**
-     * Instantiates a new Clock with the given interval enveliope.
+     * Instantiates a new Clock with the given interval envelope.
      * 
      * @param context the AudioContext.
      * @param env the interval envelope.
