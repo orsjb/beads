@@ -60,16 +60,16 @@ public class Envelope extends UGen {
     public class Segment {
         
         /** The end value. */
-        float endValue; 
+        public float endValue;
         
         /** The duration in samples. */
-        long duration; 
+        public long duration;
         
         /** The curvature. */
-        float curvature;  
+        public float curvature;
         
         /** The trigger. */
-        Bead trigger;
+        public Bead trigger;
         
         /**
 		 * Instantiates a new segment.
@@ -89,7 +89,13 @@ public class Envelope extends UGen {
             this.curvature = Math.abs(curvature);
             this.trigger = trigger;
         }
-        
+
+        public Segment(Segment that) {
+			this.endValue = that.endValue;
+			this.duration = that.duration;
+			this.curvature = that.curvature;
+			this.trigger = that.trigger;
+		}
     }
     
     /**
@@ -313,5 +319,11 @@ public class Envelope extends UGen {
 		} 
 		return myBufOut[j];
 	}
-    
+
+	public LinkedList<Segment> getSegments() {
+		LinkedList<Segment> segmentsCopy = new LinkedList<Segment>();
+		for (Segment s : segments)
+			segmentsCopy.add(new Segment(s));
+		return segmentsCopy;
+	}
 }

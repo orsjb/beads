@@ -30,4 +30,8 @@ public class KillTrigger extends Bead {
 	public void messageReceived(Bead message) {
 		if(receiver != null) receiver.kill();
 	}
+
+	public Bead getReceiver() {
+		return receiver;
+	}
 }

@@ -68,7 +68,7 @@ public class Gain extends UGen implements DataBeadReceiver {
 	 * Gets the gain envelope.
 	 * 
 	 * @return the gain envelope.
-	 * @deprecated As of version 1.0, replaced by {@link #setGain(UGen)}.
+	 * @deprecated As of version 1.0, replaced by {@link #getGainUGen()}.
 	 */
 	@Deprecated
 	public UGen getGainEnvelope() {

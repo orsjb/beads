@@ -9,6 +9,8 @@ import net.beadsproject.beads.core.BeadArray;
 import net.beadsproject.beads.core.UGen;
 import net.beadsproject.beads.events.IntegerBead;
 
+import java.util.ArrayList;
+
 /**
  * A sample rate Clock. A Clock generates timing data at two levels: ticks and beats. It notifies an {@link BeadArray} of listeners at each tick. These listeners can query the Clock to find out the current tick count, if it is on a beat, and the current beat count. The rate of ticking of the Clock is controlled by an interval envelope.
  *
@@ -112,9 +114,18 @@ public class Clock extends UGen implements IntegerBead {
     public void removeMessageListener(Bead newListener) {
         listeners.remove(newListener);
     }
-    
-    /**
-     * Resets the Clock immediately.
+
+	/**
+	 * Gets an ArrayList of listeners.
+	 *
+	 * @return ArrayList of listeners.
+	 */
+	public ArrayList<Bead> getMessageListeners() {
+		return (ArrayList<Bead>) listeners.getBeads().clone();
+	}
+
+	/**
+	 * Resets the Clock immediately.
      */
     public void reset() {
         point = 0.0f;

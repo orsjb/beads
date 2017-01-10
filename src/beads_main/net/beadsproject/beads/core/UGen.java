@@ -478,6 +478,15 @@ public abstract class UGen extends Bead {
 	}
 
 	/**
+	 * Returns a List of dependent UGens.
+	 * @return List of dependent UGens.
+	 */
+	@SuppressWarnings("unchecked")
+	public synchronized List<UGen> getDependents() {
+		return (List<UGen>) dependents.clone();
+	}
+
+	/**
 	 * Checks if this UGen has the given UGen plugged into it.
 	 * @param ugen the UGen to test.
 	 * @return true if the given UGen is plugged into this UGen.

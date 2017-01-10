@@ -132,4 +132,15 @@ public class Glide extends UGen {
 		}
 	}
 
+	public float getTargetValue() {
+		return targetValue;
+	}
+
+	public float getCurrentValue() {
+		return currentValue;
+	}
+
+	public boolean isGliding() {
+		return gliding;
+	}
 }
