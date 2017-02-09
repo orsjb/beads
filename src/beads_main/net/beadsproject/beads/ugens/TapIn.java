@@ -42,6 +42,10 @@ public class TapIn extends UGen {
 		counter = 0;
 	}
 
+	public float getMaxDelayMS() {
+		return (float) context.samplesToMs(maxDelay);
+	}
+
 	public void calculateBuffer() {
 		float[] bi = bufIn[0];
 		for (int i = 0; i < bufferSize; i++) {

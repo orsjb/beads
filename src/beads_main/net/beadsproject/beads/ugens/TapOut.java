@@ -253,4 +253,5 @@ public class TapOut extends UGen {
 		return mode;
 	}
 
+	public TapIn getTapIn() { return ti; }
 };

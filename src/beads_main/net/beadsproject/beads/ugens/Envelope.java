@@ -326,4 +326,10 @@ public class Envelope extends UGen {
 			segmentsCopy.add(new Segment(s));
 		return segmentsCopy;
 	}
+
+	public Segment getCurrentSegment() {
+		if (currentSegment == null)
+			return null;
+		return new Segment(currentSegment);
+	}
 }
