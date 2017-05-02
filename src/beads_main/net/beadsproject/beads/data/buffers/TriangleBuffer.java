@@ -23,7 +23,7 @@ public class TriangleBuffer extends BufferFactory {
         	if(i < bufferSize / 2) {
         		b.buf[i] = (float)i / ((float)bufferSize / 2f) * 2.0f - 1.0f;
         	} else {
-        		b.buf[i] = 1f - ((float)(i - (bufferSize / 2)) / ((float)bufferSize / 2f) * 2.0f - 1.0f);
+        		b.buf[i] = (1f - ((float)(i - (bufferSize / 2)) / ((float)bufferSize / 2f))) * 2.0f - 1.0f;
         	}
         }
     	return b;
@@ -35,6 +35,5 @@ public class TriangleBuffer extends BufferFactory {
     public String getName() {
     	return "Triangle";
     }
-
     
 }
