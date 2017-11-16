@@ -24,12 +24,9 @@ public class Gain extends UGen implements DataBeadReceiver {
 	/**
 	 * Instantiates a new Gain.
 	 * 
-	 * @param context
-	 *            the AudioContext.
-	 * @param inouts
-	 *            the number of inputs (= number of outputs).
-	 * @param gainEnvelope
-	 *            the gain envelope.
+	 * @param context the AudioContext.
+	 * @param inouts the number of inputs (= number of outputs).
+	 * @param gainEnvelope the gain envelope.
 	 */
 	public Gain(AudioContext context, int inouts, UGen gainEnvelope) {
 		super(context, inouts, inouts);
@@ -40,12 +37,9 @@ public class Gain extends UGen implements DataBeadReceiver {
 	 * Instantiates a new Gain with a {@link Static} gain envelop with the given
 	 * value.
 	 * 
-	 * @param context
-	 *            the AudioContext.
-	 * @param inouts
-	 *            the number of inputs (= number of outputs).
-	 * @param gain
-	 *            the fixed gain level.
+	 * @param context the AudioContext.
+	 * @param inouts the number of inputs (= number of outputs).
+	 * @param gain the fixed gain level.
 	 */
 	public Gain(AudioContext context, int inouts, float gain) {
 		super(context, inouts, inouts);
