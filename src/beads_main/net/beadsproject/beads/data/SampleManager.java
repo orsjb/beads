@@ -3,10 +3,7 @@
  */
 package net.beadsproject.beads.data;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -45,7 +42,9 @@ public class SampleManager {
 	 * 
 	 * @return the sample.
 	 */
-	public static Sample sample(String fn) {
+	public static Sample sample(String fn)
+			throws IOException {
+		checkFile(fn);
 		return sample(fn, fn);
 	}
 
@@ -79,7 +78,7 @@ public class SampleManager {
 				samples.put(ref, sample);
 				if(verbose) System.out.println("Loaded " + fn);
 			} catch (Exception e) {
-				//swallow exception
+				e.printStackTrace(System.err);
 			}
 		}
 		return sample;
@@ -466,6 +465,14 @@ public class SampleManager {
 				}
 			}
 		}
+	}
+
+	public static void checkFile(String filePath) throws IOException {
+		File audioFile=new File(filePath);
+		if(!audioFile.exists())
+			throw new FileNotFoundException("Cannot Find "+audioFile);
+		if (!audioFile.canRead())
+			throw new FileNotFoundException("Cannot Read "+audioFile.getCanonicalPath());
 	}
 
 	/**

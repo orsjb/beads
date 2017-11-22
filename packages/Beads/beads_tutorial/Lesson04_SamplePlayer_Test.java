@@ -1,21 +1,26 @@
-
-
 import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.data.Sample;
 import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.SamplePlayer;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
 
 
-public class Lesson04_SamplePlayer {
+public class Lesson04_SamplePlayer_Test {
 
-	public static void main(String[] args) {
-
+	@Test
+	public void Lesson04_SamplePlayer()
+			throws IOException,
+			InterruptedException {
 		AudioContext ac;
 
 		ac = new AudioContext();
 		/*
 		 * Here's how to play back a sample.
-		 * 
+		 *
 		 * The first line gives you a way to choose the audio file. The
 		 * (commented, optional) second line allows you to stream the audio
 		 * rather than loading it all at once. The third line creates a sample
@@ -23,10 +28,10 @@ public class Lesson04_SamplePlayer {
 		 * keeps track of loaded audio files according to their file names, so
 		 * you don't have to load them again.
 		 */
-		String audioFile = "audio/1234.aif";
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
-		SamplePlayer player = new SamplePlayer(ac, SampleManager
-				.sample(audioFile));
+		Sample sample = SampleManager.sample(SampleManagerTest.audioFilePath);
+		Assert.assertNotNull(sample);
+		SamplePlayer player = new SamplePlayer(ac, sample);
 		/*
 		 * And as before...
 		 */
@@ -34,7 +39,7 @@ public class Lesson04_SamplePlayer {
 		g.addInput(player);
 		ac.out.addInput(g);
 		ac.start();
-		
-
+		Thread.sleep(2000);
+		ac.stop();
 	}
 }

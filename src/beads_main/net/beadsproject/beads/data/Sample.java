@@ -3,14 +3,13 @@
  */
 package net.beadsproject.beads.data;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 import net.beadsproject.beads.data.audiofile.AudioFileReader;
 import net.beadsproject.beads.data.audiofile.AudioFileType;
 import net.beadsproject.beads.data.audiofile.AudioFileWriter;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A Sample encapsulates audio data, either loaded from an audio file (such as
@@ -613,19 +612,21 @@ public class Sample {
 	}
 
 	/**
-	 * Specify an audio file that the Sample reads from.
+	 * Specify an audio filePath that the Sample reads from.
 	 * 
 	 * If BufferedRegime is TOTAL, this will block until the sample is loaded.
 	 * 
 	 * @throws IOException
 	 * 
 	 */
-	private void loadAudioFile(String file) throws IOException {
+	private void loadAudioFile(String filePath) throws IOException {
+		SampleManager.checkFile(filePath);
+		
 		//we have to deal with a bug in Tritonus: JavaSound doesn't accept 24-bit wav but strangely Tritonus 
 		//interprets 24-bit wavs as mp3s. So we intercept all wavs and send them to the WavFileReaderWriter.
-		//In the first instance we can only use the file suffix as a clue to this, not the header.		
+		//In the first instance we can only use the filePath suffix as a clue to this, not the header.		
 		Class<? extends AudioFileReader> theRealAudioFileReaderClass = audioFileReaderClass == null ? defaultAudioFileReaderClass : audioFileReaderClass;
-		if(file.endsWith(".wav") || file.endsWith(".WAV")) {
+		if(filePath.endsWith(".wav") || filePath.endsWith(".WAV")) {
 			try {
 				theRealAudioFileReaderClass = (Class<? extends AudioFileReader>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
 			} catch (ClassNotFoundException e) {
@@ -639,7 +640,7 @@ public class Sample {
 			throw new IOException("Sample: No AudioFileReader Class has been set and the default JavaSoundAudioFile Class cannot be found. Aborting write(). You may need to link to beads-io.jar.");
 		} 
 		try {
-			this.theSampleData = audioFileReader.readAudioFile(file);
+			this.theSampleData = audioFileReader.readAudioFile(filePath);
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
@@ -649,4 +650,5 @@ public class Sample {
 		this.current = new float[nChannels];
         this.next = new float[nChannels];
 	}
+
 }

@@ -3,17 +3,13 @@
  */
 package net.beadsproject.beads.ugens;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import net.beadsproject.beads.core.AudioContext;
-import net.beadsproject.beads.core.Bead;
 import net.beadsproject.beads.core.UGen;
 import net.beadsproject.beads.data.Buffer;
 import net.beadsproject.beads.data.Sample;
-import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.data.buffers.CosineWindow;
+
+import java.util.LinkedList;
 
 /**
  * GranularSamplePlayer plays back a {@link Sample} using granular synthesis. GranularSamplePlayer inherits its main behaviour from {@link SamplePlayer} but replaces the direct {@link Sample} lookup with a granular process. 
@@ -107,13 +103,13 @@ public class GranularSamplePlayer extends SamplePlayer {
 	 * Instantiates a new GranularSamplePlayer.
 	 * 
 	 * @param context the AudioContext.
-	 * @param buffer the Sample played by the GranularSamplePlayer.
+	 * @param sample the Sample played by the GranularSamplePlayer.
 	 */
-	public GranularSamplePlayer(AudioContext context, Sample buffer) {
-		this(context, buffer.getNumChannels());
-		setSample(buffer);
+	public GranularSamplePlayer(AudioContext context, Sample sample) {
+		this(context, sample.getNumChannels());
+		setSample(sample);
 		loopStartEnvelope = new Static(context, 0.0f);
-		loopEndEnvelope = new Static(context, (float)buffer.getLength());
+		loopEndEnvelope = new Static(context, (float)sample.getLength());
 	}
 
 	/**
