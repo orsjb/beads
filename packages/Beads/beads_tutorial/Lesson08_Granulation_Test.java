@@ -1,16 +1,20 @@
-
-
 import net.beadsproject.beads.core.AudioContext;
+import net.beadsproject.beads.data.Sample;
 import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.ugens.Envelope;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.GranularSamplePlayer;
 import net.beadsproject.beads.ugens.SamplePlayer;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class Lesson08_Granulation {
+import java.io.IOException;
 
-	public static void main(String[] args) {
+public class Lesson08_Granulation_Test {
 
+	@Test
+	public void Lesson08_Granulation()
+			throws IOException, InterruptedException {
 		AudioContext ac;
 
 		ac = new AudioContext();
@@ -19,9 +23,10 @@ public class Lesson08_Granulation {
 		 * but uses GranularSamplePlayer instead of SamplePlayer. See some of
 		 * the controls below.
 		 */
-		String audioFile = "audio/1234.aif";
+		Sample sample = SampleManager.sample(SampleManagerTest.audioFilePath);
+		Assert.assertNotNull(sample);
 		GranularSamplePlayer player = new GranularSamplePlayer(ac,
-				SampleManager.sample(audioFile));
+				sample);
 		/*
 		 * Have some fun with the controls.
 		 */
@@ -29,7 +34,7 @@ public class Lesson08_Granulation {
 		player.setLoopType(SamplePlayer.LoopType.LOOP_ALTERNATING);
 		player.getLoopStartUGen().setValue(0);
 		player.getLoopEndUGen().setValue(
-				(float)SampleManager.sample(audioFile).getLength());
+				(float) sample.getLength());
 		// control the rate of grain firing
 		Envelope grainIntervalEnvelope = new Envelope(ac, 100);
 		grainIntervalEnvelope.addSegment(20, 10000);
@@ -50,7 +55,7 @@ public class Lesson08_Granulation {
 		g.addInput(player);
 		ac.out.addInput(g);
 		ac.start();
-
+		Thread.sleep(10500);
+		ac.stop();
 	}
-
 }

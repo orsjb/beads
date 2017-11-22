@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="tutorial"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="lib" path="dependencies/beads.jar"/>
-	<classpathentry kind="lib" path="dependencies/beads-io.jar"/>
-	<classpathentry kind="lib" path="dependencies/jarjar-1.0.jar"/>
-	<classpathentry kind="lib" path="dependencies/jl1.0.1.jar"/>
-	<classpathentry kind="lib" path="dependencies/jna.jar"/>
-	<classpathentry kind="lib" path="dependencies/mp3spi1.9.4.jar"/>
-	<classpathentry kind="lib" path="dependencies/org-jaudiolibs-audioservers-jack.jar"/>
-	<classpathentry kind="lib" path="dependencies/org-jaudiolibs-audioservers-javasound.jar"/>
-	<classpathentry kind="lib" path="dependencies/org-jaudiolibs-audioservers.jar"/>
-	<classpathentry kind="lib" path="dependencies/org-jaudiolibs-jnajack.jar"/>
-	<classpathentry kind="lib" path="dependencies/tools.jar"/>
-	<classpathentry kind="lib" path="dependencies/tritonus_aos-0.3.6.jar"/>
-	<classpathentry kind="lib" path="dependencies/tritonus_share.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/beads_io"/>
+	<classpathentry kind="src" path="src/beads_main"/>
+	<classpathentry kind="src" path="packages/Beads/beads_tutorial"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="scripts"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Beads-dependencies"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: junit:junit:4.12"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.hamcrest:hamcrest-core:1.3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jnajack"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: net.java.dev.jna:jna:4.1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.junit.jupiter:junit-jupiter-api:5.0.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apiguardian:apiguardian-api:1.0.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.opentest4j:opentest4j:1.0.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.junit.platform:junit-platform-commons:1.0.0"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

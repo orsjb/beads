@@ -1,17 +1,17 @@
-
-
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.Noise;
+import org.junit.Test;
 
-public class Lesson01_AudioContext {
+/*
+ * Lesson 1: Make some noise! Note, if you don't know Java, you'd
+ * be well advised to follow some of the Java tutorials first.
+ */
+public class Lesson01_AudioContext_Test {
 
-	public static void main(String[] args) {
-
-		/*
-		 * Lesson 1: Make some noise! Note, if you don't know Java, you'd
-		 * be well advised to follow some of the Java tutorials first.
-		 */
+	@Test
+	public void Lesson01_AudioContext()
+			throws InterruptedException {
 		AudioContext ac;
 
 		/*
@@ -52,6 +52,7 @@ public class Lesson01_AudioContext {
 		 * Finally, start things running.
 		 */
 		ac.start();
+		Thread.sleep(2000);
+		ac.stop();
 	}
-
 }
