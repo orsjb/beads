@@ -51,6 +51,10 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
             from("packages/Processing/examples")
             into("${buildDir}/processing/examples")
         }
+	copy {
+            from("src")
+            into("${buildDir}/processing/src")
+        }
         copy {
             from("${buildDir}/libs/beads.jar")
             into("${buildDir}/processing/library")
@@ -63,6 +67,7 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
 
     task zipProcessingLibrary(type: Zip, dependsOn: 'generateProcessingLibrary') {
         from("${buildDir}/processing/")
+	exclude("*.DS_Store")
         archiveName("beads.zip")
         destinationDir(file("${buildDir}"))
     }
