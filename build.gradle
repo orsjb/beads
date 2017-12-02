@@ -1,0 +1,58 @@
+//gradle build file for Beads
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+version=1.1
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/beads_main/java', 'src/beads_io/java', 'src/beads_tutorial/java']
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    runtime fileTree(dir: 'libs', include: '*.jar')
+}
+
+shadowJar {
+    baseName = 'beads'
+    classifier = null
+    version = null
+}
+
+uploadShadow {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${buildDir}/mavenRepo")
+        }
+    }
+}
+
+javadoc {
+    failOnError(false)
+}
+
+task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
+    doLast {
+        copy {
+            from("${buildDir}/docs/javadoc")
+            into("${buildDir}/processing/reference")
+        }
+        copy {
+            from("packages/Processing/examples")
+            into("${buildDir}/processing/examples")
+        }
+        copy {
+            from("${buildDir}/libs/beads.jar")
+            into("${buildDir}/processing/library")
+        }
+    }
+}
+
