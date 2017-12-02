@@ -6,7 +6,9 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: 'maven'
-version=1.1
+
+version=1.02
+group='net.beadsproject'
 
 sourceSets {
     main {
@@ -53,6 +55,17 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
             from("${buildDir}/libs/beads.jar")
             into("${buildDir}/processing/library")
         }
+        copy {
+            from("packages/Processing/library.properties")
+            into("${buildDir}/processing/")
+        }
+    }
+
+    task zipProcessingLibrary(type: Zip, dependsOn: 'generateProcessingLibrary') {
+        from("${buildDir}/processing/")
+        archiveName("beads.zip")
+        destinationDir(file("${buildDir}"))
     }
 }
 
+task deploy(dependsOn: ['zipProcessingLibrary', 'uploadShadow'])
