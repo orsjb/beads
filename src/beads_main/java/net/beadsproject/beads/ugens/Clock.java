@@ -40,7 +40,7 @@ public class Clock extends UGen implements IntegerBead {
     /** The strength (gain) of the audible click. */
     private float clickStrength;
     
-    /** Used so that other objects can discover what */
+    /** Used so that other objects can discover what the tick times were from the last buffer update. */
     private double[] subticks;
     
     /**
@@ -129,8 +129,7 @@ public class Clock extends UGen implements IntegerBead {
      */
     public void reset() {
         point = 0.0f;
-        count = -1;	//OLLIE - hack to get the first tick to be a beat
-//        tick();	//OLLIE - this must be pointless, if we haven't connect the clock to anything
+        count = -1;	
     }
 
     /**
