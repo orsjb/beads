@@ -1,0 +1,12 @@
+rootProject.name = 'beads_java'
+
+include ':beads_main'
+project(':beads_main').projectDir = new File(settingsDir, '../beads_main')
+
+
+include ':beads_tutorial'
+project(':beads_tutorial').projectDir = new File(settingsDir, '../beads_tutorial')
+
+
+include ':beads_io'
+project(':beads_io').projectDir = new File(settingsDir, '../beads_io')

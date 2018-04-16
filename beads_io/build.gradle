@@ -1,0 +1,45 @@
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
+/**
+ * Task to specify which gradle version to download when the gradle wrapper isn't present
+ */
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+    gradleVersion = '4.6'
+}
+
+project.ext {
+    targetAllSrc = "$buildDir" + "/allSources"
+    targetAllSrcMain = "$targetAllSrc" + "/main/java"
+    targetAllSrcTest = "$targetAllSrc" + "/test/java"
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+
+    // Declare the dependency for your favourite test framework you want to use in your tests.
+//    testCompile 'junit:junit:3.8.2'
+    compile project(':beads_main')
+
+}
+
+task copySrcMainToRoot(type: Copy) {
+    from(sourceSets.main.allSource.srcDirs)
+    into(rootProject.targetAllSrcMain)
+//    println("from $source.asPath")
+//    println("copying to $destinationDir")
+}
+
+task copySrcTestToRoot(type: Copy) {
+    from(sourceSets.test.allSource.srcDirs)
+    into(rootProject.targetAllSrcTest)
+//    println("from $source.asPath")
+//    println("copying to $destinationDir")
+}
+
+task copySrcToRoot(dependsOn: ['copySrcMainToRoot', 'copySrcTestToRoot']) {}

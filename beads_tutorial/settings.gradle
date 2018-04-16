@@ -1,0 +1,4 @@
+rootProject.name = 'beads_tutorial'
+
+include ':beads_main'
+project(':beads_main').projectDir = new File(settingsDir, '../beads_main')

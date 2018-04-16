@@ -1,0 +1,146 @@
+apply plugin: 'com.android.library'
+
+android {
+    /**
+     * compileSdkVersion specifies the Android API level Gradle should use to
+     * compile your app. This means your app can use the API features included in
+     * this API level and lower.
+     */
+
+    compileSdkVersion 27
+
+    /**
+     * buildToolsVersion specifies the version of the SDK build tools, command-line
+     * utilities, and compiler that Gradle should use to build your app. You need to
+     * download the build tools using the SDK Manager.
+     *
+     * If you're using Android plugin 3.0.0 or higher, this property is optional—
+     * the plugin uses a recommended version of the build tools by default.
+     */
+
+    buildToolsVersion "27.0.3"
+
+    /**
+     * The defaultConfig block encapsulates default settings and entries for all
+     * build variants, and can override some attributes in main/AndroidManifest.xml
+     * dynamically from the build system. You can configure product flavors to override
+     * these values for different versions of your app.
+     */
+
+    defaultConfig {
+
+        // Defines the minimum API level required to run the app.
+        minSdkVersion 15
+
+        // Specifies the API level used to test the app.
+        targetSdkVersion 27
+
+        // Defines the version number of your app.
+        versionCode 1
+
+        // Defines a user-friendly version name for your app.
+        versionName "1.0"
+    }
+
+    /**
+     * The buildTypes block is where you can configure multiple build types.
+     * By default, the build system defines two build types: debug and release. The
+     * debug build type is not explicitly shown in the default build configuration,
+     * but it includes debugging tools and is signed with the debug key. The release
+     * build type applies Proguard settings and is not signed by default.
+     */
+
+    buildTypes {
+
+        /**
+         * By default, Android Studio configures the release build type to enable code
+         * shrinking, using minifyEnabled, and specifies the Proguard settings file.
+         */
+
+        release {
+            minifyEnabled true // Enables code shrinking for the release build type.
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+/**
+ * The repositories block configures the repositories Gradle uses to
+ * search or download the dependencies. Gradle pre-configures support for remote
+ * repositories such as JCenter, Maven Central, and Ivy. You can also use local
+ * repositories or define your own remote repositories. The code below defines
+ * JCenter as the repository Gradle should use to look for its dependencies.
+ *
+ * New projects created using Android Studio 3.0 and higher also include
+ * Google's Maven repository.
+ */
+
+repositories {
+    google()
+    jcenter()
+}
+
+/**
+ * Task to specify which gradle version to download when the gradle wrapper isn't present
+ */
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+    gradleVersion = '4.6'
+}
+
+/**
+ * The dependencies block in the module-level build configuration file
+ * only specifies dependencies required to build the module itself.
+ *
+ * If you're using Android plugin 3.0.0 or higher, you should
+ * use the new dependency configurations, which help you improve build speeds by
+ * restricting which dependencies leak their APIs to other modules.
+ */
+
+dependencies {
+    implementation project(':beads_main')
+
+    testImplementation 'junit:junit:4.12'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+    }
+}
+
+project.ext {
+    targetAllSrc = "$buildDir" + "/allSources"
+    targetAllSrcMain = "$targetAllSrc" + "/main/java"
+    targetAllSrcTest = "$targetAllSrc" + "/test/java"
+//    localTargetSrcMain = "src/main/java"
+    localSrcMain = "src/main"
+    localTargetMain = "$targetAllSrc" + "/main"
+//    localTargetSrcTest = "src/test/java"
+    localSrcTest = "src/test"
+    localTargetTest = "$targetAllSrc" + "/test"
+}
+
+task copySrcMainToRoot(type: Copy) {
+//    from(sourceSets.main.allSource.srcDirs)
+//    from(fileTree(dir: localTargetSrcMain, include: '**\\*.java'))
+    from(fileTree(dir: localSrcMain))
+    into(localTargetMain)
+//    println("from $source.asPath")
+//    println("copying to $destinationDir")
+}
+
+task copySrcTestToRoot(type: Copy) {
+//    from(sourceSets.test.allSource.srcDirs)
+//    from(fileTree(dir: localTargetSrcTest, include: '**\\*.java'))
+    from(fileTree(dir: localSrcTest))
+    into(localTargetTest)
+//    println("from $source.asPath")
+//    println("copying to $destinationDir")
+}
+
+task copySrcToRoot(dependsOn: ['copySrcMainToRoot', 'copySrcTestToRoot']) {}

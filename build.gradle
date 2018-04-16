@@ -10,18 +10,14 @@ apply plugin: 'maven'
 version=1.02
 group='net.beadsproject'
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/beads_main/java', 'src/beads_io/java', 'src/beads_tutorial/java']
-        }
-    }
+project.ext {
+    targetAllSrc = "$buildDir" + "/all"
+    targetAllSrcMain = "$targetAllSrc" + "/main"
+    targetAllSrcTest = "$targetAllSrc" + "/test"
+
+    targetZipLoc = "$buildDir" + "/Android"
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    runtime fileTree(dir: 'libs', include: '*.jar')
-}
 
 shadowJar {
     baseName = 'beads'

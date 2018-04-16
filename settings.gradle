@@ -1,1 +1,6 @@
 //gradle settings file
+include ':beads_android'
+//include ':beads_io'
+include ':beads_java'
+include ':beads_main'
+//include ':beads_tutorial'
