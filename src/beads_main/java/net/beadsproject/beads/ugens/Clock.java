@@ -76,7 +76,13 @@ public class Clock extends UGen implements IntegerBead {
 	 * @param interval the interval in milliseconds.
 	 */
 	public Clock(float interval) {
+
 		this(getDefaultContext(), interval);
+
+		if (getDefaultContext() != null)
+		{
+			getDefaultContext().out.addDependent(this);
+		}
 	}
 
     /**
@@ -102,6 +108,11 @@ public class Clock extends UGen implements IntegerBead {
 	 */
 	public Clock(UGen env) {
 		this(getDefaultContext(), env);
+
+		if (getDefaultContext() != null)
+		{
+			getDefaultContext().out.addDependent(this);
+		}
 	}
 	
 	/**
