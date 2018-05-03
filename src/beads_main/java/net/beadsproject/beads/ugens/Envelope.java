@@ -146,7 +146,7 @@ public class Envelope extends UGen {
      *            the start value.
      */
     public Envelope(float value) {
-        this(getDefaultContext());
+        this(getDefaultContext(), value);
     }
     
     /**

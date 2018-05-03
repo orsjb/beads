@@ -123,7 +123,7 @@ public class Clock extends UGen implements IntegerBead {
 	public boolean isClicking() {
 		return click;
 	}
-	
+
 	/**
 	 * Starts/stops the audible click.
 	 * 
