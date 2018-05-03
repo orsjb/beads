@@ -30,6 +30,14 @@ public class Phasor extends UGen {
 	}
 
 	/**
+	 * Basic constructor.
+	 *
+	 */
+	public Phasor() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor that sets the initial frequency to a float value.
 	 * 
 	 * @param con
@@ -43,6 +51,16 @@ public class Phasor extends UGen {
 	}
 
 	/**
+	 * Constructor that sets the initial frequency to a float value.
+	 *
+	 * @param frequency
+	 *            The initial frequency.
+	 */
+	public Phasor(float frequency) {
+		this(getDefaultContext(), frequency);
+	}
+
+	/**
 	 * Constructor that sets a UGen to control the frequency.
 	 * 
 	 * @param con
@@ -53,6 +71,16 @@ public class Phasor extends UGen {
 	public Phasor(AudioContext con, UGen frequencyUGen) {
 		this(con);
 		setFrequency(frequencyUGen);
+	}
+
+	/**
+	 * Constructor that sets a UGen to control the frequency.
+	 *
+	 * @param frequencyUGen
+	 *            The frequency controller UGen.
+	 */
+	public Phasor(UGen frequencyUGen) {
+		this(getDefaultContext(), frequencyUGen);
 	}
 
 	@Override

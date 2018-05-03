@@ -64,7 +64,20 @@ public class RandomPWM extends UGen implements DataBeadReceiver {
 	public RandomPWM(AudioContext context, Mode mode, float minl, float maxl) {
 		this(context, mode, minl, maxl, 1);
 	}
-	
+
+	/**
+	 * Constructor specifying mode, and minumum and maximum pulse lengths.
+	 * @param mode
+	 *            The pulse mode; see {@link #setMode(Mode) setMode}.
+	 * @param minl
+	 *            The minimum pulse length.
+	 * @param maxl
+	 *            The maximum pulse length.
+	 */
+	public RandomPWM(Mode mode, float minl, float maxl){
+		this(getDefaultContext(), mode, minl, maxl);
+	}
+
 	/**
 	 * Constructor specifying all parameters
 	 * 
@@ -84,6 +97,25 @@ public class RandomPWM extends UGen implements DataBeadReceiver {
 		super(context, 0, 1);
 		setParams(mode, minl, maxl, lexp);
 	}
+
+	/**
+	 * Constructor specifying all parameters
+	 *
+	 * @param mode
+	 *            The pulse mode; see {@link #setMode(Mode) setMode}.
+	 * @param minl
+	 *            The minimum pulse length.
+	 * @param maxl
+	 *            The maximum pulse length.
+	 * @param lexp
+	 *            The pulse length exponent.
+	 */
+	public RandomPWM(Mode mode, float minl, float maxl,
+					 float lexp) {
+
+		this(getDefaultContext(), mode, minl, maxl, lexp);
+	}
+
 
 	public void calculateBuffer() {
 		float[] bo = bufOut[0];

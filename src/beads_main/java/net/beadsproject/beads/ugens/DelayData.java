@@ -41,6 +41,22 @@ public class DelayData extends DelayEvent {
 		this.dataBead = db;
 	}
 
+	/**
+	 * Instantiates a new DelayMessage with the specified millisecond delay,
+	 * receiver, and DataBead message.
+	 *
+	 * @param delay
+	 *            The delay time in milliseconds.
+	 * @param receiver
+	 *            The DataBead receiver.
+	 * @param db
+	 *            The DataBead to send.
+	 */
+	public DelayData(double delay,
+					 DataBeadReceiver receiver, DataBead db) {
+		this(getDefaultContext(), delay, receiver, db);
+	}
+
 	@Override
 	public void trigger() {
 		if (receiver != null) {

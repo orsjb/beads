@@ -58,6 +58,15 @@ public class Compressor extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a 1-channel compressor with no look-ahead time and other
+	 * parameters set to their default values.
+	 *
+	 */
+	public Compressor() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a multi-channel compressor with no look-ahead time and
 	 * other parameters set to their default values.
 	 * 
@@ -68,6 +77,17 @@ public class Compressor extends UGen implements DataBeadReceiver {
 	 */
 	public Compressor(AudioContext context, int channels) {
 		this(context, channels, 0, null);
+	}
+
+	/**
+	 * Constructor for a multi-channel compressor with no look-ahead time and
+	 * other parameters set to their default values.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public Compressor(int channels){
+		this(getDefaultContext(), channels);
 	}
 
 	/**
@@ -86,6 +106,19 @@ public class Compressor extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel compressor with the specified side-chain,
+	 * no look-ahead time, and other parameters set to their default values.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param sideChain
+	 *            The UGen to use as the side-chain.
+	 */
+	public Compressor( int channels, UGen sideChain){
+		this(getDefaultContext(), channels, sideChain);
+	}
+
+	/**
 	 * Constructor for a multi-channel compressor with the specified look-ahead
 	 * time and other parameters set to their default values.
 	 * 
@@ -98,6 +131,18 @@ public class Compressor extends UGen implements DataBeadReceiver {
 	 */
 	public Compressor(AudioContext context, int channels, float lookAheadDelay) {
 		this(context, channels, lookAheadDelay, null);
+	}
+
+	/**
+	 * Constructor for a multi-channel compressor with the specified look-ahead
+	 * time and other parameters set to their default values.
+	 * @param channels
+	 *            The number of channels.
+	 * @param lookAheadDelay
+	 *            The look-ahead time in milliseconds.
+	 */
+	public Compressor(int channels, float lookAheadDelay) {
+		this(getDefaultContext(), channels, lookAheadDelay);
 	}
 
 	/**
@@ -139,6 +184,22 @@ public class Compressor extends UGen implements DataBeadReceiver {
 
 		setSideChain(sideChain).setAttack(1).setDecay(.5f).setRatio(2)
 				.setThreshold(.5f).setKnee(.5f);
+	}
+
+	/**
+	 * Constructor for a multi-channel compressor with the specified look-ahead
+	 * time and side-chain, and other parameters set to their default values.
+	 * @param channels
+	 *            The number of channels.
+	 * @param lookAheadDelay
+	 *            The look-ahead time in milliseconds.
+	 * @param sideChain
+	 *            The UGen to use as the side-chain.
+	 */
+	public Compressor(int channels, float lookAheadDelay,
+					  UGen sideChain) {
+
+		this(getDefaultContext(), channels, lookAheadDelay, sideChain);
 	}
 
 	@Override

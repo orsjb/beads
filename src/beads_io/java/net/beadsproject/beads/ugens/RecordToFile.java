@@ -74,7 +74,24 @@ public class RecordToFile extends UGen {
 				AudioSystem.NOT_SPECIFIED, 
 				file);				
 	}
-	
+
+	/**
+	 * Instantiates a recorder for file recording.
+	 *
+	 * @param numberOfChannels
+	 * 				The number of channels
+	 * @param file
+	 * 				The file to output to
+	 * @param type
+	 * 				The type of the file
+	 * @throws IOException
+	 * 				if the audio format is not supported on this machine.
+	 *
+	 */
+	public RecordToFile(int numberOfChannels, File file, AudioFileFormat.Type type) throws IOException {
+		this(getDefaultContext(), numberOfChannels, file, type);
+	}
+
 	/**
 	 * Instantiates a recorder for file recording. Uses the .wav format.
 	 * 
@@ -90,7 +107,20 @@ public class RecordToFile extends UGen {
 	public RecordToFile(AudioContext context, int numberOfChannels, File file) throws IOException {
 		this(context,numberOfChannels,file,AudioFileFormat.Type.WAVE);
 	}
-	
+	/**
+	 * Instantiates a recorder for file recording. Uses the .wav format.
+	 *
+	 * @param numberOfChannels
+	 * 				The number of channels
+	 * @param file
+	 * 				The file to output to. Extension should be .wav.
+	 * @throws IOException if the audio format is not supported on this machine.
+	 *
+	 */
+	public RecordToFile(int numberOfChannels, File file) throws IOException {
+		this(getDefaultContext(), numberOfChannels, file);
+	}
+
 	@Override
 	public void calculateBuffer() {
 		// INV: bufIn[0] exists

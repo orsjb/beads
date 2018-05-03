@@ -36,7 +36,14 @@ public abstract class AudioSegmenter extends UGen implements SegmentMaker {
 		listeners = new ArrayList<FeatureExtractor<?, float[]>>();
 		segmentListeners = new ArrayList<SegmentListener>();
 	}
-	
+
+	/**
+	 * Instantiates a new Segmenter.
+	 */
+	public AudioSegmenter() {
+		this(getDefaultContext());
+	}
+
 	/**
 	 * Adds a FeatureExtractor as a responder to this Segmenter.
 	 * 

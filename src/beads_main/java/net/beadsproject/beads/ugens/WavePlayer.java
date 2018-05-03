@@ -73,6 +73,20 @@ public class WavePlayer extends UGen {
 	}
 
 	/**
+	 * Instantiates a new WavePlayer with given frequency envelope and Buffer.
+	 *
+	 * @param frequencyController
+	 *            the frequency envelope.
+	 * @param buffer
+	 *            the Buffer.
+	 */
+	public WavePlayer(UGen frequencyController,
+					  Buffer buffer) {
+		this(getDefaultContext(), frequencyController, buffer);
+
+	}
+
+	/**
 	 * Instantiates a new WavePlayer with given static frequency and Buffer.
 	 * 
 	 * @param context
@@ -85,6 +99,18 @@ public class WavePlayer extends UGen {
 	public WavePlayer(AudioContext context, float frequency, Buffer buffer) {
 		this(context, buffer);
 		setFrequency(frequency);
+	}
+
+	/**
+	 * Instantiates a new WavePlayer with given static frequency and Buffer.
+	 *
+	 * @param frequency
+	 *            the frequency in Hz.
+	 * @param buffer
+	 *            the Buffer.
+	 */
+	public WavePlayer(float frequency, Buffer buffer) {
+		this(getDefaultContext(), frequency, buffer);
 	}
 
 	/*

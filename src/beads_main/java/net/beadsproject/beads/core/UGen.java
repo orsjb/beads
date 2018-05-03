@@ -72,6 +72,25 @@ public abstract class UGen extends Bead {
 	protected OutputPauseRegime outputPauseRegime;
 
 	/**
+	 * Get the default AudioContext to use in UGen objects
+	 * @return the default AudioContext
+	 */
+	public static AudioContext getDefaultContext() {
+		return defaultContext;
+	}
+
+	/**
+	 * Set the default AudioContext to use in UGen objects
+	 * @param defaultContext the default UGen object to use for specialised class constructors
+	 */
+	public static void setDefaultContext(AudioContext defaultContext) {
+		UGen.defaultContext = defaultContext;
+	}
+
+	/** A default audio context to to remove the requirement of adding an AudioContext to every constructor */
+	static  AudioContext defaultContext = null;
+
+	/**
 	 * Create a new UGen from the given AudioContext but with no inputs or
 	 * outputs.
 	 * 

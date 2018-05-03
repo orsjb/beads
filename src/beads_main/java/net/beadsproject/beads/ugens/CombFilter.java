@@ -47,6 +47,16 @@ public class CombFilter extends IIRFilter {
 		setA(a).setG(g).setH(h).setDelay(1);
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param maxdel
+	 *            The maximum delay in samples.
+	 */
+	public CombFilter(int maxdel) {
+		this(getDefaultContext(), maxdel);
+	}
+
 	private void checkStaticStatus() {
 		if (isAStatic && isGStatic && isGStatic && isDelayStatic) {
 			areAllStatic = true;

@@ -29,12 +29,21 @@ public class Plug extends UGen {
 	}
 
 	/**
+	 * Constructor for a one-channel Plug using the specified audio
+	 * context.
+	 *
+	 */
+	public Plug(){
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a mono Plug that takes input from the specified source
 	 * UGen.
 	 * 
 	 * @param context
 	 *            The audio context.
-	 * @param souceUGen
+	 * @param sourceUGen
 	 *            The source UGen.
 	 */
 	public Plug(AudioContext context, UGen sourceUGen) {
@@ -43,12 +52,23 @@ public class Plug extends UGen {
 	}
 
 	/**
+	 * Constructor for a mono Plug that takes input from the specified source
+	 * UGen.
+	 *
+	 * @param sourceUGen
+	 *            The source UGen.
+	 */
+	public Plug(UGen sourceUGen) {
+		this	(getDefaultContext(), sourceUGen);
+	}
+
+	/**
 	 * Constructor for a mono Plug that takes input from the specified output
 	 * channel of a source UGen.
 	 * 
 	 * @param context
 	 *            The audio context.
-	 * @param souceUGen
+	 * @param sourceUGen
 	 *            The source UGen.
 	 * @param sourceOutputChannel
 	 *            The channel from the source UGen to take as input.
@@ -56,6 +76,19 @@ public class Plug extends UGen {
 	public Plug(AudioContext context, UGen sourceUGen, int sourceOutputChannel) {
 		this(context, 1);
 		this.addInput(0, sourceUGen, sourceOutputChannel);
+	}
+
+	/**
+	 * Constructor for a mono Plug that takes input from the specified output
+	 * channel of a source UGen.
+	 *
+	 * @param sourceUGen
+	 *            The source UGen.
+	 * @param sourceOutputChannel
+	 *            The channel from the source UGen to take as input.
+	 */
+	public Plug(UGen sourceUGen, int sourceOutputChannel) {
+		this	(getDefaultContext(), sourceUGen, sourceOutputChannel);
 	}
 
 	/**
@@ -71,6 +104,17 @@ public class Plug extends UGen {
 		super(context, channels, channels);
 		this.outputInitializationRegime = OutputInitializationRegime.RETAIN;
 		bufOut = bufIn;
+	}
+
+	/**
+	 * Constructor for a Plug with the specified number of channels, using
+	 * the specified audio context.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public Plug(int channels) {
+		this(getDefaultContext(), channels);
 	}
 
 	@Override

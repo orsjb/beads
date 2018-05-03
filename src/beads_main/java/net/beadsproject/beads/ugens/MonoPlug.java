@@ -26,6 +26,14 @@ public class MonoPlug extends UGen {
 		outputPauseRegime = OutputPauseRegime.ZERO;
 	}
 
+	/**
+	 * Instantiates a new MonoPlug.
+	 *
+	 */
+	public MonoPlug() {
+		this(getDefaultContext());
+	}
+
 	/* (non-Javadoc)
 	 * @see net.beadsproject.beads.core.UGen#calculateBuffer()
 	 */

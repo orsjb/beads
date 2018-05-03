@@ -38,6 +38,19 @@ public class DelayTrigger extends DelayEvent {
 	}
 
 	/**
+	 * Instantiates a new DelayTrigger with the specified millisecond delay and
+	 * receiver. By default, a DelayTrigger object will send itself as the
+	 * message.
+	 * @param delay
+	 *            the delay in milliseconds.
+	 * @param receiver
+	 *            the receiver.
+	 */
+	public DelayTrigger(double delay, Bead receiver) {
+		this(getDefaultContext(), delay, receiver);
+	}
+
+	/**
 	 * Instantiates a new DelayTrigger with the specified millisecond delay,
 	 * receiver, and message.
 	 * 
@@ -53,6 +66,21 @@ public class DelayTrigger extends DelayEvent {
 		super(context, delay);
 		this.receiver = receiver;
 		this.message = message;
+	}
+
+	/**
+	 * Instantiates a new DelayTrigger with the specified millisecond delay,
+	 * receiver, and message.
+	 *
+	 * @param delay
+	 *            The delay in milliseconds.
+	 * @param receiver
+	 *            The receiver.
+	 */
+	public DelayTrigger(double delay, Bead receiver,
+						Bead message) {
+
+		this(getDefaultContext(), delay, receiver, message);
 	}
 
 	@Override

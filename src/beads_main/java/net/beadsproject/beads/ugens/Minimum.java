@@ -26,20 +26,39 @@ public class Minimum extends UGen {
 	}
 
 	/**
+	 * Constructor with no assigned inputs.
+	 *
+	 */
+	public Minimum() {
+		this(getDefaultContext());
+	}
+
+	/**
+	* Constructor for 1 UGen input and a static minimum value.
+	*
+	* @param context
+	*            The audio context.
+	* @param ugen
+	*            The input UGen.
+	* @param minVal
+	*            The minimum value.
+	*/
+	public Minimum(AudioContext context, UGen ugen, float minVal) {
+		super(context, 2, 1);
+		addInput(0, ugen, 0);
+		addInput(1, new Static(context, minVal), 0);
+	}
+
+	/**
 	 * Constructor for 1 UGen input and a static minimum value.
-	 * 
-	 * @param context
-	 *            The audio context.
+	 *
 	 * @param ugen
 	 *            The input UGen.
 	 * @param minVal
 	 *            The minimum value.
 	 */
-
-	public Minimum(AudioContext context, UGen ugen, float minVal) {
-		super(context, 2, 1);
-		addInput(0, ugen, 0);
-		addInput(1, new Static(context, minVal), 0);
+	public Minimum(UGen ugen, float minVal) {
+		this(getDefaultContext(), ugen, minVal);
 	}
 
 	/**
@@ -56,6 +75,18 @@ public class Minimum extends UGen {
 		super(context, 2, 1);
 		addInput(0, ugen1, 0);
 		addInput(1, ugen2, 0);
+	}
+
+	/**
+	 * Constructor for 2 UGen inputs.
+	 *
+	 * @param ugen1
+	 *            The first UGen input.
+	 * @param ugen2
+	 *            The second UGen input.
+	 */
+	public Minimum(UGen ugen1, UGen ugen2) {
+		this(getDefaultContext(), ugen1, ugen2);
 	}
 
 	@Override

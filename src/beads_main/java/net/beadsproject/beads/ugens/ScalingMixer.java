@@ -23,7 +23,15 @@ public class ScalingMixer extends UGen {
 	public ScalingMixer(AudioContext context) {
         this(context, 1);
     }
-	
+
+	/**
+	 * Instantiates a new ScalingMixer.
+	 *
+	 */
+	public ScalingMixer() {
+		this(getDefaultContext());
+	}
+
     /**
 	 * Instantiates a new ScalingMixer.
 	 * 
@@ -35,7 +43,17 @@ public class ScalingMixer extends UGen {
     public ScalingMixer(AudioContext context, int inouts) {
         super(context, inouts, inouts);
     }
-    
+
+	/**
+	 * Instantiates a new ScalingMixer.
+	 *
+	 * @param inouts
+	 *            the number of inputs (= the number of outputs).
+	 */
+	public ScalingMixer(int inouts) {
+		this(getDefaultContext(), inouts);
+	}
+
     /* (non-Javadoc)
      * @see com.olliebown.beads.core.UGen#calculateBuffer()
      */

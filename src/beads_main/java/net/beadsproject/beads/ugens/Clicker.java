@@ -30,6 +30,15 @@ public class Clicker extends UGen {
 		done = false;
 	}
 
+	/**
+	 * Instantiates a new Clicker.
+	 *
+	 * @param strength the volume of the click (max = 1).
+	 */
+	public Clicker(float strength) {
+		this(getDefaultContext(), strength);
+	}
+
 	/* (non-Javadoc)
 	 * @see com.olliebown.beads.core.UGen#calculateBuffer()
 	 */

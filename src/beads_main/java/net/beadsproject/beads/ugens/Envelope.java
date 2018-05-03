@@ -117,7 +117,15 @@ public class Envelope extends UGen {
         myBufOut = new float[bufferSize];
         bufOut[0] = myBufOut;
     }
-    
+
+    /**
+     * Instantiates a new Envelope with start value 0.
+     *
+     */
+    public Envelope() {
+        this(getDefaultContext());
+    }
+
     /**
 	 * Instantiates a new Envelope with the specified start value.
 	 * 
@@ -129,6 +137,16 @@ public class Envelope extends UGen {
     public Envelope(AudioContext context, float value) {
     	this(context);
     	setValue(value);
+    }
+
+    /**
+     * Instantiates a new Envelope with the specified start value.
+     *
+     * @param value
+     *            the start value.
+     */
+    public Envelope(float value) {
+        this(getDefaultContext());
     }
     
     /**

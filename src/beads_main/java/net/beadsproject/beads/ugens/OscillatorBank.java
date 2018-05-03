@@ -49,8 +49,17 @@ public class OscillatorBank extends UGen {
         setNumOscillators(numOscillators);
         gain = 1f / (float)numOscillators;
     }
-    
-    
+
+    /**
+     * Instantiates a new OscillatorBank.
+     *
+     * @param buffer the buffer used as a lookup table by the oscillators.
+     * @param numOscillators the number of oscillators.
+     */
+    public OscillatorBank(Buffer buffer, int numOscillators) {
+        this(getDefaultContext(), buffer, numOscillators);
+    }
+
     /**
      * Sets the number of oscillators.
      * 

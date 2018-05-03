@@ -42,6 +42,16 @@ public class OnePoleFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for cut-off frequency specified by a static float.
+	 *
+	 * @param freq
+	 *            The cut-off frequency.
+	 */
+	public OnePoleFilter(float freq) {
+		this(getDefaultContext(), freq);
+	}
+
+	/**
 	 * Constructor for cut-off frequency specified by a UGen.
 	 * 
 	 * @param con
@@ -55,6 +65,16 @@ public class OnePoleFilter extends IIRFilter implements DataBeadReceiver {
 		two_pi_over_sf = (float) (2 * Math.PI / samplingfreq);
 
 		setFrequency(freq);
+	}
+
+	/**
+	 * Constructor for cut-off frequency specified by a UGen.
+	 *
+	 * @param freq
+	 *            The cut-off frequency UGen.
+	 */
+	public OnePoleFilter(UGen freq) {
+		this(getDefaultContext(), freq);
 	}
 
 	protected void calcVals() {

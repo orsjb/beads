@@ -35,6 +35,17 @@ public class ZeroCross extends UGen {
 		cross = new boolean[memSize];
 	}
 
+	/**
+	 * Constructor. The specified memory size indicates the time frame over
+	 * which zero crossings are counted.
+	 *
+	 * @param memSizeInMS
+	 *            The time frame in milliseconds.
+	 */
+	public ZeroCross(float memSizeInMS) {
+		this(getDefaultContext(), memSizeInMS);
+	}
+
 	@Override
 	public void calculateBuffer() {
 

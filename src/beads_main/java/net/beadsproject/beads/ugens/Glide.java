@@ -43,7 +43,18 @@ public class Glide extends UGen {
 		bufOut[0] = new float[bufferSize];
 		setGlideTime(glideTimeMS);
 	}
-	
+
+	/**
+	 * Creates a new Glide with the default AudioContext, initial value and glide time in milliseconds.
+	 * @param currentValue
+	 * 				the initial value.
+	 * @param glideTimeMS
+	 * 				the glide time in milliseconds.
+	 */
+	public Glide(float currentValue, float glideTimeMS) {
+		this(getDefaultContext(), currentValue, glideTimeMS);
+	}
+
 	/**
 	 * Creates a new Glide with the specified AudioContext, initial value. Uses the 
 	 * default glide time of 100 milliseconds.
@@ -55,7 +66,17 @@ public class Glide extends UGen {
 	public Glide(AudioContext context, float currentValue) {
 		this(context, currentValue, 100);
 	}
-	
+
+	/**
+	 * Creates a new Glide with the default AudioContext, initial value. Uses the
+	 * default glide time of 100 milliseconds.
+	 * @param currentValue
+	 * 				the initial value.
+	 */
+	public Glide(float currentValue) {
+		this(getDefaultContext(), currentValue);
+	}
+
 	/**
 	 * Creates a new Glide with the specified AudioContext. Uses the 
 	 * default inital value of zero and glide time of 100 milliseconds.
@@ -66,6 +87,13 @@ public class Glide extends UGen {
 		this(context, 0f);
 	}
 
+	/**
+	 * Creates a new Glide with the default AudioContext. Uses the
+	 * default inital value of zero and glide time of 100 milliseconds.
+	 */
+	public Glide() {
+		this(getDefaultContext());
+	}
 	/** 
 	 * Sets the target glide value. From its current value Glide immediately interpolates
 	 * its way to that value over the specified glideTime.

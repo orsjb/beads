@@ -192,7 +192,17 @@ public class Spatial extends UGen {
 	public Spatial(AudioContext context, int dimensions) {
 		this(context, dimensions, (float)Math.sqrt(dimensions));
 	}
-	
+
+	/**
+	 * Instantiates a new Spatial with given AudioContext and dimensions. The default speaker config for the dimensionality
+	 * is used, and the default sphereDiameter (equal to Math.sqrt(dimensions)).
+	 *
+	 * @param dimensions the dimensions
+	 */
+	public Spatial(int dimensions) {
+		this(getDefaultContext(), dimensions);
+	}
+
 	/**
 	 * Instantiates a new Spatial with given AudioContext and sphereDiameter.
 	 * 
@@ -240,9 +250,19 @@ public class Spatial extends UGen {
 	}
 
 	/**
+	 * Instantiates a new Spatial with given AudioContext and sphereDiameter.
+	 *
+	 * @param dimensions the number of dimensions, between 1 and 3.
+	 * @param sphereDiameter the sphere diameter.
+	 */
+	public Spatial(int dimensions, float sphereDiameter) {
+		this(getDefaultContext(), dimensions, sphereDiameter);
+	}
+
+	/**
 	 * Instantiates a new Spatial with given AudioContext, dimensions and locations. The locations array
 	 * is an array of the form float[speakerNumber][dimension].
-	 * 
+	 *
 	 * @param context the context.
 	 * @param dimensions the dimensions.
 	 * @param locations the locations.
@@ -250,11 +270,22 @@ public class Spatial extends UGen {
 	public Spatial(AudioContext context, int dimensions, float[][] locations) {
 		this(context, dimensions, locations, (float)Math.sqrt(dimensions));
 	}
-	
+
+	/**
+	 * Instantiates a new Spatial with given AudioContext, dimensions and locations. The locations array
+	 * is an array of the form float[speakerNumber][dimension].
+	 *
+	 * @param dimensions the dimensions.
+	 * @param locations the locations.
+	 */
+	public Spatial( int dimensions, float[][] locations) {
+		this(getDefaultContext(), dimensions, locations);
+	}
+
 	/**
 	 * Instantiates a new Spatial with the given AudioContext, dimensions, locations and sphereDiamater. The locations array
 	 * is an array of the form float[speakerNumber][dimension].
-	 * 
+	 *
 	 * @param context the context
 	 * @param dimensions the dimensions
 	 * @param locations the locations
@@ -267,7 +298,19 @@ public class Spatial extends UGen {
 		setSphereDiameter(sphereDiameter);
 		setup();
 	}
-	
+
+	/**
+	 * Instantiates a new Spatial with the given AudioContext, dimensions, locations and sphereDiamater. The locations array
+	 * is an array of the form float[speakerNumber][dimension].
+	 *
+	 * @param dimensions the dimensions
+	 * @param locations the locations
+	 * @param sphereDiameter the sphere diameter
+	 */
+	public Spatial(int dimensions, float[][] locations, float sphereDiameter) {
+		this(getDefaultContext(), dimensions, locations, sphereDiameter);
+	}
+
 	/**
 	 * Setup.
 	 */

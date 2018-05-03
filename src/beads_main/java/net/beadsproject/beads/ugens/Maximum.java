@@ -26,6 +26,14 @@ public class Maximum extends UGen {
 	}
 
 	/**
+	 * Constructor with no assigned inputs.
+	 *
+	 */
+	public Maximum() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for 1 UGen input and a static maximum value.
 	 * 
 	 * @param context
@@ -42,6 +50,18 @@ public class Maximum extends UGen {
 	}
 
 	/**
+	 * Constructor for 1 UGen input and a static maximum value.
+	 *
+	 * @param ugen
+	 *            The input UGen.
+	 * @param maxVal
+	 *            The minimum value.
+	 */
+	public Maximum( UGen ugen, float maxVal) {
+		this(getDefaultContext(), ugen, maxVal);
+	}
+
+	/**
 	 * Constructor for 2 UGen inputs.
 	 * 
 	 * @param context
@@ -55,6 +75,17 @@ public class Maximum extends UGen {
 		super(context, 2, 1);
 		addInput(0, ugen1, 0);
 		addInput(1, ugen2, 0);
+	}
+
+	/**
+	 * Constructor for 2 UGen inputs.
+	 * @param ugen1
+	 *            The first UGen input.
+	 * @param ugen2
+	 *            The second UGen input.
+	 */
+	public Maximum(UGen ugen1, UGen ugen2) {
+		this(getDefaultContext(), ugen1, ugen2);
 	}
 
 	@Override

@@ -32,6 +32,15 @@ public class NBitsConverter extends UGen
 
 	  }
 
+
+	/**
+	 * Creates a new NBitsConverter with the default {@link AudioContext} and number of bits to convert to.
+
+	 * @param n the number of bits to convert to.
+	 */
+	public NBitsConverter(int n) {
+		this(getDefaultContext(), n);
+	}
 	  public void calculateBuffer()
 	  {
 	    // for each float value (-1,1)

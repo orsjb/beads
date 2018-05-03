@@ -42,6 +42,14 @@ public class TapIn extends UGen {
 		counter = 0;
 	}
 
+	/**
+	 * @param maxDelayInMS
+	 *            The size of the tapin memory buffer in milliseconds.
+	 */
+	public TapIn(float maxDelayInMS) {
+		this(getDefaultContext(), maxDelayInMS);
+	}
+
 	public float getMaxDelayMS() {
 		return (float) context.samplesToMs(maxDelay);
 	}

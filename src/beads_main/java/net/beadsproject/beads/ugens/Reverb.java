@@ -41,6 +41,14 @@ public class Reverb extends UGenChain implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a reverb unit with one output channel.
+	 *
+	 */
+	public Reverb() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a reverb unit with the specified number of output
 	 * channels.
 	 * 
@@ -129,6 +137,17 @@ public class Reverb extends UGenChain implements DataBeadReceiver {
 
 		setSize(.5f).setDamping(.7f).setEarlyReflectionsLevel(1)
 				.setLateReverbLevel(1);
+	}
+
+	/**
+	 * Constructor for a reverb unit with the specified number of output
+	 * channels.
+	 *
+	 * @param outChannels
+	 *            The number of output channels.
+	 */
+	public Reverb(int outChannels) {
+		this(getDefaultContext(), outChannels);
 	}
 
 	@Override

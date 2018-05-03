@@ -32,6 +32,14 @@ public class Change extends UGen {
 	}
 
 	/**
+	 * Bare constructor.
+	 */
+	public Change() {
+
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a given input UGen.
 	 * 
 	 * @param context
@@ -42,6 +50,16 @@ public class Change extends UGen {
 	public Change(AudioContext context, UGen ugen) {
 		super(context, 1, 1);
 		addInput(0, ugen, 0);
+	}
+
+	/**
+	 * Constructor for a given input UGen.
+	 *
+	 * @param ugen
+	 *            The input UGen.
+	 */
+	public Change(UGen ugen) {
+		this(getDefaultContext(), ugen);
 	}
 
 	@Override

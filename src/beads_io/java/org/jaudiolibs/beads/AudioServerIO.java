@@ -83,7 +83,15 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
     private class RTInput extends UGen {
 
 		private int[] channels;
-		
+
+        /**
+         * Create UGen with default AudioContext
+         * @param channels number of channels
+         */
+        RTInput(int[] channels){
+            this(getDefaultContext(), channels);
+        }
+
 		RTInput(AudioContext context, int[] channels) {
 			super(context, channels.length);
 			this.channels = channels;

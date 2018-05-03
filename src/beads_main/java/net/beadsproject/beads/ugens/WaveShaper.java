@@ -55,6 +55,15 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a mono-channel wave shaper that uses a default
+	 * cosine-based wave shape.
+	 *
+	 */
+	public WaveShaper() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a multi-channel wave shaper that uses a default
 	 * cosine-based wave shape.
 	 * 
@@ -71,6 +80,17 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel wave shaper that uses a default
+	 * cosine-based wave shape.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public WaveShaper(int channels) {
+		this(getDefaultContext(), channels);
+	}
+
+	/**
 	 * Constructor for a mono-channel wave shaper that uses the provided float
 	 * array for its wave shape.
 	 * 
@@ -82,6 +102,17 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	public WaveShaper(AudioContext context, float[] shape) {
 		this(context);
 		setShape(shape);
+	}
+
+	/**
+	 * Constructor for a mono-channel wave shaper that uses the provided float
+	 * array for its wave shape.
+	 *
+	 * @param shape
+	 *            The float array.
+	 */
+	public WaveShaper(float[] shape) {
+		this(getDefaultContext(), shape);
 	}
 
 	/**
@@ -101,6 +132,19 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel wave shaper that uses the provided float
+	 * array for its wave shape.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param shape
+	 *            The float array.
+	 */
+	public WaveShaper(int channels, float[] shape) {
+		this(getDefaultContext(), channels, shape);
+	}
+
+	/**
 	 * Constructor for a mono-channel wave shaperthat uses the float array from
 	 * a Buffer for its wave shape.
 	 * 
@@ -112,6 +156,17 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	public WaveShaper(AudioContext context, Buffer shapeBuffer) {
 		this(context);
 		setShape(shapeBuffer.buf);
+	}
+
+	/**
+	 * Constructor for a mono-channel wave shaperthat uses the float array from
+	 * a Buffer for its wave shape.
+	 *
+	 * @param shapeBuffer
+	 *            The Buffer from which to get the wave shape.
+	 */
+	public WaveShaper(Buffer shapeBuffer) {
+		this(getDefaultContext(), shapeBuffer);
 	}
 
 	/**
@@ -128,6 +183,19 @@ public class WaveShaper extends UGen implements DataBeadReceiver {
 	public WaveShaper(AudioContext context, int channels, Buffer shapeBuffer) {
 		this(context, channels);
 		setShape(shapeBuffer.buf);
+	}
+
+	/**
+	 * Constructor for a multi-channel wave shaper that uses the float array
+	 * from a Buffer for its wave shape.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param shapeBuffer
+	 *            The Buffer from which to get the wave shape.
+	 */
+	public WaveShaper(int channels, Buffer shapeBuffer) {
+		this(getDefaultContext(), channels, shapeBuffer);
 	}
 
 	/**

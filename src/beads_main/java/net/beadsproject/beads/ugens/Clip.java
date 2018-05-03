@@ -47,6 +47,17 @@ public class Clip extends UGen implements DataBeadReceiver {
 		setRange(-1, 1);
 	}
 
+	/**
+	 * Constructor for a new Clip with the specified number of channels.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public Clip(int channels) {
+
+		this(getDefaultContext(), channels);
+	}
+
 	@Override
 	public void calculateBuffer() {
 		if (isMinStatic && isMaxStatic) {

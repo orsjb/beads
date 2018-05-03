@@ -29,6 +29,16 @@ public class RangeLimiter extends UGen {
 		super(context, channels, channels);
 	}
 
+	/**
+	 * Instantiates a new RangeLimiter.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public RangeLimiter(int channels) {
+		this(getDefaultContext(), channels);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

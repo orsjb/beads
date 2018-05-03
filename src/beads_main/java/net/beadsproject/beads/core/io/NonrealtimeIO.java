@@ -51,6 +51,14 @@ public class NonrealtimeIO extends AudioIO {
 			pause(true);
 		}
 
+		/**
+		 * Instantiates a new this is not an input.
+		 * @param outs the outs
+		 */
+		public ThisIsNotAnInput(int outs) {
+			this(getDefaultContext(), outs);
+		}
+
 		/* (non-Javadoc)
 		 * @see net.beadsproject.beads.core.UGen#calculateBuffer()
 		 */

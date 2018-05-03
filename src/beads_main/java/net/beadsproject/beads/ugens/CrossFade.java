@@ -34,7 +34,15 @@ public class CrossFade extends UGen {
 		incoming = new Static(context, 0f);
 		pauseAfterComplete = false;
 	}
-	
+
+	/**
+	 * Create a new CrossFade with given number of channels. The CrossFade has no inputs
+	 * since the input UGens are assigned in the method {@link #fadeTo(UGen, float)}.
+	 * @param channels the number of output channels.
+	 */
+	public CrossFade(int channels) {
+		this(getDefaultContext(), channels);
+	}
 
 	/**
 	 * Create a new CrossFade with given start UGen.
@@ -46,7 +54,15 @@ public class CrossFade extends UGen {
 		incoming = start;
 		pauseAfterComplete = false;
 	}
-	
+
+	/**
+	 * Create a new CrossFade with given start UGen.
+	 * @param start the UGen to start on.
+	 */
+	public CrossFade(UGen start) {
+		this(getDefaultContext(), start);
+	}
+
 	/**
 	 * Cross fades from the current UGen to the specified UGen the specified number of milliseconds.
 	 * @param target the new target UGen.

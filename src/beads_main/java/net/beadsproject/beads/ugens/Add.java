@@ -34,6 +34,20 @@ public class Add extends UGen {
 		super(context, channels, channels);
 		setAdder(adderUGen);
 	}
+
+	/**
+	 * Constructor for an Add object that sets a UGen to control the value to
+	 * add.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param adderUGen
+	 *            The adder UGen controller.
+	 */
+	public Add(int channels, UGen adderUGen) {
+		this(getDefaultContext(), channels, adderUGen);
+	}
+
 	/**
 	 * Constructor for an Add object with a given UGen as input and another as adder.
 	 * i.e., use this as quickest way to add two UGens together.
@@ -49,8 +63,19 @@ public class Add extends UGen {
 	}
 
 	/**
+	 * Constructor for an Add object with a given UGen as input and another as adder.
+	 * i.e., use this as quickest way to add two UGens together.
+	 *
+	 * @param input the input UGen.
+	 * @param adderUGen the adder UGen.
+	 */
+	public Add(UGen input, UGen adderUGen) {
+		this(getDefaultContext(), input, adderUGen);
+	}
+
+	/**
 	 * Constructor for an Add object that sets a static adder value.
-	 * 
+	 *
 	 * @param context
 	 *            The audio context.
 	 * @param channels
@@ -61,6 +86,18 @@ public class Add extends UGen {
 	public Add(AudioContext context, int channels, float adder) {
 		super(context, channels, channels);
 		setAdder(adder);
+	}
+
+	/**
+	 * Constructor for an Add object that sets a static adder value.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param adder
+	 *            The value to add.
+	 */
+	public Add(int channels, float adder) {
+		this(getDefaultContext(), channels, adder);
 	}
 
 	/*

@@ -40,6 +40,14 @@ public class Panner extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor that sets the pan to the middle by default.
+	 *
+	 */
+	public Panner(){
+		this (getDefaultContext());
+	}
+
+	/**
 	 * Constructor that sets the pan to a static value.
 	 * 
 	 * @param con
@@ -53,6 +61,16 @@ public class Panner extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor that sets the pan to a static value.
+	 *
+	 * @param ipos
+	 *            The initial pan value.
+	 */
+	public Panner(float ipos) {
+		this(getDefaultContext(), ipos);
+	}
+
+	/**
 	 * Constructor that sets a UGen to specify the pan value.
 	 * 
 	 * @param con
@@ -63,6 +81,16 @@ public class Panner extends UGen implements DataBeadReceiver {
 	public Panner(AudioContext con, UGen posUGen) {
 		super(con, 1, 2);
 		setPos(posUGen);
+	}
+
+	/**
+	 * Constructor that sets a UGen to specify the pan value.
+	 *
+	 * @param posUGen
+	 *            The pan UGen.
+	 */
+	public Panner(UGen posUGen) {
+		this(getDefaultContext(), posUGen);
 	}
 
 	@Override

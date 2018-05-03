@@ -50,6 +50,13 @@ public class MouseResponder extends UGen {
 	}
 
 	/**
+	 * Instantiates a new MouseResponder.
+	 *
+	 */
+	public MouseResponder() {
+		this(getDefaultContext());
+	}
+	/**
 	 * Gets the current point.
 	 * 
 	 * @return the point.

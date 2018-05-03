@@ -40,7 +40,15 @@ public class Drain extends UGen {
 		super(context, outs);
 		grains = new LinkedList<Grain>();
 	}
-	
+
+	/**
+	 * Instantiates a new Drain.
+	 *
+	 * @param outs the number of output channels.
+	 */
+	public Drain( int outs){
+		this(getDefaultContext(), outs);
+	}
 	/**
 	 * Adds a new grain of audio data.
 	 *

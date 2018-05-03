@@ -39,6 +39,16 @@ public class ZMap extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a 1-channel mapping object with default parameters
+	 * (mapping [0,1] to [0,1] with no clipping, or multiplying by 1 and adding
+	 * 0).
+	 *
+	 */
+	public ZMap() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a mapping object with the specified number of channels
 	 * and the default parameters (mapping [0,1] to [0,1] with no clipping, or
 	 * multiplying by 1 and adding 0).
@@ -52,6 +62,18 @@ public class ZMap extends UGen implements DataBeadReceiver {
 		super(context, channels, channels);
 		this.channels = channels;
 		clear();
+	}
+
+	/**
+	 * Constructor for a mapping object with the specified number of channels
+	 * and the default parameters (mapping [0,1] to [0,1] with no clipping, or
+	 * multiplying by 1 and adding 0).
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public ZMap(int channels) {
+		this(getDefaultContext(), channels);
 	}
 
 	@Override

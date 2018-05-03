@@ -53,6 +53,15 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a single-channel LPRezFilter with default values for
+	 * frequency and resonance.
+	 *
+	 */
+	public LPRezFilter(){
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a multi-channel LPRezFilter with default values for
 	 * frequency and resonance.
 	 * 
@@ -71,6 +80,17 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel LPRezFilter with default values for
+	 * frequency and resonance.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public LPRezFilter(int channels) {
+		this(getDefaultContext(), channels);
+	}
+
+	/**
 	 * Constructor for a single-channel LPRezFilter with frequency and resonance
 	 * specified by floats.
 	 * 
@@ -83,6 +103,19 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	 */
 	public LPRezFilter(AudioContext con, float freq, float res) {
 		this(con, 1, freq, res);
+	}
+
+	/**
+	 * Constructor for a single-channel LPRezFilter with frequency and resonance
+	 * specified by floats.
+	 *
+	 * @param freq
+	 *            The filter cut-off frequency.
+	 * @param res
+	 *            The resonance.
+	 */
+	public LPRezFilter(float freq, float res) {
+		this(getDefaultContext(), freq, res);
 	}
 
 	/**
@@ -102,6 +135,19 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Constructor for a single-channel LPRezFilter with frequency specified by
+	 * a UGen and resonance specified by a float.
+	 *
+	 * @param freq
+	 *            The filter cut-off frequency UGen.
+	 * @param res
+	 *            The resonance.
+	 */
+	public LPRezFilter(UGen freq, float res) {
+		this(getDefaultContext(), freq, res);
+	}
+
+	/**
+	 * Constructor for a single-channel LPRezFilter with frequency specified by
 	 * a float and resonance specified by a UGen.
 	 * 
 	 * @param con
@@ -113,6 +159,19 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	 */
 	public LPRezFilter(AudioContext con, float freq, UGen res) {
 		this(con, 1, freq, res);
+	}
+
+	/**
+	 * Constructor for a single-channel LPRezFilter with frequency specified by
+	 * a float and resonance specified by a UGen.
+	 *
+	 * @param freq
+	 *            The filter cut-off frequency.
+	 * @param res
+	 *            The resonance UGen.
+	 */
+	public LPRezFilter(float freq, UGen res) {
+		this(getDefaultContext(), freq, res);
 	}
 
 	/**
@@ -131,6 +190,21 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a single-channel LPRezFilter with frequency and resonance
+	 * specified by UGens.
+	 *
+	 * @param con
+	 *            The audio context.
+	 * @param freq
+	 *            The filter cut-off frequency UGen.
+	 * @param res
+	 *            The resonance UGen.
+	 */
+	public LPRezFilter(UGen freq, UGen res) {
+		this(getDefaultContext(), freq, res);
+	}
+
+	/**
 	 * Constructor for a multi-channel LPRezFilter with frequency and resonance
 	 * specified by floats.
 	 * 
@@ -146,6 +220,23 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	public LPRezFilter(AudioContext con, int channels, float freq, float res) {
 		this(con, channels);
 		setFrequency(freq).setRes(res);
+	}
+
+	/**
+	 * Constructor for a multi-channel LPRezFilter with frequency and resonance
+	 * specified by floats.
+	 *
+	 * @param con
+	 *            The audio context.
+	 * @param channels
+	 *            The number of channels.
+	 * @param freq
+	 *            The filter cut-off frequency.
+	 * @param res
+	 *            The resonance.
+	 */
+	public LPRezFilter(int channels, float freq, float res) {
+		this(getDefaultContext(), channels, freq, res);
 	}
 
 	/**
@@ -168,6 +259,21 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Constructor for a multi-channel LPRezFilter with frequency specified by a
+	 * UGen and resonance specified by a float.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param freq
+	 *            The filter cut-off frequency UGen.
+	 * @param res
+	 *            The resonance.
+	 */
+	public LPRezFilter(int channels, UGen freq, float res) {
+		this(getDefaultContext(), channels, freq, res);
+	}
+
+	/**
+	 * Constructor for a multi-channel LPRezFilter with frequency specified by a
 	 * float and resonance specified by a UGen.
 	 * 
 	 * @param con
@@ -182,6 +288,21 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	public LPRezFilter(AudioContext con, int channels, float freq, UGen res) {
 		this(con, channels);
 		setFrequency(freq).setRes(res);
+	}
+
+	/**
+	 * Constructor for a multi-channel LPRezFilter with frequency specified by a
+	 * float and resonance specified by a UGen.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param freq
+	 *            The filter cut-off frequency.
+	 * @param res
+	 *            The resonance UGen.
+	 */
+	public LPRezFilter(int channels, float freq, UGen res) {
+		this(getDefaultContext(), channels, freq, res);
 	}
 
 	/**
@@ -200,6 +321,23 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	public LPRezFilter(AudioContext con, int channels, UGen freq, UGen res) {
 		this(con, channels);
 		setFrequency(freq).setRes(res);
+	}
+
+	/**
+	 * Constructor for a multi-channel LPRezFilter with frequency and resonance
+	 * specified by UGens.
+	 *
+	 * @param con
+	 *            The audio context.
+	 * @param channels
+	 *            The number of channels.
+	 * @param freq
+	 *            The filter cut-off frequency UGen.
+	 * @param res
+	 *            The resonance UGen.
+	 */
+	public LPRezFilter(int channels, UGen freq, UGen res) {
+		this(getDefaultContext(), channels, freq, res);
 	}
 
 	protected void calcVals() {

@@ -43,6 +43,10 @@ public class UGenChain extends UGen {
 
 	}
 
+	public UGenChain(int ins, int outs) {
+		this(getDefaultContext(), ins, outs);
+	}
+
 	/**
 	 * Adds the Chain inputs to the target UGen's inputs.
 	 * 

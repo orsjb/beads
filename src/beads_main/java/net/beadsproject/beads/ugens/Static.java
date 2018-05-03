@@ -33,6 +33,7 @@ public class Static extends UGen {
 		pause(true); //might as well be muted
 	}
 
+
 	/* (non-Javadoc)
 	 * @see com.olliebown.beads.core.UGen#calculateBuffer()
 	 */

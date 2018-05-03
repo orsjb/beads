@@ -71,6 +71,15 @@ public class CrossoverFilter extends UGen implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a one-channel crossover filter, initialized with a cutoff
+	 * frequency of 800Hz.
+	 *
+	 */
+	public CrossoverFilter() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a crossover filter with the specified number of channels,
 	 * initialized with a cutoff frequency of 800Hz.
 	 * 
@@ -81,6 +90,17 @@ public class CrossoverFilter extends UGen implements DataBeadReceiver {
 	 */
 	public CrossoverFilter(AudioContext context, int channels) {
 		this(context, channels, 800);
+	}
+
+	/**
+	 * Constructor for a crossover filter with the specified number of channels,
+	 * initialized with a cutoff frequency of 800Hz.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public CrossoverFilter(int channels) {
+		this(getDefaultContext(), channels);
 	}
 
 	/**
@@ -107,6 +127,19 @@ public class CrossoverFilter extends UGen implements DataBeadReceiver {
 		sr = context.getSampleRate();
 		pi_sr = (float) (Math.PI / sr);
 		setFrequency(freq);
+	}
+
+	/**
+	 * Constructor for a crossover filter with the specified number of channels,
+	 * set at the specified frequency.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param freq
+	 *            The initial cutoff frequency.
+	 */
+	public CrossoverFilter(int channels, float freq) {
+		this(getDefaultContext(), channels, freq);
 	}
 
 	@Override

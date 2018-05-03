@@ -179,6 +179,17 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel low-pass biquad filter UGen with the
+	 * specified number of channels.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public BiquadFilter(int channels) {
+		this(getDefaultContext(), channels);
+	}
+
+	/**
 	 * Constructor for a multi-channel biquad filter UGen of specified type with
 	 * the specified number of channels. See {@link #setType(int) setType} for a
 	 * list of supported filter types.
@@ -206,6 +217,21 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel biquad filter UGen of specified type with
+	 * the specified number of channels. See {@link #setType(int) setType} for a
+	 * list of supported filter types.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param itype
+	 *            The initial filter type, e.g. {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 */
+	public BiquadFilter(int channels, Type itype) {
+		this(getDefaultContext(), channels, itype);
+	}
+
+	/**
 	 * Constructor for a multi-channel biquad filter UGen with the specified
 	 * number of channels and parameters specified by a DataBead.
 	 * 
@@ -220,6 +246,20 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	public BiquadFilter(AudioContext context, int channels, DataBead params) {
 		this(context, channels, LP);
 		setParams(params);
+	}
+
+	/**
+	 * Constructor for a multi-channel biquad filter UGen with the specified
+	 * number of channels and parameters specified by a DataBead.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param params
+	 *            A DataBead specifying parameter values; see
+	 *            {@link #setParams(DataBead)}.
+	 */
+	public BiquadFilter(int channels, DataBead params) {
+		this(getDefaultContext(), channels, params);
 	}
 
 	/**
@@ -245,6 +285,28 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for a multi-channel biquad filter UGen of specified type,
+	 * with the specified number of channels, and with parameters specified by a
+	 * DataBead.
+	 *
+	 * @param context
+	 *            The audio context.
+	 * @param channels
+	 *            The number of channels.
+	 * @param itype
+	 *            The initial filter type, e.g. {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 * @param params
+	 *            A DataBead specifying parameter values; see
+	 *            {@link #setParams(DataBead)}.
+	 */
+	public BiquadFilter(int channels, Type itype,
+						DataBead params) {
+
+		this(getDefaultContext(), channels, itype, params);
+	}
+
+	/**
 	 * Constructor for frequency and Q as floats. See {@link #setType(int)
 	 * setType} for a list of supported filter types.
 	 * 
@@ -262,6 +324,24 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 			float iqval) {
 		this(context, 1, itype);
 		setFrequency(ifreq).setQ(iqval);
+	}
+
+	/**
+	 * Constructor for frequency and Q as floats. See {@link #setType(int)
+	 * setType} for a list of supported filter types.
+	 *
+	 * @param itype
+	 *            The initial filter type, e.g. {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 * @param ifreq
+	 *            The initial frequency.
+	 * @param iqval
+	 *            The initial Q-value.
+	 */
+	public BiquadFilter(Type itype, float ifreq,
+						float iqval) {
+
+		this(getDefaultContext(), itype, ifreq, iqval);
 	}
 
 	/**
@@ -284,6 +364,22 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for frequency as a UGen and Q as a float. See
+	 * {@link #setType(int) setType} for a list of supported filter types.
+	 *
+	 * @param itype
+	 *            The initial filter type, {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 * @param ifreq
+	 *            The frequency UGen.
+	 * @param iqval
+	 *            The initial Q-value.
+	 */
+	public BiquadFilter(Type itype, UGen ifreq, float iqval) {
+		this(getDefaultContext(), itype, ifreq, iqval);
+	}
+
+	/**
 	 * Constructor for frequency as a float and Q as a UGen. See
 	 * {@link #setType(int) setType} for a list of supported filter types.
 	 * 
@@ -303,6 +399,22 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for frequency as a float and Q as a UGen. See
+	 * {@link #setType(int) setType} for a list of supported filter types.
+	 *
+	 * @param itype
+	 *            The initial filter type, e.g. {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 * @param ifreq
+	 *            The initial frequency.
+	 * @param iqval
+	 *            The Q-value UGen.
+	 */
+	public BiquadFilter(Type itype, float ifreq, UGen iqval) {
+		this(getDefaultContext(), itype, ifreq, iqval);
+	}
+
+	/**
 	 * Constructor for frequency and Q as UGens. See {@link #setType(int)
 	 * setType} for a list of supported filter types.
 	 * 
@@ -319,6 +431,22 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	public BiquadFilter(AudioContext context, Type itype, UGen ifreq, UGen iqval) {
 		this(context, 1, itype);
 		setFrequency(ifreq).setQ(iqval);
+	}
+
+	/**
+	 * Constructor for frequency and Q as UGens. See {@link #setType(int)
+	 * setType} for a list of supported filter types.
+	 *
+	 * @param itype
+	 *            The initial filter type, e.g. {@link #LP}, {@link #HP},
+	 *            {@link #BP_SKIRT}, etc.
+	 * @param ifreq
+	 *            The frequency UGen.
+	 * @param iqval
+	 *            The Q-value UGen.
+	 */
+	public BiquadFilter(Type itype, UGen ifreq, UGen iqval) {
+		this(getDefaultContext(), itype, ifreq, iqval);
 	}
 
 	private void checkStaticStatus() {

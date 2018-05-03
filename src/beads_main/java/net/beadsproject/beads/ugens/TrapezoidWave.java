@@ -44,6 +44,14 @@ public class TrapezoidWave extends UGen {
 		calcVals();
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 */
+	public TrapezoidWave() {
+		this(getDefaultContext());
+	}
+
 	@Override
 	public void calculateBuffer() {
 		float[] bo = bufOut[0];

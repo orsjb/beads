@@ -28,6 +28,14 @@ public class Throughput extends UGen {
 	}
 
 	/**
+	 * Constructor for a one-channel Throughput using the defualt audio
+	 * context.
+	 */
+	public Throughput() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a Throughput with the specified number of channels, using
 	 * the specified audio context.
 	 * 
@@ -40,6 +48,17 @@ public class Throughput extends UGen {
 		super(context, channels, channels);
 		this.outputInitializationRegime = OutputInitializationRegime.RETAIN;
 		bufOut = bufIn;
+	}
+
+	/**
+	 * Constructor for a Throughput with the specified number of channels, using
+	 * the default audio context.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public Throughput(int channels) {
+		this(getDefaultContext(), channels);
 	}
 
 	@Override

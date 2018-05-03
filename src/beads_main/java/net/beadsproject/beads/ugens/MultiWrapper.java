@@ -39,8 +39,24 @@ public class MultiWrapper extends UGenChain implements DataBeadReceiver {
 		this(context, channels, 1, 1);
 	}
 
+	/**
+	 * Constructor for an multi-channel wrapper for 1-in/1-out UGens on each
+	 * channel. {@link #buildUGens(int)} should be implemented to construct a
+	 * UGen for each channel.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 */
+	public MultiWrapper(int channels){
+		this(getDefaultContext(), channels);
+	}
+
 	private MultiWrapper(AudioContext context, int numIns, int numOuts) {
 		super(context, numIns, numOuts);
+	}
+
+	private MultiWrapper(int numIns, int numOuts){
+		this(getDefaultContext(), numIns, numOuts);
 	}
 
 	/**
@@ -77,6 +93,24 @@ public class MultiWrapper extends UGenChain implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor for an n-channel wrapper for UGens with a certain number
+	 * inputs and a certain number outputs on each channel.
+	 * {@link #buildUGens(int)} should be implemented to construct a UGen for
+	 * each channel.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param insPerChannel
+	 *            The number of inputs per channel UGen.
+	 * @param outsPerChannel
+	 *            The number of outputs per channel UGen.
+	 */
+	public MultiWrapper(int channels, int insPerChannel,
+						int outsPerChannel) {
+		this(getDefaultContext(), channels, insPerChannel, outsPerChannel);
+	}
+
+	/**
 	 * Constructor for a multi-channel wrapper for an array of UGens that
 	 * represent separate "channels".
 	 * 
@@ -103,6 +137,21 @@ public class MultiWrapper extends UGenChain implements DataBeadReceiver {
 
 	}
 
+	/**
+	 * Constructor for a multi-channel wrapper for an array of UGens that
+	 * represent separate "channels".
+	 *
+	 * @param ugens
+	 *            The array of UGens to wrap.
+	 * @param insPerChannel
+	 *            The number of inputs per channel.
+	 * @param outsPerChannel
+	 *            The number of ouputs per channel.
+	 */
+	public MultiWrapper(UGen[] ugens, int insPerChannel,
+						int outsPerChannel) {
+		this(getDefaultContext(), ugens, insPerChannel, outsPerChannel );
+	}
 	private void setupUGens() {
 
 		for (int i = 0; i < channels; i++) {

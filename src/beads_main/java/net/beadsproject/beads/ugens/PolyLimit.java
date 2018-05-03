@@ -40,7 +40,17 @@ public class PolyLimit extends UGen {
 		setMaxInputs(maxInputs);
 		existingInputs = new LinkedList<UGen>();
 	}
-	
+
+	/**
+	 * Instantiates a new PolyLimit.
+	 *
+	 * @param inouts the number of channels.
+	 * @param maxInputs the max number of connected inputs.
+	 */
+	public PolyLimit(int inouts, int maxInputs) {
+		this(getDefaultContext(), inouts, maxInputs);
+	}
+
 	/**
 	 * Overrides {@link UGen#addInput(UGen)} such that if a new UGen pushes the total number of 
 	 * connected UGens above the upper limit, the oldest UGen is removed.

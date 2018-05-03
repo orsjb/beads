@@ -70,6 +70,19 @@ public class TapOut extends UGen {
 	}
 
 	/**
+	 * Constructor for a given TapIn object with a static float delay. The mode
+	 * is set to the default (no interpolation).
+	 *
+	 * @param ti
+	 *            The TapIn from which to draw the delayed signal.
+	 * @param delay
+	 *            The delay time in milliseconds.
+	 */
+	public TapOut(TapIn ti, float delay) {
+		this(getDefaultContext(), ti, delay);
+	}
+
+	/**
 	 * Constructor for a given TapIn object with a delay time specified by a
 	 * UGen. The mode is set to the default (no interpolation).
 	 * 
@@ -83,6 +96,19 @@ public class TapOut extends UGen {
 	public TapOut(AudioContext ac, TapIn ti, UGen delayUGen) {
 		this(ac, ti);
 		setDelay(delayUGen);
+	}
+
+	/**
+	 * Constructor for a given TapIn object with a delay time specified by a
+	 * UGen. The mode is set to the default (no interpolation).
+	 *
+	 * @param ti
+	 *            The TapIn from which to draw the delayed signal.
+	 * @param delayUGen
+	 *            The UGen specifying the delay time in milliseconds.
+	 */
+	public TapOut(TapIn ti, UGen delayUGen) {
+		this(getDefaultContext(), ti, delayUGen);
 	}
 
 	/**
@@ -104,6 +130,21 @@ public class TapOut extends UGen {
 	}
 
 	/**
+	 * Constructor for a given TapIn object with a static float delay, using the
+	 * specified delay mode.
+	 *
+	 * @param ti
+	 *            The TapIn from which to draw the delayed signal.
+	 * @param mode
+	 *            The delay mode; see {@link #setMode(InterpolationType)}.
+	 * @param delay
+	 *            The delay time in milliseconds.
+	 */
+	public TapOut(TapIn ti, InterpolationType mode, float delay) {
+		this(getDefaultContext(), ti, mode, delay);
+	}
+
+	/**
 	 * Constructor for a given TapIn object with a delay time specified by a
 	 * UGen, using the specified delay mode.
 	 * 
@@ -119,6 +160,21 @@ public class TapOut extends UGen {
 	public TapOut(AudioContext ac, TapIn ti, InterpolationType mode, UGen delayUGen) {
 		this(ac, ti);
 		setDelay(delay).setMode(mode);
+	}
+
+	/**
+	 * Constructor for a given TapIn object with a delay time specified by a
+	 * UGen, using the specified delay mode.
+	 *
+	 * @param ti
+	 *            The TapIn from which to draw the delayed signal.
+	 * @param mode
+	 *            The delay mode; see {@link #setMode(InterpolationType)}.
+	 * @param delayUGen
+	 *            The UGen specifying the delay time in milliseconds.
+	 */
+	public TapOut(TapIn ti, InterpolationType mode, UGen delayUGen) {
+		this(getDefaultContext(), ti, mode, delayUGen);
 	}
 
 	@Override

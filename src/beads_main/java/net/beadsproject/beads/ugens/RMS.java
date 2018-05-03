@@ -41,6 +41,18 @@ public class RMS extends UGen {
 		memScale = 1f / memorySize;
 	}
 
+	/**
+	 * Constructor.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param memorySize
+	 *            The number of samples over which to compute the RMS.
+	 */
+	public RMS(int channels, int memorySize) {
+		this(getDefaultContext(), channels, memorySize);
+	}
+
 	@Override
 	public void calculateBuffer() {
 		float[] bo = bufOut[0];

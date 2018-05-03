@@ -51,7 +51,15 @@ public class Clock extends UGen implements IntegerBead {
     public Clock(AudioContext context) {
         this(context, 1000.0f);
     }
-    
+
+	/**
+	 * Instantiates a new Clock with a static interval of 1000ms.
+	 */
+	public Clock() {
+
+		this(getDefaultContext());
+	}
+
     /**
      * Instantiates a new Clock with the given static interval in milliseconds.
      * 
@@ -62,7 +70,15 @@ public class Clock extends UGen implements IntegerBead {
         this(context, new Static(context, interval));
         ticksPerBeat = 16;
     }
-    
+
+	/**
+	 * Instantiates a new Clock with the given static interval in milliseconds.
+	 * @param interval the interval in milliseconds.
+	 */
+	public Clock(float interval) {
+		this(getDefaultContext(), interval);
+	}
+
     /**
      * Instantiates a new Clock with the given interval envelope.
      * 
@@ -78,7 +94,16 @@ public class Clock extends UGen implements IntegerBead {
         clickStrength = 0.1f;
         subticks = new double[context.getBufferSize()];
     }
-    
+
+	/**
+	 * Instantiates a new Clock with the given interval envelope.
+	 *
+	 * @param env the interval envelope.
+	 */
+	public Clock(UGen env) {
+		this(getDefaultContext(), env);
+	}
+	
 	/**
 	 * Checks if the Clock is set to make an audible click.
 	 * 

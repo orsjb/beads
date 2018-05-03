@@ -45,6 +45,20 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor with delay and g specified by floats.
+	 *
+	 * @param maxdel
+	 *            The maximum delay in samples; cannot be changed.
+	 * @param idel
+	 *            The initial delay in samples.
+	 * @param ig
+	 *            The initial g parameter.
+	 */
+	public AllpassFilter(int maxdel, int idel, float ig) {
+		this(getDefaultContext(), maxdel, idel, ig);
+	}
+
+	/**
 	 * Constructor with delay specified by a UGen and g specified by a float.
 	 * 
 	 * @param context
@@ -62,8 +76,22 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor with delay specified by a UGen and g specified by a float.
+	 *
+	 * @param maxdel
+	 *            The maximum delay in samples; cannot be changed.
+	 * @param idel
+	 *            The delay UGen.
+	 * @param ig
+	 *            The initial g parameter.
+	 */
+	public AllpassFilter(int maxdel, UGen idel, float ig) {
+		this(getDefaultContext(), maxdel, idel, ig);
+	}
+
+	/**
 	 * Constructor with delay specified by a float and g specified by a UGen.
-	 * 
+	 *
 	 * @param context
 	 *            The AudioContext.
 	 * @param maxdel
@@ -79,8 +107,22 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	}
 
 	/**
+	 * Constructor with delay specified by a float and g specified by a UGen.
+	 *
+	 * @param maxdel
+	 *            The maximum delay in samples; cannot be changed.
+	 * @param idel
+	 *            The initial delay in samples.
+	 * @param ig
+	 *            The g UGen.
+	 */
+	public AllpassFilter(int maxdel, int idel, UGen ig) {
+		this(getDefaultContext(), maxdel, idel, ig);
+	}
+
+	/**
 	 * Constructor with delay and g specified by UGens.
-	 * 
+	 *
 	 * @param context
 	 *            The AudioContext.
 	 * @param maxdel
@@ -94,6 +136,21 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 		this(context, maxdel);
 		setDelay(idel).setG(ig);
 	}
+
+	/**
+	 * Constructor with delay and g specified by UGens.
+	 *
+	 * @param maxdel
+	 *            The maximum delay in samples; cannot be changed.
+	 * @param idel
+	 *            The delay UGen.
+	 * @param ig
+	 *            The g UGen.
+	 */
+	public AllpassFilter(int maxdel, UGen idel, UGen ig) {
+		this(getDefaultContext(), maxdel, idel, ig);
+	}
+
 
 	private AllpassFilter(AudioContext context, int maxdel) {
 		super(context, 1, 1);
@@ -145,7 +202,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Gets the current g parameter.
-	 * 
+	 *
 	 * @return The g parameter.
 	 */
 	public float getG() {
@@ -154,7 +211,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Sets the g parameter. This clears the g UGen if there is one.
-	 * 
+	 *
 	 * @param g
 	 *            The g parameter.
 	 * @return This filter instance.
@@ -172,7 +229,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Sets a UGen to determine the g value.
-	 * 
+	 *
 	 * @param g
 	 *            The g UGen.
 	 * @return This filter instance.
@@ -191,7 +248,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Gets the g UGen, if there is one.
-	 * 
+	 *
 	 * @return The g UGen.
 	 */
 	public UGen getGUGen() {
@@ -204,7 +261,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Gets the current delay in samples.
-	 * 
+	 *
 	 * @return The delay in samples.
 	 */
 	public int getDelay() {
@@ -213,7 +270,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Sets the delay.
-	 * 
+	 *
 	 * @param del
 	 *            The delay in samples. This will remove the delay UGen if there
 	 *            is one.
@@ -239,7 +296,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	/**
 	 * Sets a UGen to determine the delay in samples. Delay times are converted
 	 * to integers. Passing a null value freezes the delay at its current value.
-	 * 
+	 *
 	 * @param del
 	 *            The delay UGen.
 	 * @return This filter instance.
@@ -262,7 +319,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Gets the delay UGen, if there is one.
-	 * 
+	 *
 	 * @return The delay UGen.
 	 */
 	public UGen getDelayUGen() {
@@ -282,7 +339,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	 * <li>"delay": (float or UGen)</li>
 	 * <li>"g": (float or UGen)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param paramBead
 	 *            The DataBead specifying parameters.
 	 * @return This filter instance.
@@ -320,7 +377,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	/**
 	 * Gets a DataBead with properties "delay" and "g" set to the corresponding
 	 * filter parameters.
-	 * 
+	 *
 	 * @return The parameter DataBead.
 	 */
 	public DataBead getParams() {
@@ -343,7 +400,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 	/**
 	 * Gets a DataBead with properties "delay" and "g" set to static float
 	 * values corresponding to the current filter parameters.
-	 * 
+	 *
 	 * @return The static parameter DataBead.
 	 */
 	public DataBead getStaticParams() {
@@ -355,7 +412,7 @@ public class AllpassFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Sets the filter's parameters with a DataBead.
-	 * 
+	 *
 	 * @return This filter instance.
 	 * @see #setParams(DataBead)
 	 */

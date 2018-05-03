@@ -35,6 +35,18 @@ public class Mult extends UGen {
 	}
 
 	/**
+	 * Constructor for a Mult object with a static multiplier value.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param multiplier
+	 *            The multiplier value.
+	 */
+	public Mult(int channels, float multiplier) {
+		this(getDefaultContext(), channels, multiplier);
+	}
+
+	/**
 	 * Constructor for a Mult object with a UGen controlling the multiplier
 	 * value.
 	 * 
@@ -49,7 +61,20 @@ public class Mult extends UGen {
 		super(context, channels, channels);
 		setMultiplier(multiplierUGen);
 	}
-	
+
+	/**
+	 * Constructor for a Mult object with a UGen controlling the multiplier
+	 * value.
+	 *
+	 * @param channels
+	 *            The number of channels.
+	 * @param multiplierUGen
+	 *            The UGen controlling the multiplier value.
+	 */
+	public Mult(int channels, UGen multiplierUGen) {
+		this(getDefaultContext(), channels, multiplierUGen);
+	}
+
 	/**
 	 * Constructor for a Mult object with a given UGen as input and another as multiplier.
 	 * i.e., use this as quickest way to multiply two UGens together.
@@ -62,6 +87,17 @@ public class Mult extends UGen {
 		super(context, input.getOuts(), input.getOuts());
 		setMultiplier(multiplierUGen);
 		addInput(input);
+	}
+
+	/**
+	 * Constructor for a Mult object with a given UGen as input and another as multiplier.
+	 * i.e., use this as quickest way to multiply two UGens together.
+	 *
+	 * @param input the input UGen.
+	 * @param multiplierUGen the multiplier UGen.
+	 */
+	public Mult(UGen input, UGen multiplierUGen) {
+		this(getDefaultContext(), input, multiplierUGen);
 	}
 
 	/*

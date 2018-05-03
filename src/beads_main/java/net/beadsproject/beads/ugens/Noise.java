@@ -35,6 +35,13 @@ public class Noise extends UGen {
 		index = (int)(Math.random() * noiseBuffer.buf.length);
 	}
 
+	/**
+	 * Instantiates a new Noise.
+	 */
+	public Noise() {
+		this(getDefaultContext());
+	}
+
 	/* (non-Javadoc)
 	 * @see net.beadsproject.beads.core.UGen#calculateBuffer()
 	 */

@@ -188,6 +188,16 @@ public class SamplePlayer extends UGen {
 	}
 
 	/**
+	 * Instantiates a new SamplePlayer with given number of outputs.
+	 *
+	 * @param outs
+	 *            the number of outputs.
+	 */
+	public SamplePlayer(int outs) {
+		this(getDefaultContext(), outs);
+	}
+
+	/**
 	 * Instantiates a new SamplePlayer with given Sample. Number of outputs is
 	 * determined by number of channels in Sample.
 	 * 
@@ -203,8 +213,18 @@ public class SamplePlayer extends UGen {
 	}
 
 	/**
-	 * Sets the Sample.
+	 * Instantiates a new SamplePlayer with given Sample. Number of outputs is
+	 * determined by number of channels in Sample.
+	 *
+	 * @param buffer
+	 *            the Sample.
 	 */
+	public SamplePlayer(Sample buffer) {
+		this(getDefaultContext(), buffer);
+	}
+		/**
+         * Sets the Sample.
+         */
 	public void setSample(Sample sample) {
 		this.sample = sample;
 		// sampleRate = sample.getSampleRate();

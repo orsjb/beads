@@ -21,6 +21,10 @@ public abstract class IIRFilter extends UGen {
 		super(context, ins, outs);
 	}
 
+	public IIRFilter(int ins, int outs) {
+		this(getDefaultContext(), ins, outs);
+	}
+
 	public abstract IIRFilterAnalysis getFilterResponse(float freq);
 
 	/**

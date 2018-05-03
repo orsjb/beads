@@ -248,7 +248,16 @@ public class JavaSoundAudioIO extends AudioIO {
 			this.audioFormat = audioFormat;
 			javaSoundInitialized = false;
 		}
-		
+
+		/**
+		 * Instantiates a new RTInput.
+		 *
+		 * @param audioFormat
+		 *            the AudioFormat.
+		 */
+		JavaSoundRTInput( AudioFormat audioFormat) {
+			this(getDefaultContext(), audioFormat);
+		}
 		/**
 		 * Set up JavaSound. Requires that JavaSound has been set up in AudioContext.
 		 */

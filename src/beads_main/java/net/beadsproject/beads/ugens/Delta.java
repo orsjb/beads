@@ -28,6 +28,14 @@ public class Delta extends UGen {
 	}
 
 	/**
+	 * Bare constructor.
+	 *
+	 */
+	public Delta() {
+		this(getDefaultContext());
+	}
+
+	/**
 	 * Constructor for a given input UGen.
 	 * 
 	 * @param context
@@ -38,6 +46,16 @@ public class Delta extends UGen {
 	public Delta(AudioContext context, UGen ugen) {
 		super(context, 1, 1);
 		addInput(0, ugen, 0);
+	}
+
+	/**
+	 * Constructor for a given input UGen.
+	 *
+	 * @param ugen
+	 *            The input UGen.
+	 */
+	public Delta(UGen ugen) {
+		this(getDefaultContext(), ugen);
 	}
 
 	@Override

@@ -36,11 +36,21 @@ public abstract class DelayEvent extends UGen {
 	 *            The audio context.
 	 * @param delay
 	 *            The delay time in milliseconds.
-	 * @param receiver
-	 *            The receiver.
 	 */
 	public DelayEvent(AudioContext context, double delay) {
 		this(context, delay, false);
+	}
+
+	/**
+	 * Instantiates a new DelayEvent with the specified millisecond delay and
+	 * receiver. By default, the object will be triggered at the beginning of
+	 * the frame in which the delay time expires.
+	 *
+	 * @param delay
+	 *            The delay time in milliseconds.
+	 */
+	public DelayEvent(double delay){
+		this(getDefaultContext(), delay);
 	}
 
 	/**
@@ -53,8 +63,6 @@ public abstract class DelayEvent extends UGen {
 	 *            The audio context.
 	 * @param delay
 	 *            The delay in milliseconds.
-	 * @param receiver
-	 *            The receiver.
 	 * @param triggerAfter
 	 *            Whether the object fires just before or just after the delay
 	 *            time expires.
@@ -66,6 +74,23 @@ public abstract class DelayEvent extends UGen {
 		sampleDelay = (long) context.msToSamples(delay);
 		reset();
 		triggeredAfter(triggerAfter);
+	}
+
+	/**
+	 * Instantiates a new DelayEvent with the specified millisecond delay and
+	 * receiver. <code>triggerAfter</code> indicates whether the object is
+	 * triggered at the beginning of the frame in which the delay time elapses (
+	 * <code>false</code>), or after (<code>true</code>).
+	 *
+	 * @param delay
+	 *            The delay in milliseconds.
+	 * @param triggerAfter
+	 *            Whether the object fires just before or just after the delay
+	 *            time expires.
+	 */
+	public DelayEvent(double delay, boolean triggerAfter) {
+		this(getDefaultContext(), delay, triggerAfter);
+
 	}
 
 	/**

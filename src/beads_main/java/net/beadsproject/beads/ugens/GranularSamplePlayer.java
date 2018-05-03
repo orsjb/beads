@@ -105,6 +105,15 @@ public class GranularSamplePlayer extends SamplePlayer {
 
 	/**
 	 * Instantiates a new GranularSamplePlayer.
+	 *
+	 * @param outs the number of outputs.
+	 */
+	public GranularSamplePlayer(int outs) {
+		this(getDefaultContext(), outs);
+	}
+
+	/**
+	 * Instantiates a new GranularSamplePlayer.
 	 * 
 	 * @param context the AudioContext.
 	 * @param buffer the Sample played by the GranularSamplePlayer.
@@ -114,6 +123,15 @@ public class GranularSamplePlayer extends SamplePlayer {
 		setSample(buffer);
 		loopStartEnvelope = new Static(context, 0.0f);
 		loopEndEnvelope = new Static(context, (float)buffer.getLength());
+	}
+
+	/**
+	 * Instantiates a new GranularSamplePlayer.
+	 *
+	 * @param buffer the Sample played by the GranularSamplePlayer.
+	 */
+	public GranularSamplePlayer(Sample buffer) {
+		this(getDefaultContext(), buffer);
 	}
 
 	/**

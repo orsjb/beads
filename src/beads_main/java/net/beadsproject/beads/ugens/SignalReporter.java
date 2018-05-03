@@ -41,6 +41,20 @@ public class SignalReporter extends UGen {
 	}
 
 	/**
+	 * Constructor for a SignalReporter that calls {@link #notify()} at the
+	 * specified interval, with the specified name.
+	 *
+	 * @param reportInterval
+	 *            The interval between reports, in milliseconds.
+	 * @param name
+	 *            The SignalReporter name (used in reports).
+	 */
+	public SignalReporter(float reportInterval,
+						  String name) {
+
+		this(getDefaultContext(), reportInterval, name);
+	}
+	/**
 	 * Sets the report interval.
 	 * 
 	 * @param reportInterval
