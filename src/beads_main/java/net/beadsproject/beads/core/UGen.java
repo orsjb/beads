@@ -408,6 +408,34 @@ public abstract class UGen extends Bead {
 		}
 	}
 
+
+	/**
+	 * Connect another UGen's outputs to the inputs of this UGen. If the number
+	 * of outputs is greater than the number of inputs then the extra outputs are not connected. If the number of inputs is greater than the number of outputs then the outputs are cycled to fill all inputs. If
+	 * multiple UGens are connected to any one input then the outputs from those
+	 * UGens are summed on their way into the input.
+	 *
+	 * @param  the UGen to connect to this UGen.
+	 */
+
+	/**
+	 * Connect this UGen's outputs to the inputs of the targetGen. If the number
+	 * of outputs is greater than the number of inputs then the extra outputs are not connected. If the number of inputs is greater than the number of outputs then the outputs are cycled to fill all inputs. If
+	 * multiple UGens are connected to any one input then the outputs from those
+	 * UGens are summed on their way into the input.
+	 * by returning the target, we can connect sequentially.
+	 * eg. source->intermediate->end
+	 * source.connectTo(intermediate).connectTo(end);
+	 *
+	 * @param targetGen The ugen we are connecting our output to
+	 * @return the target gen
+	 */
+	public UGen connectTo(UGen targetGen){
+		targetGen.addInput(this);
+		return targetGen;
+	}
+
+
 	/**
 	 * Connect a specific output from another UGen to a specific input of this
 	 * UGen.
@@ -422,7 +450,23 @@ public abstract class UGen extends Bead {
 		//System.out.println("new input added, channel=" + inputIndex + " total=" + inputsAtChannel[inputIndex].size());
 		noInputs = false;
 	}
-	
+
+	/**
+	 * Connect a Specific output from this UGen to a specific input of targetUGen
+	 * by returning the target, we can connect sequentially.
+	 * eg. source->intermediate->end
+	 * source.connectTo(intermediate).connectTo(end);
+	 *
+	 * @param sourceOutputIndex the output of this UGEN we want to conect from
+	 * @param targetUgen the UGen we are connecting into
+	 * @param inputIndex the Input channel of the target UGen we are connecting into
+	 * @return
+	 */
+	public UGen connectTo(int sourceOutputIndex, UGen targetUgen, int inputIndex){
+		targetUgen.addInput(inputIndex, this, sourceOutputIndex);
+		return targetUgen;
+	}
+
 	/**
 	 * Performs a crossfade from one UGen (which must already be connected) to another. Only works if you 
 	 * @param source the UGen to crossfade away from (assumed to already be connected), will be disconnected once cross-fade is over.
