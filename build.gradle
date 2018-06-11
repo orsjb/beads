@@ -7,7 +7,7 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'maven'
 
-version=1.03
+version=2.00
 group='net.beadsproject'
 
 sourceSets {
