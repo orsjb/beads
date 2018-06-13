@@ -40,6 +40,9 @@ public class JavaSoundAudioIO extends AudioIO {
 	
 	/** The current byte buffer. */
 	private byte[] bbuf;
+
+	/** Indicating if this JavaSoundAudioIO is running, not context from getContext(). Exists for concurrency */
+	volatile private boolean isRunning;
 	
 	public JavaSoundAudioIO() {
 		this(DEFAULT_SYSTEM_BUFFER_SIZE);
@@ -48,6 +51,7 @@ public class JavaSoundAudioIO extends AudioIO {
 	public JavaSoundAudioIO(int systemBufferSize) {
 		this.systemBufferSizeInFrames = systemBufferSize;
 		setThreadPriority(Thread.MAX_PRIORITY);
+		isRunning = false;
 	}
 	
 	/**
@@ -170,14 +174,23 @@ public class JavaSoundAudioIO extends AudioIO {
 	/** Starts the audio system running. */
 	@Override
 	protected boolean start() {
+		if (isRunning) {
+			//failed to start because it is running.
+			return false;
+		}
+		isRunning = true;
 		audioThread = new Thread(new Runnable() {
 			public void run() {
-				//create JavaSound stuff only when needed
-				create();
-				//start the update loop
-				runRealTime();
-				//return from above method means context got stopped, so now clean up
-				destroy();
+				//prevent undestroyed last session messing with newly initialized variables.
+				synchronized(JavaSoundAudioIO.this) {
+					//create JavaSound stuff only when needed
+					create();
+					//start the update loop
+					runRealTime();
+					isRunning = false;
+					//return from above method means context got stopped, so now clean up
+					destroy();
+				}
 			}
 		});
 		audioThread.setPriority(threadPriority);
