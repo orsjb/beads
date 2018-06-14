@@ -100,7 +100,7 @@ public abstract class Pitch {
 	 * in the scale relative to the tonic, and the index using zero based reference
 	 * For example, with Midi Note C3 (60), using the Major scale, and scaleIndex of 8 (being major 9th)
 	 * we would get 60 + 12 + 2 =  74 (D4)
-	 * @param scaleTonic The note number that would the zero index of the scale
+	 * @param scaleTonic The note number that would be the zero index of the scale
 	 * @param scaleData An array of notes for which to define our scale
 	 * @param scaleIndex The index within the scale to find the value to add
 	 * @return The scaleTonic + scaleIndex in the index. If scaleIndex is outside the range of array
