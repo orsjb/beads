@@ -3,7 +3,7 @@ package net.beadsproject.beads.core;
 public final class BuildVersion {
     static final int MAJOR = 2;
     static final int MINOR = 0;
-    static final int BUILD = 1;
+    static final int BUILD = 3;
 
     public static int getMajor() {
         return MAJOR;

@@ -247,7 +247,7 @@ public class AudioContext {
 	 * 
 	 * @return buffer of size bufSize, unknown contents.
 	 */
-	public float[] getBuf() {
+	synchronized float[] getBuf() {
 		if (bufStoreIndex < bufferStore.size()) {
 			return bufferStore.get(bufStoreIndex++);
 		} else {
@@ -266,7 +266,7 @@ public class AudioContext {
 	 * 
 	 * @return buffer of size bufSize, all zeros.
 	 */
-	public float[] getCleanBuf() {
+	float[] getCleanBuf() {
 		float[] buf = getBuf();
 		Arrays.fill(buf, 0f);
 		return buf;
@@ -280,7 +280,7 @@ public class AudioContext {
 	 * 
 	 * @return buffer of size bufSize, all zeros.
 	 */
-	public float[] getZeroBuf() {
+	float[] getZeroBuf() {
 		return zeroBuf;
 	}
 
@@ -288,7 +288,7 @@ public class AudioContext {
 	 * Starts the AudioContext running in non-realtime. This occurs in the
 	 * current Thread.
 	 */
-	public void runNonRealTime() {
+	private void runNonRealTime() {
 		if (stopped) {
 			stopped = false;
 			reset();

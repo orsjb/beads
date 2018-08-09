@@ -36,17 +36,18 @@ public class JavaSoundAudioIO extends AudioIO {
 	private Thread audioThread;
 
 	/** The priority of the audio thread. */
-	private int threadPriority; 
-	
-	/** The current byte buffer. */
-	private byte[] bbuf;
-	
+	private int threadPriority;
+
+	/** The number of prepared output buffers ready to go to AudioOutput */
+	final int NUM_OUTPUT_BUFFERS = 2;
+
 	public JavaSoundAudioIO() {
 		this(DEFAULT_SYSTEM_BUFFER_SIZE);
 	}
 	
 	public JavaSoundAudioIO(int systemBufferSize) {
 		this.systemBufferSizeInFrames = systemBufferSize;
+		System.out.println("Beads System Buffer size=" + systemBufferSize);
 		setThreadPriority(Thread.MAX_PRIORITY);
 	}
 	
@@ -65,11 +66,15 @@ public class JavaSoundAudioIO extends AudioIO {
 				audioFormat);
 		try {
 			sourceDataLine = (SourceDataLine) mixer.getLine(info);
-			if (systemBufferSizeInFrames < 0)
+			if (systemBufferSizeInFrames < 0) {
 				sourceDataLine.open(audioFormat);
-			else
-				sourceDataLine.open(audioFormat, systemBufferSizeInFrames
-						* audioFormat.getFrameSize());
+			}else {
+				int sound_output_buffer_size = systemBufferSizeInFrames
+						* audioFormat.getFrameSize() * 2;
+
+				sourceDataLine.open(audioFormat, sound_output_buffer_size);
+				System.out.println("Beads Output buffer size=" + sound_output_buffer_size);
+			}
 		} catch (LineUnavailableException ex) {
 			System.out
 					.println(getClass().getName() + " : Error getting line\n");
@@ -192,20 +197,58 @@ public class JavaSoundAudioIO extends AudioIO {
 		AudioFormat audioFormat = 
 				new AudioFormat(ioAudioFormat.sampleRate, ioAudioFormat.bitDepth, ioAudioFormat.outputs, ioAudioFormat.signed, ioAudioFormat.bigEndian);
 		int bufferSizeInFrames = context.getBufferSize();
-		bbuf = new byte[bufferSizeInFrames * audioFormat.getFrameSize()];
-		float[] interleavedOutput = new float[audioFormat.getChannels() * bufferSizeInFrames];
+
+		final int outputBufferLength = bufferSizeInFrames * audioFormat.getFrameSize();
+
+		byte [][] output_buffers = new byte [NUM_OUTPUT_BUFFERS] [outputBufferLength];
+
+		final int sampleBufferSize = audioFormat.getChannels() * bufferSizeInFrames;
+		float[] interleavedOutput = new float[sampleBufferSize];
+
 		sourceDataLine.start();
-		while (context.isRunning()) {
-			update(); // this propagates update call to context
-			for (int i = 0, counter = 0; i < bufferSizeInFrames; ++i) {
-				for (int j = 0; j < audioFormat.getChannels(); ++j) {
-					interleavedOutput[counter++] = context.out.getValue(j, i);
-				}
+
+		int buffers_sent =  0;
+
+		// first let is prime our output buffer
+		if (context.isRunning()){
+			for (int i = 0; i < NUM_OUTPUT_BUFFERS; i++){
+				byte [] current_buffer = output_buffers[i];
+				prepareLineBuffer(audioFormat,  current_buffer,  interleavedOutput,  bufferSizeInFrames,  sampleBufferSize);
 			}
-			AudioUtils.floatToByte(bbuf, interleavedOutput,
-					audioFormat.isBigEndian());
-			sourceDataLine.write(bbuf, 0, bbuf.length);
 		}
+
+
+		while (context.isRunning()) {
+
+			byte [] current_buffer = output_buffers[buffers_sent % NUM_OUTPUT_BUFFERS];
+			buffers_sent++;
+			sourceDataLine.write(current_buffer, 0, outputBufferLength);
+
+			current_buffer = output_buffers[buffers_sent % NUM_OUTPUT_BUFFERS];
+			prepareLineBuffer(audioFormat,  current_buffer,  interleavedOutput,  bufferSizeInFrames,  sampleBufferSize);
+			//AudioUtils.floatToByte(bbuf, interleavedOutput, audioFormat.isBigEndian());
+
+		}
+	}
+
+	/**
+	 * Read audio from UGens and copy them into a buffer ready to write to Audio Line
+	 * @param audioFormat The AudioFormat
+	 * @param outputBUffer The buffer that will contain the prepared bytes for the AudioLine
+	 * @param interleavedSamples Interleaved samples as floats
+	 * @param bufferSizeInFrames The size of interleaved samples in frames
+	 * @param sampleBufferSize The size of our actual sample buffer size
+	 */
+	private void prepareLineBuffer(AudioFormat audioFormat, byte[] outputBUffer, float[] interleavedSamples, int bufferSizeInFrames, int sampleBufferSize){
+		update(); // this propagates update call to context
+		for (int i = 0, counter = 0; i < bufferSizeInFrames; ++i) {
+			for (int j = 0; j < audioFormat.getChannels(); ++j) {
+				interleavedSamples[counter++] = context.out.getValue(j, i);
+			}
+		}
+
+		AudioUtils.floatToByte(outputBUffer,0, interleavedSamples,0, sampleBufferSize, audioFormat.isBigEndian());
+
 	}
 
 	@Override
