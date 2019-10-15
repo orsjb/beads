@@ -106,9 +106,8 @@ public abstract class IIRFilter extends UGen {
 
 	/**
 	 * Does our analysis at the specified frequency.
-	 * 
-	 * @param freq
-	 *            The frequency to analyze.
+	 *
+	 * @param freq The frequency to analyze.
 	 */
 	protected static IIRFilterAnalysis analyzeFilter(float[] bs, float[] as,
 			float freq, float samplingFreq) {

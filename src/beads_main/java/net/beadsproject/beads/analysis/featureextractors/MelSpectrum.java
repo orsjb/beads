@@ -12,7 +12,7 @@ import net.beadsproject.beads.core.TimeStamp;
  * converts it to the mel frequency spectrum. To use MelSpectrum, make sure it 
  * is set as a listener to a {@link PowerSpectrum} object, not directly from an audio stream.
  * 
- * @beads.category analysis
+ *
  */
 public class MelSpectrum extends FeatureExtractor<float[], float[]>  {
 

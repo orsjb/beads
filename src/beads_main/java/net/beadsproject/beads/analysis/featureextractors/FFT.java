@@ -53,7 +53,8 @@ public class FFT extends FeatureExtractor<float[][], float[]>  {
 	 * 
 	 * @param samplingFrequency The Sampling Frequency of the AudioContext
 	 * @param blockSize The size of the block analysed
-	 * @param binNumber 
+	 * @param binNumber bin number
+	 * @return bin frequency
 	 */
 	public static float binFrequency(float samplingFrequency, int blockSize, float binNumber)
 	{		
@@ -67,6 +68,7 @@ public class FFT extends FeatureExtractor<float[][], float[]>  {
 	 * @param samplingFrequency The Sampling Frequency of the AudioContext
 	 * @param blockSize The size of the fft block
 	 * @param freq  The frequency
+	 * @return bin NUmber
 	 */
 	
 	public static float binNumber(float samplingFrequency, int blockSize, float freq)
@@ -77,6 +79,7 @@ public class FFT extends FeatureExtractor<float[][], float[]>  {
 	/** The nyquist frequency for this samplingFrequency 
 	 * 
 	 * @param samplingFrequency the sample
+	 * @return nyquist frequency
 	 */
 	public static float nyquist(float samplingFrequency)
 	{

@@ -42,13 +42,16 @@ public abstract class FeatureExtractor<R, P> extends Bead {
 	
 	/**
 	 * Process some data of type P (specified by the class def). This method must be overidden by implementing classes.
-	 * 
+	 * @param startTime start time
+	 * @param endTime end time
 	 * @param data the data.
 	 */
 	public abstract void process(TimeStamp startTime, TimeStamp endTime, P data);
-	
+
 	/**
-	 * Subclasses should call this at end of their process() method to forward features to listeners.
+	 *  Subclasses should call this at end of their process() method to forward features to listeners.
+	 * @param startTime Start Time
+	 * @param endTime end time
 	 */
 	public void forward(TimeStamp startTime, TimeStamp endTime) {
 		//forward to the feature extractor listeners

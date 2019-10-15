@@ -23,7 +23,7 @@ public class BasicTimeDataWriter<T> extends FeatureExtractor<Object, T> {
 	
 	/**
 	 * Instantiates a new BasicDataWriter with the given FileOutputStream.
-	 * 
+	 * @param ac audio context
 	 * @param fos the FileOutputStream.
 	 */
 	public BasicTimeDataWriter(AudioContext ac, FileOutputStream fos) {

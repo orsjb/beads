@@ -91,7 +91,8 @@ public class PeakDetector extends FeatureExtractor<Float, Float> implements Segm
 	}
 
 	/**
-	 * Get the correct BufferSize for the OnsetDetector 
+	 * Get the correct BufferSize for the OnsetDetector
+	 * @return buffer size
 	 */
 	public int getBufferSize() {
 		return M;
