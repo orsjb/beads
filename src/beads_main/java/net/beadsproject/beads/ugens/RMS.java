@@ -11,8 +11,7 @@ import net.beadsproject.beads.core.UGen;
  * over a given time frame. The algorithm accounts for multi-channel input by
  * summing the squares of each channel and dividing by the square root of the
  * number of channels.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

@@ -15,7 +15,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * The amount of compression can also be controlled by an alternate side-chain.
  * <p>
  * The following are the default parameter values:
- * <p>
+ * </p>
  * <ul>
  * <li>{@link #setThreshold(float) threshold} - .5</li>
  * <li>{@link #setAttack(float) attack} - 1</li>
@@ -24,8 +24,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * <li>{@link #setRatio(float) ratio} - 2</li>
  * <li>{@link #setSideChain(UGen) side-chain} - the input audio</li>
  * </ul>
- * 
- * @beads.category dynamics
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

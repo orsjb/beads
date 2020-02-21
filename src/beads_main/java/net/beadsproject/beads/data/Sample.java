@@ -14,15 +14,15 @@ import net.beadsproject.beads.data.audiofile.AudioFileWriter;
 
 /**
  * A Sample encapsulates audio data, either loaded from an audio file (such as
- * an MP3) or written by a Recorder. <br></br>
+ * an MP3) or written by a Recorder. <br>
  * The typical use of a Sample is through
  * {@link net.beadsproject.beads.data.SampleManager}. For example, to load an
- * mp3, you would do the following. <br />
- * <br></br>
+ * mp3, you would do the following.
+ * <pre>
  * <code>
  * Sample wicked = SampleManager.sample("wickedTrack.mp3");	
- * </code> <br></br>
- * <br></br>
+ * </code>
+ * </pre>
  * 
  * <p>
  * Samples are usually played with a

@@ -12,7 +12,6 @@ import net.beadsproject.beads.data.DataBeadReceiver;
 /**
  * A simple wave-shaper. WaveShaper takes an incoming signal, maps it onto a
  * stored wave shape, and outputs the result. For each sample it:
- * <p>
  * <ol>
  * <li>Multiplies by the <code>preGain</code>.</li>
  * <li>Clips between -1 and 1, and maps onto the stored wave shape, with linear
@@ -27,8 +26,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * This UGen is a {@link DataBeadReceiver}, so you can set its parameters with a
  * DataBead.
  * </p>
- * 
- * @beads.category synth
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

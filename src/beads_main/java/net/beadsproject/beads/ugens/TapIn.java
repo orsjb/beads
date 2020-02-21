@@ -11,8 +11,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * TapIn stores and serves sound data. Can be used with TapOut to implement
  * delays, etc.
- * 
- * @beads.category effect
+ *
  * @author ben
  * @author Benito Crawford
  * @version 0.9

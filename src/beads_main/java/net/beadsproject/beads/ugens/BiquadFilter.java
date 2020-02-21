@@ -30,8 +30,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * <p>
  * BiquadFilterMulti can also implement a user-defined filter algorithm by
  * calling {@link #setCustomType(CustomCoeffCalculator)}.
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version 0.9.6
  */
@@ -289,8 +288,6 @@ public class BiquadFilter extends IIRFilter implements DataBeadReceiver {
 	 * with the specified number of channels, and with parameters specified by a
 	 * DataBead.
 	 *
-	 * @param context
-	 *            The audio context.
 	 * @param channels
 	 *            The number of channels.
 	 * @param itype

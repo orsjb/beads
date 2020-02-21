@@ -19,8 +19,7 @@ import net.beadsproject.beads.data.Sample;
  * use either linear or cubic interpolation.
  * 
  * TODO: Loop cross-fading has not been implemented yet.
- * 
- * @beads.category sample players
+ *
  * @author ollie
  */
 public class SamplePlayer extends UGen {
@@ -838,7 +837,7 @@ public class SamplePlayer extends UGen {
 	 * the end. This occurs when the SamplePlayer's position reaches then end
 	 * when playing forwards in a non-looping mode, or reaches the the beginning
 	 * when playing backwards in a non-looping mode. It is never triggered in a
-	 * looping mode. As an alternative, you can use the method {@link Bead.#setKillListener(Bead)} as long as {@link #setKillOnEnd(boolean)} is
+	 * looping mode. As an alternative, you can use the method {@link Bead#setKillListener(Bead)} as long as {@link #setKillOnEnd(boolean)} is
 	 * set to true. In other words, you set this SamplePlayer to kill itself
 	 * when it reaches the end of the sample, and then use the functionality of
 	 * {@link Bead}, which allows you to create a trigger whenever a Bead is
@@ -855,7 +854,7 @@ public class SamplePlayer extends UGen {
 	/**
 	 * Gets the current endListener.
 	 * 
-	 * @see {#setEndListener(Bead)}.
+	 * //@see {@link #setEndListener(Bead)}
 	 * @return the current endListener.
 	 */
 	public Bead getEndListener() {

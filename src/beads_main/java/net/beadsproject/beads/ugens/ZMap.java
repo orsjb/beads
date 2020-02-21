@@ -13,8 +13,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * controlled by specifying the ranges from and to which to map, or by
  * specifying a multiplier and shift (addition) value. Optionally, the signal
  * can be clipped to the specified range.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

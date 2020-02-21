@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * 
  * Simple UGen that ramps between given values over a given duration (e.g., for portamento).
- * 
- * @beads.category control
+ *
  * @author ollie
  */
 public class Glide extends UGen {

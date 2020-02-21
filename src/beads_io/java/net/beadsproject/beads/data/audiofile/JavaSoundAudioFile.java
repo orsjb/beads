@@ -43,8 +43,8 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 
 	/**
 	 * Convert a Javasound AudioFormat object to a Beads SampleAudioFormat object.
-	 * @param af
-	 * @return
+	 * @param af audio format
+	 * @return new audio format
 	 */
 	static public SampleAudioFormat convertJavasoundAudioFormatToBeadsAudioFormat(
 			javax.sound.sampled.AudioFormat af) {
@@ -57,8 +57,8 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 
 	/**
 	 * Convert a Beads SampleAudioFormat object to a Javasound AudioFormat object.
-	 * @param saf
-	 * @return
+	 * @param saf sample audio format
+	 * @return audio format
 	 */
 	static public AudioFormat convertBeadsAudioFormatToJavasoundAudioFormat(SampleAudioFormat saf) {
 		AudioFormat af = new AudioFormat(saf.sampleRate, saf.bitDepth, saf.channels, saf.signed, saf.bigEndian);

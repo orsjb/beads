@@ -5,8 +5,7 @@ import net.beadsproject.beads.core.Bead;
 
 /**
  * A DelayTrigger waits for a specified duration and then notifies a receiver.
- * 
- * @beads.category utilities
+ *
  * @author ollie
  * @author Benito Crawford
  * @version 0.9.5

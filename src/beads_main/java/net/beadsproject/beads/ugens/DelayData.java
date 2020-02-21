@@ -98,7 +98,7 @@ public class DelayData extends DelayEvent {
 	/**
 	 * Sets the message to send when the DelayData fires.
 	 * 
-	 * @param dataBead
+	 * @param db
 	 *            The DataBead to be sent.
 	 * @return This DelayData instance.
 	 */

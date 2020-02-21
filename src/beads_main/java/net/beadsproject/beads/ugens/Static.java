@@ -9,7 +9,6 @@ import net.beadsproject.beads.core.UGen;
 /**
  * Static represents a {@link UGen} with a fixed value. Since the value is fixed, Static doesn't actually calculate anything, and overrides the methods {@link #getValue()} and {@link #getValue(int, int)} to return its fixed value.
  *
- * @beads.category utilities
  * @author ollie
  */
 public class Static extends UGen {

@@ -96,14 +96,14 @@ public abstract class AudioSegmenter extends UGen implements SegmentMaker {
 	public abstract void resetTimeStamp();	
 	
 	/** Set the TimeStamp of this AudioSegmenter when the AudioContext is at t=0. 
-	 * @param ts
+	 * @param ts timestamp
 	 */
 	public abstract void setBeginningTimeStamp(TimeStamp ts);
 	
 	/** Set the last TimeStamp of this AudioSegmenter. The next time a segment is 
 	 * produced, the start time of the segment will be this value. The counter is
 	 * reset with this operation.
-	 * @param ts
+	 * @param ts timestamp
 	 */
 	public abstract void setLastTimeStamp(TimeStamp ts);
 	

@@ -14,8 +14,7 @@ import net.beadsproject.beads.core.UGen;
  * An upper limit is given. If a new UGen is added but this takes the number of connected UGens over that 
  * upper limit then the oldest connected UGen is dropped in order to allow
  * the new UGen to be connected.
- * 
- * @beads.category utilities
+ *
  */
 public class PolyLimit extends UGen {
 

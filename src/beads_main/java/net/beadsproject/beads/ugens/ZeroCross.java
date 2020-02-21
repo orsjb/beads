@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * Counts and outputs as a signal the number of zero crossings in its input
  * signal over a specified time frame.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

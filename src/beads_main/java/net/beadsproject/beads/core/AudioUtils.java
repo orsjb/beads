@@ -309,8 +309,8 @@ public final class AudioUtils {
 	/**
 	 * "Stretches" source into dest. Linearly interpolates.
 	 * 
-	 * @param source
-	 * @param dest
+	 * @param source source
+	 * @param dest destination
 	 */
 	static final public void stretchBuffer(float[][] source, float[][] dest)
 	{
@@ -370,7 +370,7 @@ public final class AudioUtils {
 	
 	/**
 	 * Reverse the data in each channel.
-	 * @param buffer
+	 * @param buffer buffer
 	 */
 	static final public void reverseBuffer(float[][] buffer)
 	{
@@ -389,7 +389,7 @@ public final class AudioUtils {
 	/**
 	 * Does a freaky shortcut for calculating pow (limited to base with range 0-1), faster but less accurate than regular Math.pow(). 
 	 * 
-	 * <p/>CREDIT: this method is copied directly from <a href="http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/">http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/</a>
+	 * CREDIT: this method is copied directly from <a href="http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/">http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/</a>
 	 * 
 	 * @param a the base.
 	 * @param b the exponent.

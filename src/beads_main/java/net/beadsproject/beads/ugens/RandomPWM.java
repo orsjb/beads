@@ -25,8 +25,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * <li>{@link #RAMPED_NOISE} - for random-length ramps between random values between -1 and 1.</li>
  * <li>{@link #NOISE_ENVELOPE} - for random-length ramps between random values between 0 and 1.</li>
  * </ul>
- * 
- * @beads.category synth
+ *
  * @author Benito Crawford
  * @version 0.9.6
  * 

@@ -10,8 +10,7 @@ import net.beadsproject.beads.data.buffers.NoiseBuffer;
 
 /**
  * Noise generates white noise. It uses a long buffer of sampled noise.
- * 
- * @beads.category synth
+ *
  * @author ollie
  */
 public class Noise extends UGen {

@@ -23,8 +23,7 @@ import net.beadsproject.beads.data.buffers.SquareBuffer;
  * @see SineBuffer
  * @see SawBuffer
  * @see SquareBuffer
- * 
- * @beads.category synth
+ *
  * @author ollie
  */
 public class WavePlayer extends UGen {

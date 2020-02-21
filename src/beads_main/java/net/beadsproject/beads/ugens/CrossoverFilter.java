@@ -13,20 +13,17 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * A multi-channel 4th-order Linkwitz-Riley crossover filter. For each input
  * channel, the filter outputs both a low-pass and a high-pass channel. If the
  * filter has two inputs, for example, then it will output four channels:
- * <p>
  * <ul>
  * <li>0: Low-pass of input 0</li>
  * <li>1: High-pass of input 0</li>
  * <li>2: Low-pass of input 1</li>
  * <li>3: High-pass of input 1</li>
  * </ul>
- * <p>
  * A key feature of Linkwitz-Riley filters is that the low- and high-pass bands
  * added together produce a flat frequency response, making them particularly
  * useful as crossover filters. A 4th-order version is equivalent to cascading
  * two identical 2nd-order Butterworth filters.
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version 0.9.5
  * 

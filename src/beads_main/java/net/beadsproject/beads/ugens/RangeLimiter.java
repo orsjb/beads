@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * RangeLimiter forces a signal within the range [-1,1]. Use {@link Clip} for
  * constraining to other ranges.
- * 
- * @beads.category utilities
+ *
  * @author ollie
  * @author benito
  * @version 0.9.5

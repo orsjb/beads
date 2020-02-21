@@ -17,7 +17,7 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.UGen;
 
 /**
- * A mixer for a speaker config in any number of dimensions (we haven't tested D>3 yet). 
+ * A mixer for a speaker config in any number of dimensions (we haven't tested D &gt; 3 yet).
  * Add sources (UGens) and control their locations using other UGens. Locations are changed on a per-channel basis,
  * so that multichannel files can be located in the mixer independently. 
  * 
@@ -32,8 +32,7 @@ import net.beadsproject.beads.core.UGen;
  * the x-axis follows the line joining 1 and 4
  * the y-axis follows the line joining 1 and 2
  * the z-axis follows the line joining 1 and 5
- * 
- * @beads.category utilities
+ *
  * @author ollie
  *
  */

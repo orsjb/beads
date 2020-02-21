@@ -23,8 +23,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * or by passing a DataBead with "frequency" and "resonance" properties to
  * {@link #setParams(DataBead)}. (Messaging this object with a DataBead achieves
  * the same.)
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */
@@ -193,8 +192,6 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	 * Constructor for a single-channel LPRezFilter with frequency and resonance
 	 * specified by UGens.
 	 *
-	 * @param con
-	 *            The audio context.
 	 * @param freq
 	 *            The filter cut-off frequency UGen.
 	 * @param res
@@ -226,8 +223,6 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	 * Constructor for a multi-channel LPRezFilter with frequency and resonance
 	 * specified by floats.
 	 *
-	 * @param con
-	 *            The audio context.
 	 * @param channels
 	 *            The number of channels.
 	 * @param freq
@@ -327,8 +322,6 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 	 * Constructor for a multi-channel LPRezFilter with frequency and resonance
 	 * specified by UGens.
 	 *
-	 * @param con
-	 *            The audio context.
 	 * @param channels
 	 *            The number of channels.
 	 * @param freq
@@ -635,10 +628,9 @@ public class LPRezFilter extends IIRFilter implements DataBeadReceiver {
 
 	/**
 	 * Sets the filter resonance to a float value. This removes the resonance
-	 * UGen, if it exists. (Should be >= 0 and < 1.)
+	 * UGen, if it exists. (Should be &gt;= 0 and &lt; 1.)
 	 * 
-	 * @param r
-	 *            The resonance.
+	 * @param r The resonance.
 	 * @return This filter instance.
 	 */
 	public LPRezFilter setRes(float r) {

@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * Takes an incoming signal (or signals in the multi-channel case) and
  * multiplies it with something (another signal or a float value).
- * 
- * @beads.category utilities
+ *
  * @author ollie
  * @author Benito Crawford
  */

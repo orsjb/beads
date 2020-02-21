@@ -10,8 +10,7 @@ import net.beadsproject.beads.core.UGen;
  * Converts a signal to have n-bits, useful for 8-bit synthesis.
  * PRE: Signal must be in (-1,1) range
  * POST: Signal is in (-1,1) range 
- * 
- * @beads.category effect
+ *
  * @author ben
  *
  */

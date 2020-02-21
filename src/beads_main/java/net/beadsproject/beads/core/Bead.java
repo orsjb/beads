@@ -7,13 +7,13 @@ package net.beadsproject.beads.core;
 /**
  * Bead is an abstract class which defines basic behaviour such as starting and stopping, pausing and handling messages. 
  * 
- * <p/>Messages: A Bead can send a message to another Bead using the {@link #message(Bead)} method. Implementations of Bead handle these messages by subclassing the {@link #messageReceived(Bead)} method. {@link BeadArray} can be used to gather Beads into groups, which is useful for defining message channels in a system. 
+ * Messages: A Bead can send a message to another Bead using the {@link #message(Bead)} method. Implementations of Bead handle these messages by subclassing the {@link #messageReceived(Bead)} method. {@link BeadArray} can be used to gather Beads into groups, which is useful for defining message channels in a system.
  * 
- * <p/>Pausing: the method {@link #pause(boolean)} toggles the pause mode of a Bead. Beads are unpaused by default. A paused Bead will no longer respond to incoming messages. 
+ * Pausing: the method {@link #pause(boolean)} toggles the pause mode of a Bead. Beads are unpaused by default. A paused Bead will no longer respond to incoming messages.
  * 
- * <p/>Deleting: The method {@link #kill()} deletes a Bead. Deleted Beads are automatically removed from {@link BeadArray}s. The method {@link Bead#setKillListener(Bead)} allows you to specify another Bead that gets notified when this Bead is killed. 
+ * Deleting: The method {@link #kill()} deletes a Bead. Deleted Beads are automatically removed from {@link BeadArray}s. The method {@link Bead#setKillListener(Bead)} allows you to specify another Bead that gets notified when this Bead is killed.
  * 
- * <p/>UGens: An important subclass of Bead is {@link UGen}. When a UGen is paused, it does not calculate audio. When it is deleted, it is automatically removed from any signal chains. 
+ * UGens: An important subclass of Bead is {@link UGen}. When a UGen is paused, it does not calculate audio. When it is deleted, it is automatically removed from any signal chains.
  * 
  * @author ollie
  */

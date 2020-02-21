@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * MonoPlug performs the simple task of channelling a single output from a multi-channel 
  * {@link UGen}.
- * 
- * @beads.category utilities
+ *
  * @author ollie
  */
 public class MonoPlug extends UGen {

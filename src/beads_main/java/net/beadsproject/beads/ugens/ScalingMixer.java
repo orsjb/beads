@@ -9,7 +9,6 @@ import net.beadsproject.beads.core.UGen;
 /**
  * ScalingMixer scales the gain of the signal at each input by the number of {@link UGen}s connected to that input, passing the scaled signal to the corresponding output.
  *
- * @beads.category effect
  * @author ollie
  */
 public class ScalingMixer extends UGen {

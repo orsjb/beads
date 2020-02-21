@@ -195,7 +195,7 @@ public class FeatureTrack implements Serializable, Iterable<FeatureFrame>, Segme
 	}
 	
 	/**
-	 * Adds a new {@link FeatureExtractor}. When {@link newSegment()} is called, the FeatureTrack creates a new {@link FeatureFrame}
+	 * Adds a new {@link FeatureExtractor}. When {@link  #newSegment(TimeStamp, TimeStamp)}} is called, the FeatureTrack creates a new {@link FeatureFrame}
 	 * with the given start and end times and adds the data from all of its {@link FeatureExtractor}s to the {@link FeatureFrame}.
 	 * 
 	 * @param e the FeatureExtractor.
@@ -216,7 +216,6 @@ public class FeatureTrack implements Serializable, Iterable<FeatureFrame>, Segme
 	/**
 	 * Tells this FeatureTrack to log a new {@link FeatureFrame}, with the given startTime and endTime. The FeatureTrack
 	 * will gather features from its various {@link FeatureExtractor}s at this point.
-	 * @throws CloneNotSupportedException 
 	 */
 	public void newSegment(TimeStamp startTime, TimeStamp endTime) {
 		FeatureFrame ff = new FeatureFrame(startTime.getTimeMS(), endTime.getTimeMS());

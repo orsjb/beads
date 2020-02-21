@@ -23,8 +23,7 @@ import org.tritonus.share.sampled.file.AudioOutputStream;
  * You must {@link #kill() kill} this object when finished to finalise the writing of the file header.
  * 
  * IMPORTANT NOTE: At the moment only the WAVE (*.wav) type is supported.
- * 
- * @beads.category utilities
+ *
  * @author bp
  */
 public class RecordToFile extends UGen {

@@ -5,8 +5,7 @@ package net.beadsproject.beads.data;
 
 /**
  * A set of static fields and utility methods associated with pitch.
- * 
- * @beads.category data
+ *
  * @author ollie
  */
 public abstract class Pitch {
@@ -104,7 +103,7 @@ public abstract class Pitch {
 	 * @param scaleData An array of notes for which to define our scale
 	 * @param scaleIndex The index within the scale to find the value to add
 	 * @return The scaleTonic + scaleIndex in the index. If scaleIndex is outside the range of array
-	 * eg (scaleIndex < 0 || scaleIndex >= scaleData.length) then modulo mathematics will be used to
+	 * eg (scaleIndex &lt; 0 || scaleIndex &gt;= scaleData.length) then modulo mathematics will be used to
 	 * return note from next or previous register
 	 */
     public static int getRelativeMidiNote (int scaleTonic, int[] scaleData, int scaleIndex){

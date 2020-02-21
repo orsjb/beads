@@ -8,8 +8,7 @@ import net.beadsproject.beads.core.UGen;
 
 /**
  * Outputs the change in the input signal from the previous sample to the current one.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9
  */

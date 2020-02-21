@@ -30,8 +30,7 @@ import net.beadsproject.beads.data.Sample;
  * <i>ADVANCED:</i> When resizing a sample in INFINITE mode, the recorder uses a set of parameters
  * that specify how it behaves. If necessary you can modify the parameters on a per-recorder basis. See
  * {@link #setResizingParameters(double, double)}.
- * 
- * @beads.category utilities
+ *
  *  
  */
 public class RecordToSample extends UGen {
@@ -79,7 +78,7 @@ public class RecordToSample extends UGen {
 	 *            the AudioContext.
 	 * @param sample
 	 *            the Sample.
-     * @throws Exception if sample is not writeable.
+     * //@throws Exception if sample is not writeable.
 	 */
     public RecordToSample(AudioContext context, Sample sample) {
         this(context, sample, Mode.FINITE);
@@ -90,7 +89,7 @@ public class RecordToSample extends UGen {
 	 *
 	 * @param sample
 	 *            the Sample.
-	 * @throws Exception if sample is not writeable.
+	 * //@throws Exception if sample is not writeable.
 	 */
 	public RecordToSample(Sample sample){
 		this(getDefaultContext(), sample);
@@ -105,7 +104,7 @@ public class RecordToSample extends UGen {
 	 *            the Sample.
 	 * @param mode
 	 *            the Recording Mode to use.
-     * @throws Exception if sample is not writeable.
+     * //@throws Exception if sample is not writeable.
 	 */
     public RecordToSample(AudioContext context, Sample sample, Mode mode) {
         this(context, sample.getNumChannels());
@@ -120,7 +119,7 @@ public class RecordToSample extends UGen {
 	 *            the Sample.
 	 * @param mode
 	 *            the Recording Mode to use.
-	 * @throws Exception if sample is not writeable.
+	 * //@throws Exception if sample is not writeable.
 	 */
 	public RecordToSample(Sample sample, Mode mode) {
 		this(getDefaultContext(), sample, mode);
@@ -320,6 +319,7 @@ public class RecordToSample extends UGen {
 	 * 
 	 * @return true if loop record mode is enabled.
 	 * @deprecated Use {@link #getMode()} instead.
+	 * //@Deprecated Use {@link #getMode()} instead.
 	 */
 	public boolean isLoopRecord() {
 		return mode==Mode.LOOPING;
@@ -330,6 +330,7 @@ public class RecordToSample extends UGen {
 	 * 
 	 * @param loopRecord true to enable loop record mode.
 	 * @deprecated Use {@link #setMode(Mode)} instead.
+	 * //@Deprecated Use {@link #setMode(Mode)} instead.
 	 */
 	public void setLoopRecord(boolean loopRecord) {
 		mode = Mode.LOOPING;

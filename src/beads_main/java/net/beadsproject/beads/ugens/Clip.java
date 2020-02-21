@@ -12,8 +12,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * Clip constrains a signal within a range. The range may be defined either by
  * static values, or by UGens. Use {@link RangeLimiter} to strictly (and more
  * efficiently) constrain a signal in the range [-1,1].
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.5
  * 

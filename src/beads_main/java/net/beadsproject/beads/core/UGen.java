@@ -20,11 +20,11 @@ import net.beadsproject.beads.ugens.Gain;
  * manually to the call chain using {@link #addDependent(UGen)} from any UGen
  * that is part of the call chain (such as the root UGen of the {@link AudioContext}).
  * 
- * </p>UGen inherits the
+ * UGen inherits the
  * {@link Bead#start()}, {@link Bead#kill()} and {@link Bead#pause(boolean)} behaviour, and messaging system from
  * {@link Bead}. Importantly, when UGens are paused, they cease audio processing, and when they are killed, they are automatically removed from any audio chains. This allows for very easy removal of elements from the call chain.
  * 
- * </p>The method {@link #calculateBuffer()} must be implemented by subclasses of UGen that actually do something. Each UGen has two 2D arrays of floats, {@link #bufIn}, {@link #bufOut}, holding the current input and output audio buffers (this is stored in the form float[numChannels][bufferSize]). The goal of a {@link UGen#calculateBuffer()} method, therefore, is to fill {@link #bufOut} with appropriate data for the current audio frame. Examples can be found in the source code of classes in the {@link net.beadsproject.beads.ugens} package.
+ * The method {@link #calculateBuffer()} must be implemented by subclasses of UGen that actually do something. Each UGen has two 2D arrays of floats, {@link #bufIn}, {@link #bufOut}, holding the current input and output audio buffers (this is stored in the form float[numChannels][bufferSize]). The goal of a {@link UGen#calculateBuffer()} method, therefore, is to fill {@link #bufOut} with appropriate data for the current audio frame. Examples can be found in the source code of classes in the {@link net.beadsproject.beads.ugens} package.
  * 
  * @author ollie
  */

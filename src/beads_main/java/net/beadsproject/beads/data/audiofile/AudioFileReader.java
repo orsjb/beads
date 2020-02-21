@@ -15,23 +15,20 @@ public interface AudioFileReader {
 	
 	/**
 	 * Single method to read an entire audio file in one go.
-	 * @param data     - upon return, this will point to a 2D array containing all the audio data. 
-	 *                   The first dimension (data.length) is the number of channels. 
-	 *                   The second dimension (data[0].length) is the number of frames.
 	 * @param filename - the name of the file to be read
-	 * @param saf      - upon return, this will point to a SampleAudioFormat object containing the details of the sample data that was read.
+	 * @return the samples as arrays
 	 */
-	public float[][] readAudioFile(String filename) throws IOException, OperationUnsupportedException, FileFormatException;
+	float[][] readAudioFile(String filename) throws IOException, OperationUnsupportedException, FileFormatException;
 	
 	/**
 	 * After reading, the SampleAudioFormat can be obtained.
 	 * @return the SampleAudioFormat object describing the sample data that has been read in.
 	 */
-	public SampleAudioFormat getSampleAudioFormat();
+	SampleAudioFormat getSampleAudioFormat();
 
 	/**
 	 * Get the supported file types.
 	 * @return - the supported file types.
 	 */
-	public HashSet<AudioFileType> getSupportedFileTypesForReading();
+	HashSet<AudioFileType> getSupportedFileTypesForReading();
 }

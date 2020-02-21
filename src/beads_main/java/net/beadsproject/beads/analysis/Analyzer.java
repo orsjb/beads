@@ -139,7 +139,7 @@ public class Analyzer implements SegmentMaker {
 	/**
 	 * Update from this source ugen.
 	 * 
-	 * @param ugen
+	 * @param ugen source
 	 */
 	public void updateFrom(UGen ugen) {
 		ugen.addDependent(sfs);
@@ -165,8 +165,8 @@ public class Analyzer implements SegmentMaker {
 	
 	/**
 	 * Gets the extractor or other element of the given class type.
-	 * @param classID
-	 * @return
+	 * @param classID classid
+	 * @return the element
 	 */
 	public Object getElement(Class<?> classID) {
 		return extractorArrangement.get(classID);

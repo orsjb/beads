@@ -19,7 +19,7 @@ import org.jaudiolibs.audioservers.javasound.JavasoundAudioServer.TimingMode;
 
 /**
  *
- * @author Neil C Smith <http://neilcsmith.net>
+ * @author Neil C Smith http://neilcsmith.net
  */
 public abstract class AudioServerIO extends AudioIO implements AudioClient {
   
@@ -108,7 +108,7 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
     
     /**
     *
-    * @author Neil C Smith <http://neilcsmith.net>
+    * @author Neil C Smith http://neilcsmith.net
     */
    public static class Jack extends AudioServerIO {
 	   

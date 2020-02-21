@@ -25,7 +25,6 @@ import net.beadsproject.beads.core.UGen;
  * can be used. The curve is defined as the mapping of the range <code>[0,1]</code> 
  * from <code>y=x</code> to <code>y=x^p</code> with a given exponent <code>p</code>.    
  *
- * @beads.category control
  * @author ollie
  */
 public class Envelope extends UGen {

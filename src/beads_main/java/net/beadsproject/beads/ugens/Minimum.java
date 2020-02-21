@@ -8,8 +8,7 @@ import net.beadsproject.beads.core.UGen;
 
 /**
  * For each sample, outputs the minimum of its two inputs.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9
  */

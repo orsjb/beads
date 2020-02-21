@@ -12,8 +12,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * A basic reverb unit with adjustable room size, high-frequency damping, and
  * early reflections and late reverb levels. If specified, creates a
  * de-correlated multi-channel effect.
- * 
- * @beads.category effect
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

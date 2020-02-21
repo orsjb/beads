@@ -9,8 +9,7 @@ import net.beadsproject.beads.core.UGen;
  * Note that UGen has it's own simpler crossFade method.
  * 
  * TODO: non-linear fades.
- * 
- * @beads.category utilities
+ *
  * @author ollie
  *
  */

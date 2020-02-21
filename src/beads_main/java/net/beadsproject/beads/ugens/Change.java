@@ -11,8 +11,7 @@ import net.beadsproject.beads.core.UGen;
 /**
  * Outputs 1 if the input signal is increasing; -1 if it is decreasing; 0 if it
  * is the same. Use {@link Delta} to find how much a signal is changing.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

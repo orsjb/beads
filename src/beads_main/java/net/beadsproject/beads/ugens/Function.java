@@ -8,7 +8,6 @@ import net.beadsproject.beads.core.UGen;
 /**
  * Function is an abstract class which can be quickly subclassed to make a custom {@link UGen} on the fly. Subclasses of Function must implement {@link #calculate()}, getting data from the array {@link #x}, and returning the result. {@link #x} provides access to the array of {@link UGen}s that are passed to Function's constructor. 
  *
- * @beads.category utilities
  * @author ollie
  */
 public abstract class Function extends UGen {

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 /**
  * A sample rate Clock. A Clock generates timing data at two levels: ticks and beats. It notifies an {@link BeadArray} of listeners at each tick. These listeners can query the Clock to find out the current tick count, if it is on a beat, and the current beat count. The rate of ticking of the Clock is controlled by an interval envelope.
  *
- * @beads.category control
  * @author ollie
  */
 public class Clock extends UGen implements IntegerBead {
@@ -191,8 +190,8 @@ public class Clock extends UGen implements IntegerBead {
      * Gets the interval envelope.
      * 
      * @return the interval envelope.
-     * 
      * @deprecated
+     *
      */
     public UGen getIntervalEnvelope() {
     	return intervalEnvelope;    	

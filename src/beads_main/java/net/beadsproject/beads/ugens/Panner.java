@@ -16,8 +16,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * channel as a result. A pan value of -1 pans completely to the left, 1 pans
  * completely to the right, and 0 results in center panning. It uses an array to
  * approximate square roots for efficiency.
- * 
- * @beads.category utilities
+ *
  * @author Benito Crawford
  * @version 0.9.1
  */

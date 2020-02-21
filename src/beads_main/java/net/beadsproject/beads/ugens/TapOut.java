@@ -12,8 +12,7 @@ import net.beadsproject.beads.core.UGen;
  * interpolation), and {@link #ALLPASS} (all-pass interpolation). Delay time is
  * specified in milliseconds and can be set by either a static float value or a
  * UGen.
- * 
- * @beads.category effect
+ *
  * @author ben
  * @author Benito Crawford
  * @version 0.9
@@ -42,7 +41,20 @@ public class TapOut extends UGen {
 	public static final InterpolationType ALLPASS = InterpolationType.ALLPASS;
 
 	public enum InterpolationType {
-		NO_INTERP, LINEAR, ALLPASS
+		/**
+		 * No Interpolation
+		 */
+		NO_INTERP,
+
+		/**
+		 * for linear interpolation
+		 */
+		LINEAR,
+
+		/**
+		 * all-pass interpolation
+		 */
+		ALLPASS
 	}
 	
 	protected TapOut(AudioContext ac, TapIn ti) {
@@ -273,13 +285,7 @@ public class TapOut extends UGen {
 	}
 
 	/**
-	 * Sets the delay mode. Use the following values:
-	 * <p>
-	 * <ul>
-	 * <li>{@value #NO_INTERP} for no interpolation.</li>
-	 * <li>{@value #LINEAR} for linear interpolation.</li>
-	 * <li>{@value #ALLPASS} for all-pass interpolation.</li>
-	 * </ul>
+	 * Sets the delay mode as {@link InterpolationType}.
 	 * 
 	 * @param mode
 	 *            The delay mode.

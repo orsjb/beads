@@ -1,13 +1,13 @@
 //gradle build file for Beads
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'maven'
 
-version=2.00
+version=3.00
 group='net.beadsproject'
 
 sourceSets {
@@ -71,6 +71,20 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
         archiveName("beads.zip")
         destinationDir(file("${buildDir}"))
     }
+}
+
+task deployJarAndJavaDocToHappyBrackets  {
+    copy {
+        from 'build/docs/javadoc/net/beadsproject'
+        into '../HappyBrackets/HappyBrackets/libs/docs/net/beadsproject'
+    }
+
+    copy {
+        from 'build/libs/beads.jar'
+        into '../HappyBrackets/HappyBrackets/libs'
+    }
+
+    println "copied jars"
 }
 
 task deploy(dependsOn: ['zipProcessingLibrary', 'uploadShadow'])

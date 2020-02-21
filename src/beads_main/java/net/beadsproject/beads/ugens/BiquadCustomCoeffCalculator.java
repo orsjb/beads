@@ -16,8 +16,7 @@ package net.beadsproject.beads.ugens;
  * according to the input parameters freq, q, and gain, as well as the useful
  * class variables {@link #sampFreq} and {@link #two_pi_over_sf}.
  * </p>
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version .9.1
  */

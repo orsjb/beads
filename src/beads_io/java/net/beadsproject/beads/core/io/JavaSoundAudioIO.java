@@ -90,7 +90,7 @@ public class JavaSoundAudioIO extends AudioIO {
 	 */
 	private void getDefaultMixerIfNotAlreadyChosen() {
 		if(mixer == null) {
-			selectMixer(0);
+			selectMixer(-1);
 		} 
 	}
 
@@ -114,13 +114,17 @@ public class JavaSoundAudioIO extends AudioIO {
 	 * @param i the index of the selected mixer.
 	 */
 	public void selectMixer(int i) {
-		Mixer.Info[] mixerinfo = AudioSystem.getMixerInfo();
-		mixer = AudioSystem.getMixer(mixerinfo[i]);
-		if(mixer != null) {
-			System.out.print("JavaSoundAudioIO: Chosen mixer is ");
-			System.out.println(mixer.getMixerInfo().getName() + ".");
+		if (i < 0) {
+			mixer = AudioSystem.getMixer(null);
 		} else {
-			System.out.println("JavaSoundAudioIO: Failed to get mixer.");
+			Mixer.Info[] mixerinfo = AudioSystem.getMixerInfo();
+			mixer = AudioSystem.getMixer(mixerinfo[i]);
+			if (mixer != null) {
+				System.out.print("JavaSoundAudioIO: Chosen mixer is ");
+				System.out.println(mixer.getMixerInfo().getName() + ".");
+			} else {
+				System.out.println("JavaSoundAudioIO: Failed to get mixer.");
+			}
 		}
 	}
 	
@@ -262,7 +266,6 @@ public class JavaSoundAudioIO extends AudioIO {
 
 	/**
 	 * JavaSoundRTInput gathers audio from the JavaSound audio input device.
-	 * @beads.category input
 	 */
 	private class JavaSoundRTInput extends UGen {
 

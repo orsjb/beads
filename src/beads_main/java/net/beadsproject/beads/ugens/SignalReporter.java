@@ -8,8 +8,7 @@ import net.beadsproject.beads.core.UGen;
 
 /**
  * An easy way to monitor a signal; useful for debugging signal chains.
- * 
- * @beads.category lowlevel
+ *
  * @author Benito Crawford
  * @version 0.9.3
  */

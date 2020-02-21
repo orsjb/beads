@@ -19,8 +19,9 @@ public interface AudioFileWriter {
 	 * @param filename - the name of the file to be written
 	 * @param type - the type of audio file to be written (mp3, wav, etc.)
 	 * @param saf - a SampleAudioFormat object specifying the attributes of the sample data to be written. Can be NULL, in which case default values will be used.
+	 *
 	 */
-	public void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException, OperationUnsupportedException, FileFormatException;
+	void writeAudioFile(float[][] data, String filename, AudioFileType type, SampleAudioFormat saf) throws IOException, OperationUnsupportedException, FileFormatException;
 
 	/**
 	 * Get the supported file types.

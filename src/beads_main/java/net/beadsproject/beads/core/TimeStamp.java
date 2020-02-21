@@ -42,8 +42,7 @@ public class TimeStamp {
 	 * TimeStamp for the current time.
 	 * 
 	 * @param context the AudioContext.
-	 * @param timeStep the time step.
-	 * @param index the index.
+	 * @param timeInSamples time in samples
 	 */
 	public TimeStamp(AudioContext context, long timeInSamples) {
 		this.context = context;
@@ -98,7 +97,7 @@ public class TimeStamp {
 	}
 	
 	/**
-	 * Returns the time stamp formatted as <tt>timeStep-index</tt>, useful
+	 * Returns the time stamp formatted as timeStep-index, useful
 	 * for debugging purposes.
 	 */
 	public String toString() {

@@ -134,7 +134,7 @@ public class DataBead extends Bead implements Map<String, Object> {
 	 * Uses the parameters stored by this DataBead, this method configures the
 	 * given object by using reflection to discover appropriate setter methods.
 	 * For example, if the object has a method <code>setX(float f)</code> then
-	 * the key-value pair \<String "x", float 0.5f\> will be used to invoke this
+	 * the key-value pair &lt;String "x", float 0.5f&gt; will be used to invoke this
 	 * method. Errors are caught and printed (actually, not right now...).
 	 * <p>
 	 * Be aware that this may not work as expected with all objects. Use with

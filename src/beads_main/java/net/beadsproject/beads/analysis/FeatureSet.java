@@ -129,12 +129,12 @@ public class FeatureSet {
 	 * @param feature name to check.
 	 * @return true if feature name is found.
 	 */
-	public boolean containsGlobal(String s) {
-		return globalFeatures.containsKey(s);
+	public boolean containsGlobal(String feature) {
+		return globalFeatures.containsKey(feature);
 	}
 	
 	/**
-	 * Writes to a file. Assumes file has already been specified by {@link write(File)} or {@link new FeatureSet(File)}.
+	 * Writes to a file. Assumes file has already been specified by write File or {@link FeatureSet(File)}.
 	 */
 	public void write() {
 		try {
@@ -206,7 +206,7 @@ public class FeatureSet {
 	
 	/**
 	 * Returns the tracks.
-	 * @return A Map<String, FeatureTrack> structure.
+	 * @return A  Map structure.
 	 */
 	public Map<String, FeatureTrack> tracks() {
 		return tracks;

@@ -15,8 +15,7 @@ import net.beadsproject.beads.data.DataBead;
  * components.
  * <p>
  * y(n) = a * x(n) + g * x(n - d) - h * y(n - d)
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version 0.9.1
  */

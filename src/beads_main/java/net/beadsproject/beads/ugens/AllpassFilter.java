@@ -14,8 +14,7 @@ import net.beadsproject.beads.data.DataBeadReceiver;
  * formula: Y(n) = X(n-d) + g * (Y(n-d) - X(n)),
  * 
  * for delay time <em>d</em> and factor <em>g</em>.
- * 
- * @beads.category filter
+ *
  * @author Benito Crawford
  * @version 0.9.5
  */

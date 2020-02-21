@@ -7,7 +7,7 @@ package net.beadsproject.beads.core;
 /**
  * AudioIO is the abstract base class for setting up interaction between {@link AudioContext} and the world. It is 
  * designed to be largely controlled by {@link AudioContext}. To be precise, AudioContext will prepare(), start(), and stop() the
- * AudioIO it is initialised with. However, certain AudioIO implementations may need to be set up before being passed to AudioContext(). By default, AudioContext creates a {@link JavaSoundAudioIO}.
+ * AudioIO it is initialised with. However, certain AudioIO implementations may need to be set up before being passed to AudioContext(). By default, AudioContext creates a {@link net.beadsproject.beads.core.io.JavaSoundAudioIO}.
  * 
  * @author ollie
  *
