@@ -1,11 +1,20 @@
 //gradle build file for Beads
 
-plugins {
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
+    }
 }
 
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 version=3.00
 group='net.beadsproject'
@@ -13,7 +22,7 @@ group='net.beadsproject'
 sourceSets {
     main {
         java {
-            srcDirs = ['src/beads_main/java', 'src/beads_io/java', 'src/beads_tutorial/java']
+            srcDirs = ['src/beads_main/java', 'src/beads_io/java']
         }
     }
 }
@@ -41,7 +50,35 @@ javadoc {
     failOnError(false)
 }
 
-task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
+// Import ShadowJar plugin and create custom shadowJar task
+// to flatten package structure for Processing
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+task flattenShadowJar (type: ShadowJar, dependsOn: 'shadowJar') {
+    from sourceSets.main.output
+    configurations = [project.configurations.runtime]
+    
+    classifier = 'flat'
+    version = null
+    
+    relocate 'org.jaudiolibs.beads', 'beads'
+    
+    //Flatten hierarchical structure, starting from leaves
+    relocate 'net.beadsproject.beads.analysis.featureextractors', 'beads'
+    relocate 'net.beadsproject.beads.analysis.segmenters', 'beads'
+    relocate 'net.beadsproject.beads.analysis', 'beads'
+    
+    relocate 'net.beadsproject.beads.core.io', 'beads'
+    relocate 'net.beadsproject.beads.core', 'beads'
+    
+    relocate 'net.beadsproject.beads.data.audiofile', 'beads'
+    relocate 'net.beadsproject.beads.data.buffers', 'beads'
+    relocate 'net.beadsproject.beads.data', 'beads'
+    
+    relocate 'net.beadsproject.beads.events', 'beads'
+    relocate 'net.beadsproject.beads.ugens', 'beads'
+}
+
+task generateProcessingLibrary(dependsOn: ['javadoc','flattenShadowJar']) {
     doLast {
         copy {
             from("${buildDir}/docs/javadoc")
@@ -51,13 +88,15 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
             from("packages/Processing/examples")
             into("${buildDir}/processing/beads/examples")
         }
-	copy {
+        copy {
             from("src")
             into("${buildDir}/processing/beads/src")
         }
+        // Transfer flat .jar to Processing folder
         copy {
-            from("${buildDir}/libs/beads.jar")
+            from("${buildDir}/libs/beads-flat.jar")
             into("${buildDir}/processing/beads/library")
+            rename('beads-flat.jar', 'beads.jar')
         }
         copy {
             from("packages/Processing/library.properties")
@@ -67,13 +106,18 @@ task generateProcessingLibrary(dependsOn: ['javadoc','shadowJar']) {
 
     task zipProcessingLibrary(type: Zip, dependsOn: 'generateProcessingLibrary') {
         from("${buildDir}/processing/")
-	exclude("*.DS_Store")
+	    exclude("*.DS_Store")
         archiveName("beads.zip")
         destinationDir(file("${buildDir}"))
     }
+    
+    // Delete leftover original flat .jar file, as only Processing will need it
+    task deleteTemporaryFiles(type: Delete, dependsOn: 'generateProcessingLibrary') {
+        delete("${buildDir}/libs/beads-flat.jar")
+    }
 }
 
-task deployJarAndJavaDocToHappyBrackets  {
+task deployJarAndJavaDocToHappyBrackets (dependsOn: ['javadoc', 'shadowJar']) {
     copy {
         from 'build/docs/javadoc/net/beadsproject'
         into '../HappyBrackets/HappyBrackets/libs/docs/net/beadsproject'
@@ -87,4 +131,4 @@ task deployJarAndJavaDocToHappyBrackets  {
     println "copied jars"
 }
 
-task deploy(dependsOn: ['zipProcessingLibrary', 'uploadShadow'])
+task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadShadow'])
