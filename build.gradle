@@ -12,12 +12,14 @@ buildscript {
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version=3.00
+version="3.0"
 group='net.beadsproject'
+archivesBaseName = "beads"
 
 sourceSets {
     main {
@@ -38,16 +40,34 @@ shadowJar {
     version = null
 }
 
-uploadShadow {
-    repositories {
-        mavenDeployer {
-            repository(url: "file://${buildDir}/mavenRepo")
-        }
-    }
-}
+//uploadShadow {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: "file://${buildDir}/mavenRepo")
+//        }
+//    }
+//}
 
 javadoc {
     failOnError(false)
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
 }
 
 // Import ShadowJar plugin and create custom shadowJar task
@@ -131,4 +151,49 @@ task deployJarAndJavaDocToHappyBrackets (dependsOn: ['javadoc', 'shadowJar']) {
     println "copied jars"
 }
 
-task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadShadow'])
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Beads'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A software library written in Java for realtime audio.'
+        url 'http://www.beadsproject.net'
+
+        scm {
+          connection 'scm:git:git://github.com/orsjb/beads.git'
+          developerConnection 'scm:git:git@github.com:orsjb/beads.git'
+          url 'https://github.com/orsjb/beads/'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'orsjb'
+            name 'Oliver Bown'
+            email 'o.bown@unsw.edu.au'
+          }
+        }
+      }
+    }
+  }
+}
+
+task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])

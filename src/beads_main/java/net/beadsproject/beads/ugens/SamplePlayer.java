@@ -789,6 +789,11 @@ public class SamplePlayer extends UGen {
 					for (int j = 0; j < outs; j++) {
 						bufOut[j][i] = frame[j % sample.getNumChannels()];
 						//TODO loop crossfades here?
+						//For t = start -> crossfade length && t =  (end - crossfade length) -> end
+						//sample1.volume = position (0 -> 1)
+						//sample2.volume = 1 - position
+						//NOTE: Ensure loop length remains true (?)
+						//bufOut[j][i] = sample1 + sample2 (add samples with internal volume to get crossfade
 					}
 					// update the position, loop state, direction
 					calculateNextPosition(i);
