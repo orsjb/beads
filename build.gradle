@@ -17,7 +17,7 @@ apply plugin: 'signing'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version="3.0"
+version="3.0"   // Add '-SNAPSHOT' at the end for non-release uploads
 group='net.beadsproject'
 archivesBaseName = "beads"
 
@@ -52,6 +52,7 @@ javadoc {
     failOnError(false)
 }
 
+//Add javadocs and sourceJars as artifact
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
@@ -151,6 +152,10 @@ task deployJarAndJavaDocToHappyBrackets (dependsOn: ['javadoc', 'shadowJar']) {
     println "copied jars"
 }
 
+// Add POM metadata to artifact for Central Maven upload
+// NOTE: You will need a gradle.properties file with the following:
+//       - signing.keyId=pubkey ID, signing.password=privkey passphrase, signing.secretKeyRingFile= /path/to/SecretKeyringFile.gpg
+//       - ossrhUsername=user, ossrhPassword=pass
 uploadArchives {
   repositories {
     mavenDeployer {
@@ -187,8 +192,8 @@ uploadArchives {
         developers {
           developer {
             id 'orsjb'
-            name 'Oliver Bown'
-            email 'o.bown@unsw.edu.au'
+            name 'Ollie Bown'
+            email 'ollie@icarus.nu'
           }
         }
       }
