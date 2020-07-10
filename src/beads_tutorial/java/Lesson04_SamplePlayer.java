@@ -4,6 +4,8 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.SamplePlayer;
+import net.beadsproject.beads.ugens.SamplePlayer.EnvelopeType;
+import net.beadsproject.beads.ugens.SamplePlayer.LoopType;
 
 
 public class Lesson04_SamplePlayer {
@@ -27,6 +29,9 @@ public class Lesson04_SamplePlayer {
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
 		SamplePlayer player = new SamplePlayer(ac, SampleManager
 				.sample(audioFile));
+//		player.setLoopType(LoopType.LOOP_FORWARDS);
+//		player.setLoopCrossFade(750);
+//		player.setEnvelopeType(EnvelopeType.FINE);
 		/*
 		 * And as before...
 		 */
@@ -34,7 +39,5 @@ public class Lesson04_SamplePlayer {
 		g.addInput(player);
 		ac.out.addInput(g);
 		ac.start();
-		
-
 	}
 }

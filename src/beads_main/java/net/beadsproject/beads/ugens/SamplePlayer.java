@@ -503,24 +503,24 @@ public class SamplePlayer extends UGen {
 		this.interpolationType = interpolationType;
 	}
 
-//	/**
-//	 * Gets the loop cross fade.
-//	 *
-//	 * @return the loop cross fade in milliseconds.
-//	 */
-//	public float getLoopCrossFade() {
-//		return loopCrossFade;
-//	}
+	/**
+	 * Gets the loop cross fade.
+	 *
+	 * @return the loop cross fade in milliseconds.
+	 */
+	public float getLoopCrossFade() {
+		return loopCrossFade;
+	}
 
-//	/**
-//	 * Sets the loop cross fade.
-//	 *
-//	 * @param loopCrossFade
-//	 *            the new loop cross fade in milliseconds.
-//	 */
-//	public void setLoopCrossFade(float loopCrossFade) {
-//		this.loopCrossFade = loopCrossFade;
-//	}
+	/**
+	 * Sets the loop cross fade.
+	 *
+	 * @param loopCrossFade
+	 *            the new loop cross fade in milliseconds.
+	 */
+	public void setLoopCrossFade(float loopCrossFade) {
+		this.loopCrossFade = loopCrossFade;
+	}
 
 	/**
 	 * Gets the loop end envelope.
@@ -765,38 +765,69 @@ public class SamplePlayer extends UGen {
 			} else // envelopeType==EnvelopeType.FINE
 			{
 				for (int i = 0; i < bufferSize; i++) {
+					// update the position, loop state, direction
+					calculateNextPosition(i);
+					
+					// Gravefully exit if the specified crossfade duration is longer than half the length of the loop
+					if (loopCrossFade > Math.abs(loopEnd - loopStart) / 2) {
+						System.out.println("CrossFade duration is too long..");
+						kill();
+					}
+					float[] crossfadeFrame = new float[sample.getNumChannels()];
+					// Get crossfade position based on current position
+					double crossPosition = (loopStart < loopEnd) ? loopStart + (loopCrossFade - (loopEnd - position))
+							: loopEnd - (loopCrossFade - (position - loopStart));
+					
+					if (crossPosition < loopStart || crossPosition > loopEnd) {
+						crossPosition = -1;
+					}
+					
+					// Move position pointer to adjust for crossfade
+					if (position == loopStart && loopStart < loopEnd) {
+						position += loopCrossFade;
+					} else if (position == loopEnd && loopEnd < loopStart) {
+						position -= loopCrossFade;
+					}
+					
 					// calculate the samples
 					switch (interpolationType) {
 					case ADAPTIVE:
 						if (rate > ADAPTIVE_INTERP_HIGH_THRESH) {
 							sample.getFrameNoInterp(position, frame);
+							sample.getFrameNoInterp(crossPosition, crossfadeFrame);
 						} else if (rate > ADAPTIVE_INTERP_LOW_THRESH) {
 							sample.getFrameLinear(position, frame);
+							sample.getFrameLinear(crossPosition, crossfadeFrame);
 						} else {
 							sample.getFrameCubic(position, frame);
+							sample.getFrameCubic(crossPosition, crossfadeFrame);
 						}
 						break;
 					case LINEAR:
 						sample.getFrameLinear(position, frame);
+						sample.getFrameLinear(crossPosition, crossfadeFrame);
 						break;
 					case CUBIC:
 						sample.getFrameCubic(position, frame);
+						sample.getFrameCubic(crossPosition, crossfadeFrame);
 						break;
 					case NONE:
 						sample.getFrameNoInterp(position, frame);
+						sample.getFrameNoInterp(crossPosition, crossfadeFrame);
 						break;
 					}
+					
+					// If the current position is <= loopCrossFade ms after loopStart or before loopEnd,
+					// fade volume.
+					double sampleLevel = ((loopEnd - position) <= loopCrossFade || (position - loopStart) <= loopCrossFade) 
+							?  Math.min(position - loopStart, Math.abs(loopEnd - position)) / loopCrossFade : 1;
+
 					for (int j = 0; j < outs; j++) {
-						bufOut[j][i] = frame[j % sample.getNumChannels()];
-						//TODO loop crossfades here?
-						//For t = start -> crossfade length && t =  (end - crossfade length) -> end
-						//sample1.volume = position (0 -> 1)
-						//sample2.volume = 1 - position
-						//NOTE: Ensure loop length remains true (?)
-						//bufOut[j][i] = sample1 + sample2 (add samples with internal volume to get crossfade
+					   bufOut[j][i] = (crossPosition != -1) ? 
+							(float) sampleLevel * frame[j % sample.getNumChannels()]
+									+ (float) (1 - sampleLevel) * crossfadeFrame[j % sample.getNumChannels()] : 
+							(float) sampleLevel * frame[j % sample.getNumChannels()];
 					}
-					// update the position, loop state, direction
-					calculateNextPosition(i);
 				}
 			}
 		}

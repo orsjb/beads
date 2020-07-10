@@ -80,7 +80,7 @@ public class Sample {
 			try {
 				defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
 			} catch (ClassNotFoundException e2) {
-				defaultAudioFileReaderClass = null;
+				defaultAudioFileWriterClass = null;
 			}
 		}
 	}
