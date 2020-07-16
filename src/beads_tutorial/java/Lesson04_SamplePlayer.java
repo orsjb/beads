@@ -30,8 +30,9 @@ public class Lesson04_SamplePlayer {
 		SamplePlayer player = new SamplePlayer(ac, SampleManager
 				.sample(audioFile));
 //		player.setLoopType(LoopType.LOOP_FORWARDS);
-//		player.setLoopCrossFade(750);
+//		player.setLoopCrossFade(500);
 //		player.setEnvelopeType(EnvelopeType.FINE);
+//		player.setLoopPointsFraction(0.3f, 0.9f);
 		/*
 		 * And as before...
 		 */

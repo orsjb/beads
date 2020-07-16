@@ -768,16 +768,20 @@ public class SamplePlayer extends UGen {
 					// update the position, loop state, direction
 					calculateNextPosition(i);
 					
-					// Gravefully exit if the specified crossfade duration is longer than half the length of the loop
+					/*
+					//----
+					// Implementation 1 - Crossfade using sound directly following LoopStart. Truncates loop length after 1st traverse
+					// Gracefully exit if the specified crossfade duration is longer than half the length of the loop
 					if (loopCrossFade > Math.abs(loopEnd - loopStart) / 2) {
-						System.out.println("CrossFade duration is too long..");
+						System.out.println("CrossFade duration is too long.");
 						kill();
 					}
 					float[] crossfadeFrame = new float[sample.getNumChannels()];
 					// Get crossfade position based on current position
 					double crossPosition = (loopStart < loopEnd) ? loopStart + (loopCrossFade - (loopEnd - position))
 							: loopEnd - (loopCrossFade - (position - loopStart));
-					
+
+					// Disable crossFade Pointer if it is out of bounds
 					if (crossPosition < loopStart || crossPosition > loopEnd) {
 						crossPosition = -1;
 					}
@@ -788,7 +792,34 @@ public class SamplePlayer extends UGen {
 					} else if (position == loopEnd && loopEnd < loopStart) {
 						position -= loopCrossFade;
 					}
+					//----
+					*/
+
 					
+					//----
+					// Implementation 2 - Crossfade using sound before Loop Start: Requires loop start to be set after 0 for crossfade
+					if (loopCrossFade > loopStart && loopStart < loopEnd) {
+						System.out.println("CrossFade duration is too long.");
+						kill();
+					} else if (loopCrossFade > sample.getLength() - loopStart && loopEnd < loopStart) {
+						System.out.println("CrossFade duration is too long.");
+						kill();
+					} else if (loopCrossFade > Math.abs(loopEnd - loopStart)) {
+						System.out.println("CrossFade duration cannot be longer than loop length.");
+						kill();						
+					}
+					
+					float[] crossfadeFrame = new float[sample.getNumChannels()];
+					double crossPosition = (loopStart < loopEnd) ? loopStart - (loopEnd - position)
+							: loopStart + (position - loopEnd);
+
+					// Reset crossfade position if it is not within the boundaries of loopStart - crossLength < p < loopStart
+					// or loopStart + crossLength > p > loopStart if LoopEnd < loopStart
+					if (crossPosition < (loopStart - loopCrossFade) || crossPosition > (loopStart + loopCrossFade)) 
+						crossPosition = -1;
+					//----
+					
+
 					// calculate the samples
 					switch (interpolationType) {
 					case ADAPTIVE:
@@ -819,8 +850,14 @@ public class SamplePlayer extends UGen {
 					
 					// If the current position is <= loopCrossFade ms after loopStart or before loopEnd,
 					// fade volume.
-					double sampleLevel = ((loopEnd - position) <= loopCrossFade || (position - loopStart) <= loopCrossFade) 
-							?  Math.min(position - loopStart, Math.abs(loopEnd - position)) / loopCrossFade : 1;
+					double sampleLevel;
+					if ((loopEnd - position <= loopCrossFade) && loopStart < loopEnd) {
+						sampleLevel = (loopEnd - position) / loopCrossFade;
+					} else if ((position - loopEnd <= loopCrossFade) && loopEnd < loopStart) {
+						sampleLevel = (position - loopEnd) / loopCrossFade;
+					} else {
+						sampleLevel = 1;
+					}
 
 					for (int j = 0; j < outs; j++) {
 					   bufOut[j][i] = (crossPosition != -1) ? 
