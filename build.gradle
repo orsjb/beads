@@ -201,4 +201,6 @@ uploadArchives {
   }
 }
 
-task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])
+task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles'])
+
+task fullDeploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])
