@@ -621,7 +621,7 @@ public class Sample {
 	private void loadAudioFile(String file) throws IOException {
 		//we have to deal with a bug in Tritonus: JavaSound doesn't accept 24-bit wav but strangely Tritonus 
 		//interprets 24-bit wavs as mp3s. So we intercept all wavs and send them to the WavFileReaderWriter.
-		//In the first instance we can only use the file suffix as a clue to this, not the header.		
+		//In the first instance we can only use the file suffix as a clue to this, not the header.
 		Class<? extends AudioFileReader> theRealAudioFileReaderClass = audioFileReaderClass == null ? defaultAudioFileReaderClass : audioFileReaderClass;
 		if(file.endsWith(".wav") || file.endsWith(".WAV")) {
 			try {

@@ -3,21 +3,27 @@
 buildscript {
     repositories {
         jcenter()
+        
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url "https://clojars.org/repo" }
+}
+
 apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version="3.0"   // Add '-SNAPSHOT' at the end for non-release uploads
+version="3.1"   // Add '-SNAPSHOT' at the end for non-release uploads
 group='net.beadsproject'
 archivesBaseName = "beads"
 
@@ -30,8 +36,16 @@ sourceSets {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    runtime fileTree(dir: 'libs', include: '*.jar')
+    //implementation fileTree(dir: 'libs', include: '*.jar') // - Thin Jar
+    //compile fileTree(dir: 'libs', include: '*.jar') // - Fat Jar
+    
+    implementation 'javazoom:jlayer:1.0.1'
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    implementation 'org.clojars.automata:tritonus-aos:1.0.0'
+    implementation 'org.clojars.automata:tritonus-share:1.0.0'
+    implementation 'org.jaudiolibs:audioservers-javasound:1.2.0'
+    implementation 'org.jaudiolibs:audioservers-jack:1.2.0'
+    implementation 'org.jaudiolibs:jnajack:1.4.0'
 }
 
 shadowJar {
@@ -39,14 +53,6 @@ shadowJar {
     classifier = null
     version = null
 }
-
-//uploadShadow {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: "file://${buildDir}/mavenRepo")
-//        }
-//    }
-//}
 
 javadoc {
     failOnError(false)
@@ -119,6 +125,11 @@ task generateProcessingLibrary(dependsOn: ['javadoc','flattenShadowJar']) {
             into("${buildDir}/processing/beads/library")
             rename('beads-flat.jar', 'beads.jar')
         }
+        // Copy all dependencies over to Processing
+        copy {
+            from configurations.compileClasspath
+            into("${buildDir}/processing/beads/library")
+        }
         copy {
             from("packages/Processing/library.properties")
             into("${buildDir}/processing/beads")
@@ -184,8 +195,8 @@ uploadArchives {
 
         licenses {
           license {
-            name 'The Apache License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            name 'GNU General Public License, Version 3'
+            url 'https://www.gnu.org/licenses/gpl-3.0.txt'
           }
         }
 
@@ -201,4 +212,6 @@ uploadArchives {
   }
 }
 
-task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])
+task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles'])
+
+task fullDeploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])
