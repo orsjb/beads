@@ -1,13 +1,16 @@
 # Changelog
 
-## 3.0.1 - 7/23/2020
+## 3.1 (Stable) - 7/23/2020
 
 ### **Added**
 
 * Instructions in the README file for setting up Maven or Gradle dependencies.
 
+### **Fixed**
 
-## 3.0.0 (Stable) - 7/9/2020
+* Build.gradle for Maven Beads Distribution (v3.1) has been fixed to properly manage and locate dependencies now.
+
+## 3.0 - 7/9/2020
 
 ### **Changed**
 
