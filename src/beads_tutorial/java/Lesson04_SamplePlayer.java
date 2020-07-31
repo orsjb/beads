@@ -25,7 +25,7 @@ public class Lesson04_SamplePlayer {
 		 * keeps track of loaded audio files according to their file names, so
 		 * you don't have to load them again.
 		 */
-		String audioFile = "audio/small_tune.mp3";
+		String audioFile = "audio/kick_back.wav";
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
 		SamplePlayer player = new SamplePlayer(ac, SampleManager
 				.sample(audioFile));
