@@ -131,11 +131,9 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
                    context.getAudioFormat().outputs,
                    context.getBufferSize(),
                    true);
-   		server = JackAudioServer.create(name, config, true, this);
+   		   server = JackAudioServer.create(name, config, true, this);
            return runThread();
-   	}
-   	
-       
+       }
    }
    
    public static class JavaSound extends AudioServerIO {
@@ -160,17 +158,12 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
                    context.getBufferSize(),
                    true);
 		   try {
-			server = JavasoundAudioServer.create(device, config, TimingMode.FramePosition, this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		       server = JavasoundAudioServer.create(device, config, TimingMode.FramePosition, this);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
 		   return runThread();
 	   }
 	   
    }
-   
-   
-   
-    
-    
 }
