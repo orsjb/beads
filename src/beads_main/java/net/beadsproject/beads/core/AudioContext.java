@@ -96,7 +96,9 @@ public class AudioContext {
 		//attempt to find the default (JavaSound) AudioIO by reflection
 		AudioIO ioSystem = null;
 		try {
-			Class javaSoundAudioIOClass = Class.forName("net.beadsproject.beads.core.io.JavaSoundAudioIO");		//alt choice is org.jaudiolibs.beads.AudioServerIO$JavaSound.
+			//Class javaSoundAudioIOClass = Class.forName("net.beadsproject.beads.core.io.JavaSoundAudioIO");		
+		    //alt choice is org.jaudiolibs.beads.AudioServerIO$JavaSound.
+		    Class javaSoundAudioIOClass = Class.forName("org.jaudiolibs.beads.AudioServerIO$Jack");
 			Constructor noArgsConstructor = javaSoundAudioIOClass.getConstructor();
 			ioSystem = (AudioIO)noArgsConstructor.newInstance();
 			System.out.println("AudioContext : no AudioIO specified, using default => " + javaSoundAudioIOClass.getName() + ".");

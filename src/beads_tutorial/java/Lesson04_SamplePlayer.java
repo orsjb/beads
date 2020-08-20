@@ -29,10 +29,10 @@ public class Lesson04_SamplePlayer {
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
 		SamplePlayer player = new SamplePlayer(ac, SampleManager
 				.sample(audioFile));
-//		player.setLoopType(LoopType.LOOP_ALTERNATING);
-//		player.setLoopCrossFade(300f);
-//		player.setEnvelopeType(EnvelopeType.FINE);		
-//		player.setLoopPointsFraction(0.3f, 0.7f);
+		player.setLoopType(LoopType.LOOP_ALTERNATING);
+		player.setLoopCrossFade(300f);
+		player.setEnvelopeType(EnvelopeType.FINE);		
+		player.setLoopPointsFraction(0.4f, 0.9f);
 		/*
 		 * And as before...
 		 */

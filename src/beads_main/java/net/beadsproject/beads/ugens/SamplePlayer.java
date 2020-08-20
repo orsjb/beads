@@ -164,6 +164,10 @@ public class SamplePlayer extends UGen {
 	/** Bead responding to sample at end (only applies when not in loop mode). */
 	private Bead endListener;
 	
+	/** 
+	 * Boolean array for determining whether or not the current 
+	 * sample is looping for each i in bufferSize.
+	 */
 	private boolean[] isLooping;
 
 	/**

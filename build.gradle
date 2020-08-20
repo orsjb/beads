@@ -23,7 +23,7 @@ apply plugin: 'signing'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version="3.1"   // Add '-SNAPSHOT' at the end for non-release uploads
+version="3.2-SNAPSHOT"   // Add '-SNAPSHOT' at the end for non-release uploads
 group='net.beadsproject'
 archivesBaseName = "beads"
 
@@ -43,8 +43,8 @@ dependencies {
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
     implementation 'org.clojars.automata:tritonus-aos:1.0.0'
     implementation 'org.clojars.automata:tritonus-share:1.0.0'
-    implementation 'org.jaudiolibs:audioservers-javasound:1.2.0'
-    implementation 'org.jaudiolibs:audioservers-jack:1.2.0'
+    implementation 'org.jaudiolibs:audioservers-javasound:2.0.0'
+    implementation 'org.jaudiolibs:audioservers-jack:2.0.0'
     implementation 'org.jaudiolibs:jnajack:1.4.0'
 }
 
