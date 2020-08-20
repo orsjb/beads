@@ -164,7 +164,7 @@ public class SamplePlayer extends UGen {
 	/** Bead responding to sample at end (only applies when not in loop mode). */
 	private Bead endListener;
 	
-	private boolean isLooping = false;
+	private boolean[] isLooping;
 
 	/**
 	 * Instantiates a new SamplePlayer with given number of outputs.
@@ -187,6 +187,7 @@ public class SamplePlayer extends UGen {
 		loopEndEnvelope = new Static(context, 0.0f);
 		positionIncrement = context.samplesToMs(1);
 		loopCrossFade = 0;
+		isLooping = new boolean[bufferSize];
 	}
 
 	/**
@@ -776,7 +777,8 @@ public class SamplePlayer extends UGen {
                     if ((loopCrossFade / 2 > Math.min(loopStart, loopEnd))
                             || (loopCrossFade / 2 > (sample.getLength() - Math.max(loopStart, loopEnd)))) 
                     {
-                        loopCrossFade = (float) (Math.min(Math.min(loopStart, loopEnd), sample.getLength() - Math.max(loopStart, loopEnd)) * 2);
+                        loopCrossFade = (float) 
+                                (Math.min(Math.min(loopStart, loopEnd), sample.getLength() - Math.max(loopStart, loopEnd)) * 2);
                     }
 
                     // if crossfade ends up larger than the length of the loop
@@ -790,39 +792,85 @@ public class SamplePlayer extends UGen {
 					double sampleLevel = 1;
 					
 					// Calculate the position of the crossfade frame, and the sample level for the current position
-					// provided there is a set loopCrossFade value.
-					if (isLooping && loopCrossFade != 0) {
+					// provided there is a set loopCrossFade value, for backwards or forwards loops
+					if (isLooping[i] && loopCrossFade != 0 
+					        && loopType != LoopType.LOOP_ALTERNATING) {
     					if (loopStart < loopEnd) {
     					    // If current position is within the end segment of the loop
     					    if (position > loopEnd - loopCrossFade / 2) {
     					        // Set cross position to be the relative starting segment
     					        // And set sample level to be relative decreasing (1 -> 0.5) for the end segment
     					        crossPosition = loopStart - (loopEnd - position);
-    					        sampleLevel = 1 - ((position - (loopEnd - loopCrossFade / 2)) / loopCrossFade);
+    					        sampleLevel = 1 - Math.max(
+    					                Math.min(
+    					                        ((position - (loopEnd - loopCrossFade / 2)) / loopCrossFade),
+    					                        0.5f),
+    					                0);
                             // If current position is within the start segment of the loop
     					    } else if (position < loopStart + loopCrossFade / 2) {
                                 // Set cross position to be the relative ending segment
                                 // And set sample level to be relative increasing (0.5 -> 1) for the start segment
     					        crossPosition = loopEnd + (position - loopStart);
-    					        sampleLevel = ((position - (loopStart - loopCrossFade / 2)) / loopCrossFade);
-    					    }
+    					        sampleLevel = Math.max(
+    					                Math.min(
+    					                        ((position - (loopStart - loopCrossFade / 2)) / loopCrossFade),
+    					                        1), 
+    					                0.5f);
+    					    } 					    
     					} else {
     					    if (position < loopEnd + loopCrossFade / 2) {
     					        crossPosition = loopStart + (position - loopEnd);
-    					        sampleLevel = 1 - (((loopEnd + loopCrossFade / 2) - position) / loopCrossFade);
+    					        sampleLevel = 1 - Math.max(
+    					                Math.min(
+    					                        (((loopEnd + loopCrossFade / 2) - position) / loopCrossFade),
+    					                        0.5f),
+    					                0);
     					    } else if (position > loopStart - loopCrossFade / 2) {
     					        crossPosition = loopEnd - (loopStart - position);
-    					        sampleLevel = (((loopStart + loopCrossFade / 2) - position) / loopCrossFade);
+    					        sampleLevel = Math.max(
+    					                Math.min(
+    					                        (((loopStart + loopCrossFade / 2) - position) / loopCrossFade),
+    					                        1),
+    					                0.5f);
     					    }
     					}
+                    // Calculate crossfade frame and sample level for alternating loops
+                    } else if (isLooping[i] && loopCrossFade != 0 
+                            && loopType == LoopType.LOOP_ALTERNATING) {
+                        // Alternating loops only reach the end of the loop by going LOOP_FORWARD,
+                        // and only reach the beginning of the loop by going LOOP_BACKWARD.
+                        
+                        // If current position is within the end segment of the loop (LOOP_FORWARD)
+                        if (position > loopEnd - loopCrossFade / 2) {
+                            // Set cross position to be the relative starting segment for LOOP_BACKWARDS
+                            // And set sample level to be relative decreasing (1 -> 0.5 forwards, 0.5 -> 1 backwards)
+                            crossPosition = loopEnd + (loopEnd - position);
+                            sampleLevel = 1 - Math.max(
+                                    Math.min(
+                                            ((position - (loopEnd - loopCrossFade / 2)) / loopCrossFade),
+                                            0.5f),
+                                    0);
+                        // If current position is within the start segment of the loop (LOOP_BACKWARDS)
+                        } else if (position < loopStart + loopCrossFade / 2) {
+                            // Set cross position to be the relative ending segment for LOOP_FORWARDS
+                            // And set sample level to be relative increasing (1 -> 0.5 backwards, 0.5 -> 1 forwards)
+                            crossPosition = loopStart - (position - loopStart);
+                            sampleLevel = Math.max(
+                                    Math.min(
+                                            ((position - (loopStart - loopCrossFade / 2)) / loopCrossFade),
+                                            1),
+                                    0.5f);
+                        }
     				// Set isLooping once the first 'start segment' has played
     				// and we have reached the non crossfade section of the loop
-					} else if (!isLooping){
-					    if (loopStart < loopEnd && position > loopStart + loopCrossFade / 2) {
-					        isLooping = true;
-					    } else if (loopEnd < loopStart && position < loopStart - loopCrossFade / 2) {
-					        isLooping = true;
-					    }
+                    } else if (!isLooping[i]){
+                        if (loopStart < loopEnd && 
+                                position > loopStart + loopCrossFade / 2) {
+                            isLooping[i] = true;
+                        } else if (loopEnd < loopStart && 
+                                position < loopStart - loopCrossFade / 2) {
+                            isLooping[i] = true;
+                        }
 					}
 
 					// Reset crossfade position if it is not within the boundaries of loopStart - crossLength < p < loopStart

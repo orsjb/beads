@@ -98,7 +98,7 @@ public abstract class UGen extends Bead {
 	 * @return the default AudioContext
 	 */
 	public static AudioContext getDefaultContext() {
-		return defaultContext;
+		return defaultContext; // Fix reference to defaultContext in AudioContext.java
 	}
 
 	/**
@@ -106,11 +106,11 @@ public abstract class UGen extends Bead {
 	 * @param defaultContext the default UGen object to use for specialised class constructors
 	 */
 	public static void setDefaultContext(AudioContext defaultContext) {
-		UGen.defaultContext = defaultContext;
+		UGen.defaultContext = defaultContext; // Fix reference to defaultContext in AudioContext.java
 	}
 
 	/** A default audio context to to remove the requirement of adding an AudioContext to every constructor */
-	static AudioContext defaultContext = null;
+	static AudioContext defaultContext = null; // TODO: Embed this into AudioContext.java
 
 	/**
 	 * Create a new UGen from the given AudioContext but with no inputs or
@@ -795,6 +795,7 @@ public abstract class UGen extends Bead {
 						&& bp.index == sourceOutputChannel) {
 					it.remove();
 					ret = true;
+					break;
 				} else {
 					inputCount++;
 				}
@@ -813,6 +814,55 @@ public abstract class UGen extends Bead {
 			return false;
 		}
 	}
+	
+    /**
+     * Disconnects the connection of the UGen at the specified index from this UGen's buffer.
+     * 
+     * @param inputChannel
+     *            The channel of this UGen to check.
+     * @param index
+     *            The index of the UGen to disconnect.
+     * @param sourceOutputChannel
+     *            The channel of the source UGen.
+     * @return True if a connection was removed; false otherwise.
+     */	
+	@SuppressWarnings("unchecked")
+	public synchronized boolean removeConnectionAtIndex(int inputChannel,
+	            int index, int sourceOutputChannel) {
+        if (!noInputs) {
+            int inputCount = 0;
+            boolean ret = false;
+
+            List<BufferPointer> bplist = inputsAtChannel[inputChannel];
+            
+            int i = -1;
+            Iterator<BufferPointer> it = bplist.iterator();
+            while (it.hasNext()) {
+                BufferPointer bp = it.next();
+                i ++;
+                if (index == i && bp.index == sourceOutputChannel) {
+                    it.remove();
+                    ret = true;
+                    break;
+                } else {
+                    inputCount++;
+                }
+            }
+            if (inputCount == 0) {
+                // include inputs on all channels in count
+                for (List<BufferPointer> ch : inputsAtChannel)
+                    inputCount += ch.size();
+            }
+            if (inputCount == 0) {
+                System.out.println("CHEATED");
+                noInputs = true;
+                zeroIns();
+            }
+            return ret;
+        } else {
+            return false;
+        }
+    }
 	
 	/**
 	 * Clear all of this UGen's input connections.

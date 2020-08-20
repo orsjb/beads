@@ -19,6 +19,7 @@ public class BeadsTestCases {
 	
 	private static int N = 5000;
 	private static int M = 100;
+	private static int O = -1;
 
 
     /*
@@ -79,8 +80,31 @@ public class BeadsTestCases {
         for (int i = 0; i < M; i++) {
         	long sTime = System.nanoTime();
             //choose one to remove
-            int randomNumber = (int)(N * Math.random());
-            gain.removeConnection(0, allElements[randomNumber], 0);
+            int randomNumber;
+            
+            randomNumber = (O != -1) ? O : (int)(N * Math.random());
+            gain.removeConnectionAtIndex(0, randomNumber, 0);
+            //gain.removeConnection(0, allElements[randomNumber], 0);
+            
+            while (gain.getNumberOfConnectedUGens(0) != N - 2) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }               
+            }
+            
+            long myDur = System.nanoTime() - sTime;
+            if (i == 0) {
+                minDur = myDur;
+                maxDur = myDur;
+            } else {
+                minDur = (myDur < minDur) ? myDur : minDur;
+                maxDur = (myDur > maxDur) ? myDur : maxDur;             
+            }
+            totalDur += myDur;
+            
             //choose one to add
             randomNumber = (int)(N * Math.random());
             gain.addInput(allElements[randomNumber]);
@@ -88,26 +112,8 @@ public class BeadsTestCases {
 	        gain.update();
 	        
 	        System.out.println("ar: " + gain.getNumberOfConnectedUGens(0) + ", " + i);
-	        
-	        long myDur = System.nanoTime() - sTime;
-	        if (i == 0) {
-	        	minDur = myDur;
-	        	maxDur = myDur;
-	        } else {
-	        	minDur = (myDur < minDur) ? myDur : minDur;
-	        	maxDur = (myDur > maxDur) ? myDur : maxDur;	        	
-	        }
-	        totalDur += myDur;
-	        
-
         }
 
-        try {
-        	Thread.sleep(100);
-        } catch (InterruptedException e) {
-        	// TODO Auto-generated catch block
-        	e.printStackTrace();
-        }
         //connections
         AudioContext ac = UGen.getDefaultContext();
         ac.out.addInput(gain);
@@ -131,7 +137,7 @@ public class BeadsTestCases {
         	long sTime = System.nanoTime();
 	        //choose one to remove
 	        Set<UGen> inputs = gain.getConnectedInputs();
-	        int randomNumber = (int)(N * Math.random());
+	        int randomNumber = (O != -1) ? O : (int)(N * Math.random());
 	        UGen anElement = inputs.iterator().next();      //is this always the first element?
 	        anElement.kill(); //kill triggers automatic removal and hence add to GC pile
 	        //choose one to add
@@ -151,15 +157,14 @@ public class BeadsTestCases {
 	        	maxDur = (myDur > maxDur) ? myDur : maxDur;	        	
 	        }
 	        totalDur += myDur;
-	        
-	        try {
-	        	Thread.sleep(100);
-	        } catch (InterruptedException e) {
-	        	// TODO Auto-generated catch block
-	        	e.printStackTrace();
-	        }
         }
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         //connections
         AudioContext ac = UGen.getDefaultContext();
         ac.out.addInput(gain);
@@ -181,8 +186,9 @@ public class BeadsTestCases {
 			ac.start();
 			
 			N = 100000;
-			M = 100;
-			manyNodes(UGenStorageType.LINKEDLIST);
+			M = 10;
+			O = 50000;
+			addAndRemoveNodes(UGenStorageType.LINKEDLIST);
 
 			// End Actual Function
 			
