@@ -94,11 +94,11 @@ public abstract class UGen extends Bead {
 	private UGenStorageType ugenStorageType;
 
 	/**
-	 * Get the default AudioContext to use in UGen objects
+	 * Get the default AudioContext used in UGen objects
 	 * @return the default AudioContext
 	 */
 	public static AudioContext getDefaultContext() {
-		return defaultContext; // Fix reference to defaultContext in AudioContext.java
+		return AudioContext.getDefaultContext();
 	}
 
 	/**
@@ -106,11 +106,8 @@ public abstract class UGen extends Bead {
 	 * @param defaultContext the default UGen object to use for specialised class constructors
 	 */
 	public static void setDefaultContext(AudioContext defaultContext) {
-		UGen.defaultContext = defaultContext; // Fix reference to defaultContext in AudioContext.java
+	    AudioContext.setDefaultContext(defaultContext);
 	}
-
-	/** A default audio context to to remove the requirement of adding an AudioContext to every constructor */
-	static AudioContext defaultContext = null; // TODO: Embed this into AudioContext.java
 
 	/**
 	 * Create a new UGen from the given AudioContext but with no inputs or
