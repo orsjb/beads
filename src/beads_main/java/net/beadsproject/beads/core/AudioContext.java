@@ -32,6 +32,7 @@ public class AudioContext {
 
 	public static final int DEFAULT_BUFFER_SIZE = 512;
 	
+	/** The default context, for using UGens without explicitly declaring context **/
 	private static AudioContext defaultContext = new AudioContext();
 
 	/** The audio IO device. */

@@ -8,10 +8,6 @@ import net.beadsproject.beads.ugens.Envelope;
 public class Lesson05_Clock {
 
 	public static void main(String[] args) {
-
-		AudioContext ac;
-
-		ac = new AudioContext();
 		 /*
 		  * A Clock is an unusual UGen because it doesn't
 		  * have any outputs and because objects can listen
@@ -23,7 +19,7 @@ public class Lesson05_Clock {
 		  * 
 		  * So we begin with the envelope as before.
 		  */
-		  Envelope intervalEnvelope = new Envelope(ac, 1000);
+		  Envelope intervalEnvelope = new Envelope(1000);
 		  intervalEnvelope.addSegment(600, 10000);
 		  intervalEnvelope.addSegment(1000, 10000);
 		  intervalEnvelope.addSegment(400, 10000);
@@ -32,7 +28,7 @@ public class Lesson05_Clock {
 		   * Then the clock, which gets initialised with the
 		   * envelope. 
 		   */
-		  Clock clock = new Clock(ac, intervalEnvelope);
+		  Clock clock = new Clock(intervalEnvelope);
 		  /*
 		   * Tell the clock to tick (you probably don't want
 		   * to do this except for debugging.
@@ -44,8 +40,8 @@ public class Lesson05_Clock {
 		   * and that means it won't run. So we use the method
 		   * addDependent() instead.
 		   */
-		  ac.out.addDependent(clock);
-		  ac.start();
+		  AudioContext.getDefaultContext().out.addDependent(clock);
+		  AudioContext.getDefaultContext().start();
 		}
 	
 }

@@ -10,23 +10,26 @@ import net.beadsproject.beads.ugens.WavePlayer;
 public class Lesson02_EnvelopeAndWavePlayer {
 
 	public static void main(String[] args) {
-
-		AudioContext ac;
-
-		  ac = new AudioContext();
+	      /*
+	       * As we are using the defaultcontext, there is no longer
+           * a need to create an AudioContext object. We can simply
+           * create UGens without passing in any AudioContext object.
+	       */
+	    
 		  /*
 		   * This is an Envelope. It can be used to modify
 		   * the behaviour of other UGen object. We need to
 		   * do this to get precise control of certain parameters
 		   * at an audio rate.
+		   * 
 		   */
-		  Envelope freqEnv = new Envelope(ac, 500);
+		  Envelope freqEnv = new Envelope(500);
 		  /*
 		   * This is a WavePlayer. Here we've set it up using 
 		   * the above Envelope, and a SineBuffer. We'll use
 		   * the Envelope to modify the freqency below.
 		   */
-		  WavePlayer wp = new WavePlayer(ac, freqEnv, Buffer.SINE);
+		  WavePlayer wp = new WavePlayer(freqEnv, Buffer.SINE);
 		  /*
 		   * So now that the WavePlayer is set up with the 
 		   * frequency Envelope, do stuff with the frequency
@@ -40,10 +43,18 @@ public class Lesson02_EnvelopeAndWavePlayer {
 		  /*
 		   * Connect it all together as before.
 		   */
-		  Gain g = new Gain(ac, 1, 0.1f);
+		  Gain g = new Gain(1, 0.1f);
 		  g.addInput(wp);
-		  ac.out.addInput(g);
-		  ac.start();
+		  
+		  /*
+		   * We will still need to attach all the UGens to the output
+		   * of the defaultcontext and make it start running in order
+		   * for audio to play. We can do this the same way as before,
+		   * by accessing the defaultcontext through:
+		   * - AudioContext.getDefaultContext()
+		   */
+		  AudioContext.getDefaultContext().out.addInput(g);
+		  AudioContext.getDefaultContext().start();
 		
 	}
 }

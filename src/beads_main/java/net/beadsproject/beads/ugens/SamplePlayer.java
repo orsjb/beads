@@ -786,9 +786,12 @@ public class SamplePlayer extends UGen {
                     }
 
                     // if crossfade ends up larger than the length of the loop
-                    // set it so it's exactly the same length
+                    // set it so it's exactly the same length, and if it
+                    // is negative, set it to 0 length.
                     if (loopCrossFade > Math.abs(loopEnd - loopStart)) {
                         loopCrossFade = Math.abs(loopEnd - loopStart);
+                    } else if (loopCrossFade < 0) {
+                        loopCrossFade = 0;
                     }
 					
 					float[] crossfadeFrame = new float[sample.getNumChannels()];
@@ -797,7 +800,7 @@ public class SamplePlayer extends UGen {
 					
 					// Calculate the position of the crossfade frame, and the sample level for the current position
 					// provided there is a set loopCrossFade value, for backwards or forwards loops
-					if (isLooping[i] && loopCrossFade != 0 
+					if (isLooping[i] && loopCrossFade > 0 
 					        && loopType != LoopType.LOOP_ALTERNATING) {
     					if (loopStart < loopEnd) {
     					    // If current position is within the end segment of the loop
@@ -839,7 +842,7 @@ public class SamplePlayer extends UGen {
     					    }
     					}
                     // Calculate crossfade frame and sample level for alternating loops
-                    } else if (isLooping[i] && loopCrossFade != 0 
+                    } else if (isLooping[i] && loopCrossFade > 0 
                             && loopType == LoopType.LOOP_ALTERNATING) {
                         // Alternating loops only reach the end of the loop by going LOOP_FORWARD,
                         // and only reach the beginning of the loop by going LOOP_BACKWARD.

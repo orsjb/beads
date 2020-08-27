@@ -6,15 +6,12 @@ import net.beadsproject.beads.ugens.Gain;
 import net.beadsproject.beads.ugens.SamplePlayer;
 import net.beadsproject.beads.ugens.SamplePlayer.EnvelopeType;
 import net.beadsproject.beads.ugens.SamplePlayer.LoopType;
+import net.beadsproject.beads.ugens.Static;
 
 
 public class Lesson04_SamplePlayer {
 
 	public static void main(String[] args) {
-
-		AudioContext ac;
-
-		ac = new AudioContext();
 		/*
 		 * Here's how to play back a sample.
 		 * 
@@ -27,18 +24,20 @@ public class Lesson04_SamplePlayer {
 		 */
 		String audioFile = "audio/kick_back.wav";
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
-		SamplePlayer player = new SamplePlayer(ac, SampleManager
+		SamplePlayer player = new SamplePlayer(SampleManager
 				.sample(audioFile));
-		player.setLoopType(LoopType.LOOP_ALTERNATING);
-		player.setLoopCrossFade(300f);
-		player.setEnvelopeType(EnvelopeType.FINE);		
-		player.setLoopPointsFraction(0.4f, 0.9f);
+		player.setLoopType(LoopType.LOOP_FORWARDS);
+		player.setLoopCrossFade(200f);
+		player.setEnvelopeType(EnvelopeType.FINE);	
+		
+		player.setLoopStart(new Static(100f));
+		player.setLoopEnd(new Static(1650f));
 		/*
 		 * And as before...
 		 */
-		Gain g = new Gain(ac, 2, 0.2f);
+		Gain g = new Gain(2, 0.2f);
 		g.addInput(player);
-		ac.out.addInput(g);
-		ac.start();
+		AudioContext.getDefaultContext().out.addInput(g);
+		AudioContext.getDefaultContext().start();
 	}
 }

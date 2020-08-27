@@ -161,30 +161,80 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
    
     public static class JavaSound extends AudioServerIO {
 	   
+       JSTimingMode jsTiming = JSTimingMode.FramePosition;
 	   String device = null;
 	   String name = "Beads";
 	   
+	   /**
+	    * Creates Javasound Server object as the audio output format,
+	    * using JAudioLibs interface. The default audio output device
+	    * will be used.
+	    */
 	   public JavaSound() {
 		   super();
 	   }
 
+       /**
+        * Creates Javasound Server object as the audio output format,
+        * using JAudioLibs interface.
+        * 
+        * @param device the name of the output device
+        */
 	   public JavaSound(String device) {
 		   super();
 		   this.device = device;
 	   }
 	   
+       /**
+        * Creates Javasound Server object as the audio output format,
+        * using JAudioLibs interface. The default audio output device
+        * will be used.
+        * 
+        * @param compatibility set true if the audio output is choppy and cracking
+        */	   
+	   public JavaSound(boolean compatibility) {
+	       super();
+	       if (compatibility) this.jsTiming = JSTimingMode.Estimated;
+	   }
+	
+       /**
+        * Creates Javasound Server object as the audio output format,
+        * using JAudioLibs interface.
+        * 
+        * @param device the name of the output device
+        * @param compatibility set true if the audio output is choppy and cracking
+        */
+	   public JavaSound(String device, boolean compatibility) {
+           super();
+           this.device = device;
+           if (compatibility) this.jsTiming = JSTimingMode.Estimated;
+       }
+	   
 	   protected boolean start() {
 		   System.out.println("Starting JavaSound implementation of AudioServerIO");
-		   config = new AudioConfiguration(
-                   context.getSampleRate(),
-                   context.getAudioFormat().inputs,
-                   context.getAudioFormat().outputs,
-                   context.getBufferSize(),
-                   new ClientID(name),
-                   Connections.ALL,
-                   JSTimingMode.FramePosition
-                   //new beadsDevice(device)  // TO DO: Fix Device Implementation
-                   );
+		   
+		   if (device != null) {
+    		   config = new AudioConfiguration(
+                       context.getSampleRate(),
+                       context.getAudioFormat().inputs,
+                       context.getAudioFormat().outputs,
+                       context.getBufferSize(),
+                       new ClientID(name),
+                       Connections.ALL,
+                       jsTiming,
+                       new audioDevice(device)
+                       );
+		   } else {
+	           config = new AudioConfiguration(
+	                   context.getSampleRate(),
+	                   context.getAudioFormat().inputs,
+	                   context.getAudioFormat().outputs,
+	                   context.getBufferSize(),
+	                   new ClientID(name),
+	                   Connections.ALL,
+	                   jsTiming
+	                   );		       
+		   }
 		   
            String jaudioLib = "JavaSound";
            
@@ -209,13 +259,20 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
 	   }
     }
     
-    public class beadsDevice extends Device {
+    /**
+     * Creates a Device object containing information about the desired output 
+     * device. AudioDevices may be used as inputs when creating a JavaSound server
+     * if you want to specify an output that is not your system's default output
+     * device.
+     *
+     */
+    public class audioDevice extends Device {
 
-        public beadsDevice(String name, int maxInputChannels, int maxOutputChannels) {
+        public audioDevice(String name, int maxInputChannels, int maxOutputChannels) {
             super(name, maxInputChannels, maxOutputChannels);
         }
         
-        public beadsDevice(String name) {
+        public audioDevice(String name) {
             super(name, 1, 1);
         }
     }

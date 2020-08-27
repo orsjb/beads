@@ -11,16 +11,13 @@ public class Lesson08_Granulation {
 
 	public static void main(String[] args) {
 
-		AudioContext ac;
-
-		ac = new AudioContext();
 		/*
 		 * In lesson 4 we played back samples. This example is almost the same
 		 * but uses GranularSamplePlayer instead of SamplePlayer. See some of
 		 * the controls below.
 		 */
 		String audioFile = "audio/kick_back.wav";
-		GranularSamplePlayer player = new GranularSamplePlayer(ac,
+		GranularSamplePlayer player = new GranularSamplePlayer(
 				SampleManager.sample(audioFile));
 		/*
 		 * Have some fun with the controls.
@@ -31,11 +28,11 @@ public class Lesson08_Granulation {
 		player.getLoopEndUGen().setValue(
 				(float)SampleManager.sample(audioFile).getLength());
 		// control the rate of grain firing
-		Envelope grainIntervalEnvelope = new Envelope(ac, 100);
+		Envelope grainIntervalEnvelope = new Envelope(100);
 		grainIntervalEnvelope.addSegment(20, 10000);
 		player.setGrainInterval(grainIntervalEnvelope);
 		// control the playback rate
-		Envelope rateEnvelope = new Envelope(ac, 1);
+		Envelope rateEnvelope = new Envelope(1);
 		rateEnvelope.addSegment(1, 5000);
 		rateEnvelope.addSegment(0, 5000);
 		rateEnvelope.addSegment(0, 2000);
@@ -46,10 +43,10 @@ public class Lesson08_Granulation {
 		/*
 		 * And as before...
 		 */
-		Gain g = new Gain(ac, 2, 0.2f);
+		Gain g = new Gain(2, 0.2f);
 		g.addInput(player);
-		ac.out.addInput(g);
-		ac.start();
+		AudioContext.getDefaultContext().out.addInput(g);
+		AudioContext.getDefaultContext().start();
 
 	}
 

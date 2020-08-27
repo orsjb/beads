@@ -78,6 +78,7 @@ public class SampleManager {
 				samples.put(ref, sample);
 				if(verbose) System.out.println("Loaded " + fn);
 			} catch (Exception e) {
+			    System.out.println("Sample not found " + fn);
 				//swallow exception
 			}
 		}
