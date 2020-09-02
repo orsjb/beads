@@ -16,6 +16,10 @@ void setup() {
    * audio processing. It also connects the the JavaSound system and
    * provides you with an output device.
    */
+   
+  /* UPDATE: As of Beads (v3.2), Default Audio Contexts (defaultcontext)
+   * can now be used. Please see below for more details.
+   */
    ac = new AudioContext();
   /* 
    * Make a noise-making object. Noise is a type of Class known as a
@@ -48,6 +52,19 @@ void setup() {
    * Finally, start things running.
    */
   ac.start();
+  
+  /*
+   * UPDATE: As of Beads v3.2, all UGens have a shared default Audio
+   * Context in them that can be accessed through AudioContext.getDefaultContext().
+   * You will no longer need to explicitly create AudioContext ac and insert this
+   * when making new UGen objects. Defaultcontext will provide the same effects
+   * as creating a new AudioContext without any parameters. If you want to specify
+   * particular information such as the device or AudioIO to be used, you will
+   * need to make your own AudioContext object, as shown in lesson_01.
+   * 
+   * Lesson02_EnvelopeAndWavePlayer onwards will instead be using the 
+   * defaultcontext.  
+   */
 }
 
 /*

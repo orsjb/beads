@@ -10,6 +10,7 @@ import net.beadsproject.beads.ugens.SamplePlayer;
 public class Lesson08_Granulation {
 
 	public static void main(String[] args) {
+        AudioContext ac = AudioContext.getDefaultContext();
 
 		/*
 		 * In lesson 4 we played back samples. This example is almost the same
@@ -45,8 +46,8 @@ public class Lesson08_Granulation {
 		 */
 		Gain g = new Gain(2, 0.2f);
 		g.addInput(player);
-		AudioContext.getDefaultContext().out.addInput(g);
-		AudioContext.getDefaultContext().start();
+		ac.out.addInput(g);
+		ac.start();
 
 	}
 

@@ -134,7 +134,7 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
                    context.getAudioFormat().outputs,
                    context.getBufferSize(),
                    new ClientID(name),
-                   Connections.ALL);    // TO DO: Solve missing jack.dll issue
+                   Connections.ALL);
            
            String jaudioLib = "JACK";
            
@@ -172,6 +172,9 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
 	    */
 	   public JavaSound() {
 		   super();
+		   // If user's OS is Windows, change JSTiming to Estimated for better performance.
+		   if (System.getProperty("os.name").toLowerCase().contains("win")) 
+		       jsTiming = JSTimingMode.Estimated;
 	   }
 
        /**
@@ -183,32 +186,10 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
 	   public JavaSound(String device) {
 		   super();
 		   this.device = device;
+	       // If user's OS is Windows, change JSTiming to Estimated for better performance.
+           if (System.getProperty("os.name").toLowerCase().contains("win")) 
+               jsTiming = JSTimingMode.Estimated;
 	   }
-	   
-       /**
-        * Creates Javasound Server object as the audio output format,
-        * using JAudioLibs interface. The default audio output device
-        * will be used.
-        * 
-        * @param compatibility set true if the audio output is choppy and cracking
-        */	   
-	   public JavaSound(boolean compatibility) {
-	       super();
-	       if (compatibility) this.jsTiming = JSTimingMode.Estimated;
-	   }
-	
-       /**
-        * Creates Javasound Server object as the audio output format,
-        * using JAudioLibs interface.
-        * 
-        * @param device the name of the output device
-        * @param compatibility set true if the audio output is choppy and cracking
-        */
-	   public JavaSound(String device, boolean compatibility) {
-           super();
-           this.device = device;
-           if (compatibility) this.jsTiming = JSTimingMode.Estimated;
-       }
 	   
 	   protected boolean start() {
 		   System.out.println("Starting JavaSound implementation of AudioServerIO");
@@ -266,13 +247,13 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
      * device.
      *
      */
-    public class audioDevice extends Device {
+    protected class audioDevice extends Device {
 
-        public audioDevice(String name, int maxInputChannels, int maxOutputChannels) {
+        protected audioDevice(String name, int maxInputChannels, int maxOutputChannels) {
             super(name, maxInputChannels, maxOutputChannels);
         }
         
-        public audioDevice(String name) {
+        protected audioDevice(String name) {
             super(name, 1, 1);
         }
     }

@@ -17,8 +17,6 @@ import net.beadsproject.beads.data.Sample;
  * {@link Sample} argument, the number of outputs of SamplePlayer is determined
  * by the number of channels of the {@link Sample}. {@link Sample} playback can
  * use either linear or cubic interpolation.
- * 
- * TODO: Loop cross-fading has not been implemented yet.
  *
  * @author ollie
  */
@@ -132,7 +130,7 @@ public class SamplePlayer extends UGen {
 	protected LoopType loopType;
 
 	/** The loop cross fade in milliseconds. */
-	protected float loopCrossFade; // TODO loop crossfade behaviour
+	protected float loopCrossFade;
 
 	/**
 	 * Flag to determine whether playback starts at the beginning of the sample
@@ -781,8 +779,9 @@ public class SamplePlayer extends UGen {
                     if ((loopCrossFade / 2 > Math.min(loopStart, loopEnd))
                             || (loopCrossFade / 2 > (sample.getLength() - Math.max(loopStart, loopEnd)))) 
                     {
-                        loopCrossFade = (float) 
-                                (Math.min(Math.min(loopStart, loopEnd), sample.getLength() - Math.max(loopStart, loopEnd)) * 2);
+                        loopCrossFade = (float) (Math.min(
+                                Math.min(loopStart, loopEnd), sample.getLength() - Math.max(loopStart, loopEnd)) * 2
+                                );
                     }
 
                     // if crossfade ends up larger than the length of the loop
@@ -801,7 +800,8 @@ public class SamplePlayer extends UGen {
 					// Calculate the position of the crossfade frame, and the sample level for the current position
 					// provided there is a set loopCrossFade value, for backwards or forwards loops
 					if (isLooping[i] && loopCrossFade > 0 
-					        && loopType != LoopType.LOOP_ALTERNATING) {
+					        && (loopType == LoopType.LOOP_FORWARDS 
+					        || loopType == LoopType.LOOP_BACKWARDS)) {
     					if (loopStart < loopEnd) {
     					    // If current position is within the end segment of the loop
     					    if (position > loopEnd - loopCrossFade / 2) {
@@ -886,9 +886,9 @@ public class SamplePlayer extends UGen {
 					        || crossPosition > (Math.max(loopStart, loopEnd) + loopCrossFade/2)) 
 						crossPosition = -1;
 					//----
-					
 
-					// calculate the samples
+					// calculate the samples using position and crossPosition pointers.
+					// if either are out of bounds, getFrame() handles this by returning 0-filled array.
 					switch (interpolationType) {
 					case ADAPTIVE:
 						if (rate > ADAPTIVE_INTERP_HIGH_THRESH) {

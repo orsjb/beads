@@ -8,6 +8,8 @@ import net.beadsproject.beads.ugens.Envelope;
 public class Lesson05_Clock {
 
 	public static void main(String[] args) {
+          AudioContext ac = AudioContext.getDefaultContext();
+
 		 /*
 		  * A Clock is an unusual UGen because it doesn't
 		  * have any outputs and because objects can listen
@@ -40,8 +42,8 @@ public class Lesson05_Clock {
 		   * and that means it won't run. So we use the method
 		   * addDependent() instead.
 		   */
-		  AudioContext.getDefaultContext().out.addDependent(clock);
-		  AudioContext.getDefaultContext().start();
+		  ac.out.addDependent(clock);
+		  ac.start();
 		}
 	
 }

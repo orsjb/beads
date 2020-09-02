@@ -10,6 +10,8 @@ import net.beadsproject.beads.ugens.WavePlayer;
 public class Lesson03_FMSynthesis {
 
 	public static void main(String[] args) {
+          AudioContext ac = AudioContext.getDefaultContext();
+
 		  /*
 		   * In the last example, we used an Envelope to
 		   * control the frequency of a WavePlayer.
@@ -47,8 +49,8 @@ public class Lesson03_FMSynthesis {
 		  Gain g = new Gain(1, 0.1f);
 		  g.addInput(wp);
 		  
-		  AudioContext.getDefaultContext().out.addInput(g);
-		  AudioContext.getDefaultContext().start();
+		  ac.out.addInput(g);
+		  ac.start();
 		
 	}
 }

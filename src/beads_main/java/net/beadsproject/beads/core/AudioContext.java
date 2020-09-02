@@ -33,7 +33,7 @@ public class AudioContext {
 	public static final int DEFAULT_BUFFER_SIZE = 512;
 	
 	/** The default context, for using UGens without explicitly declaring context **/
-	private static AudioContext defaultContext = new AudioContext();
+	private static AudioContext defaultContext;
 
 	/** The audio IO device. */
 	private AudioIO audioIO;
@@ -694,15 +694,22 @@ public class AudioContext {
 	}
 	
     /**
-     * Get the default AudioContext
+     * Get the default AudioContext. If none exists, create a new one.
+     * 
      * @return the default AudioContext
      */	
 	public static AudioContext getDefaultContext() {
+	    if (defaultContext == null) 
+	        defaultContext = new AudioContext();
 	    return defaultContext;
 	}
 	
     /**
-     * Set the default AudioContext
+     * Set the default AudioContext. 
+     * If you are using a custom defaultcontext, make sure setDefaultContext 
+     * is always called before getDefaultContext and any UGen constructors 
+     * that will use the custom defaultcontext.
+     * 
      * @param defaultContext the default AudioContext object to use
      */	
     public static void setDefaultContext(AudioContext newContext) {

@@ -5,7 +5,7 @@ AudioContext ac;
 
 void setup() {
   size(300,300);
-  ac = new AudioContext();
+  ac = AudioContext.getDefaultContext();
   selectInput("Select an audio file:", "fileSelected");
 }
 
@@ -20,7 +20,7 @@ void fileSelected(File selection) {
    */
   String audioFileName = selection.getAbsolutePath();
   Sample sample = SampleManager.sample(audioFileName);
-  GranularSamplePlayer player = new GranularSamplePlayer(ac, sample);
+  GranularSamplePlayer player = new GranularSamplePlayer(sample);
   /*
    * Have some fun with the controls.
    */
@@ -29,11 +29,11 @@ void fileSelected(File selection) {
    player.getLoopStartEnvelope().setValue(0);
    player.getLoopEndEnvelope().setValue((float)sample.getLength());
    //control the rate of grain firing
-   Envelope grainIntervalEnvelope = new Envelope(ac, 30);
+   Envelope grainIntervalEnvelope = new Envelope(30);
    grainIntervalEnvelope.addSegment(20, 10000);
    player.setGrainIntervalEnvelope(grainIntervalEnvelope);
    //control the playback rate
-   Envelope rateEnvelope = new Envelope(ac, 1);
+   Envelope rateEnvelope = new Envelope(1);
    rateEnvelope.addSegment(1, 5000);
    rateEnvelope.addSegment(0, 5000);
    rateEnvelope.addSegment(0, 2000);
@@ -44,7 +44,7 @@ void fileSelected(File selection) {
    /*
    * And as before...
    */
-  Gain g = new Gain(ac, 2, 0.2);
+  Gain g = new Gain(2, 0.2);
   g.addInput(player);
   ac.out.addInput(g);
   ac.start();

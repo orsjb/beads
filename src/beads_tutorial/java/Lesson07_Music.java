@@ -15,6 +15,8 @@ import net.beadsproject.beads.ugens.WavePlayer;
 public class Lesson07_Music {
 
 	public static void main(String[] args) {
+        AudioContext ac = AudioContext.getDefaultContext();
+
 		/*
 		 * In this example a Clock is used to trigger events. We do this by
 		 * adding a listener to the Clock (which is of type Bead).
@@ -41,7 +43,7 @@ public class Lesson07_Music {
 				          WavePlayer wp = new WavePlayer(freq, Buffer.SINE);
 				          Gain g = new Gain(1, new Envelope(0));
 				          g.addInput(wp);
-				          AudioContext.getDefaultContext().out.addInput(g);
+				          ac.out.addInput(g);
 				          ((Envelope)g.getGainUGen()).addSegment(0.1f, random(200));
 				          ((Envelope)g.getGainUGen()).addSegment(0, random(7000), new KillTrigger(g));
 				       }
@@ -55,7 +57,7 @@ public class Lesson07_Music {
 				          g.addInput(wp);
 				          Panner p = new Panner(random(1));
 				          p.addInput(g);
-				          AudioContext.getDefaultContext().out.addInput(p);
+				          ac.out.addInput(p);
 				          ((Envelope)g.getGainUGen()).addSegment(random(0.1), random(50));
 				          ((Envelope)g.getGainUGen()).addSegment(0, random(400), new KillTrigger(p));
 				       }
@@ -65,14 +67,14 @@ public class Lesson07_Music {
 				          g.addInput(n);
 				          Panner p = new Panner(random(0.5) + 0.5f);
 				          p.addInput(g);
-				          AudioContext.getDefaultContext().out.addInput(p);
+				          ac.out.addInput(p);
 				          ((Envelope)g.getGainUGen()).addSegment(0, random(100), new KillTrigger(p));
 				       }
 				     }
 				   }
 				 );
-		AudioContext.getDefaultContext().out.addDependent(clock);
-		AudioContext.getDefaultContext().start();
+		ac.out.addDependent(clock);
+		ac.start();
 
 	}
 	

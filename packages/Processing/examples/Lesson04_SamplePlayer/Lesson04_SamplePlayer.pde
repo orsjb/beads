@@ -5,7 +5,7 @@ AudioContext ac;
 
 void setup() {
   size(300,300);
-  ac = new AudioContext();
+  ac = AudioContext.getDefaultContext();
   selectInput("Select an audio file:", "fileSelected");
 }
 
@@ -23,18 +23,18 @@ void fileSelected(File selection) {
    * files according to their file names, so you don't have to load them again.
    */
   String audioFileName = selection.getAbsolutePath();
-  SamplePlayer player = new SamplePlayer(ac, SampleManager.sample(audioFileName));
+  SamplePlayer player = new SamplePlayer(SampleManager.sample(audioFileName));
   /*
    * And as before...
    */
-  Gain g = new Gain(ac, 2, 0.2);
+  Gain g = new Gain(2, 0.2);
   g.addInput(player);
   ac.out.addInput(g);
   ac.start();
   
   /*
    * Note there is a lot more you can do. e.g., Varispeed. Try adding this...
-   Envelope speedControl = new Envelope(ac, 1);
+   Envelope speedControl = new Envelope(1);
    player.setRate(speedControl);
    speedControl.addSegment(1, 1000);  //wait a second
    speedControl.addSegment(-0.5, 3000); //now rewind

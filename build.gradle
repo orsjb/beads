@@ -128,6 +128,10 @@ task generateProcessingLibrary(dependsOn: ['javadoc','flattenShadowJar']) {
         // Copy all dependencies over to Processing
         copy {
             from configurations.compileClasspath
+            into("${buildDir}/libs")
+        }
+        copy {
+            from configurations.compileClasspath
             into("${buildDir}/processing/beads/library")
         }
         copy {
@@ -156,7 +160,7 @@ task deployJarAndJavaDocToHappyBrackets (dependsOn: ['javadoc', 'shadowJar']) {
     }
 
     copy {
-        from 'build/libs/beads.jar'
+        from 'build/libs/'
         into '../HappyBrackets/HappyBrackets/libs'
     }
 

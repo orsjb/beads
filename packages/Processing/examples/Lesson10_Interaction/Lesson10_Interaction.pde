@@ -6,26 +6,26 @@ Glide carrierFreq, modFreqRatio;
 
 void setup() {
   size(300,300);
-  ac = new AudioContext();
+  ac = AudioContext.getDefaultContext();
   /*
    * This is a copy of Lesson 3 with some mouse control.
    */
    //this time we use the Glide object because it smooths the mouse input.
-  carrierFreq = new Glide(ac, 500);
-  modFreqRatio = new Glide(ac, 1);
+  carrierFreq = new Glide(500);
+  modFreqRatio = new Glide(1);
   Function modFreq = new Function(carrierFreq, modFreqRatio) {
     public float calculate() {
       return x[0] * x[1];
     }
   };
-  WavePlayer freqModulator = new WavePlayer(ac, modFreq, Buffer.SINE);
+  WavePlayer freqModulator = new WavePlayer(modFreq, Buffer.SINE);
   Function carrierMod = new Function(freqModulator, carrierFreq) {
     public float calculate() {
       return x[0] * 400.0 + x[1];    
     }
   };
-  WavePlayer wp = new WavePlayer(ac, carrierMod, Buffer.SINE);
-  Gain g = new Gain(ac, 1, 0.1);
+  WavePlayer wp = new WavePlayer(carrierMod, Buffer.SINE);
+  Gain g = new Gain(1, 0.1);
   g.addInput(wp);
   ac.out.addInput(g);
   ac.start();

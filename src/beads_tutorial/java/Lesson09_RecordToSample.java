@@ -20,6 +20,8 @@ import net.beadsproject.beads.ugens.WavePlayer;
  */
 public class Lesson09_RecordToSample {
 	public static void main(String[] args) {
+        AudioContext ac = AudioContext.getDefaultContext();
+
 		/*
 		 * This example shows how to save the audio an AudioContext generates to
 		 * a file. You need two additional objects:
@@ -65,7 +67,7 @@ public class Lesson09_RecordToSample {
 					WavePlayer wp = new WavePlayer(660, Buffer.SQUARE);
 					Gain g = new Gain(1, new Envelope(0));
 					g.addInput(wp);
-					AudioContext.getDefaultContext().out.addInput(g);
+					ac.out.addInput(g);
 					((Envelope) g.getGainUGen()).addSegment(0.1f, 200);
 					((Envelope) g.getGainUGen()).addSegment(0, 500,
 							new KillTrigger(g));
@@ -105,7 +107,7 @@ public class Lesson09_RecordToSample {
 					// AudioContext. If we don't, the program will eat
 					// up a lot of memory as it continues to generate
 					// audio and store it in the Sample's buffer!
-					AudioContext.getDefaultContext().stop();
+					ac.stop();
 				}
 			}
 		});
@@ -113,12 +115,12 @@ public class Lesson09_RecordToSample {
 		// Before we start the AudioContext, we need to make sure that the
 		// RecordToSample is listening to the AudioContext's output. So we add
 		// it to the UGen chain after the AudioContext's output UGen.
-		recordToSample.addInput(AudioContext.getDefaultContext().out);
+		recordToSample.addInput(ac.out);
 		// Also add the RecordToSample as a dependent to the AudioContext so
 		// that it starts recording when the AudioContext is started and is
 		// killed when the AudioContext is stopped.
-		AudioContext.getDefaultContext().out.addDependent(recordToSample);
-		AudioContext.getDefaultContext().out.addDependent(clock);
+		ac.out.addDependent(recordToSample);
+		ac.out.addDependent(clock);
 		
 		/* 
 		 * How you start the AudioContext determines whether you will hear the
@@ -128,7 +130,7 @@ public class Lesson09_RecordToSample {
 		 */
 		/* AudioContext.start() will always play the sound through the user's
 		 * speakers. */
-		AudioContext.getDefaultContext().start();
+		ac.start();
 		/* AudioContext.runNonRealtime() will generate the audio stream
 		 * silently. One major advantage of starting an AudioContext with
 		 * runNonRealtime is that the AudioContext will generate the audio

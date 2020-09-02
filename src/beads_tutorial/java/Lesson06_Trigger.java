@@ -11,6 +11,8 @@ import net.beadsproject.beads.ugens.WavePlayer;
 public class Lesson06_Trigger {
 
 	public static void main(String[] args) {
+          AudioContext ac = AudioContext.getDefaultContext();
+
 		 /*
 		  * How do you trigger events to happen in the future? 
 		  *
@@ -62,8 +64,8 @@ public class Lesson06_Trigger {
 		  /*
 		   * Now play
 		   */
-		  AudioContext.getDefaultContext().out.addInput(masterGain);
-		  AudioContext.getDefaultContext().start();
+		  ac.out.addInput(masterGain);
+		  ac.start();
 		  
 		  /*
 		   * Some other objects that can trigger events: 

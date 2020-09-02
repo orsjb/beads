@@ -5,7 +5,7 @@ AudioContext ac;
 
 void setup() {
   size(300,300);
-  ac = new AudioContext();
+  ac = AudioContext.getDefaultContext();
   /*
    * In the last example, we used an Envelope to
    * control the frequency of a WavePlayer.
@@ -16,7 +16,7 @@ void setup() {
    * Here's the modulating WavePlayer. It has a low 
    * frequency.
    */
-  WavePlayer freqModulator = new WavePlayer(ac, 50, Buffer.SINE);
+  WavePlayer freqModulator = new WavePlayer(50, Buffer.SINE);
   /*
    * The next line might look outrageous if you're not
    * experienced in Java. Basically we're defining a 
@@ -36,11 +36,11 @@ void setup() {
    * Now we plug in the function. Compare this to the previous
    * example, where we plugged in an envelope.
    */
-  WavePlayer wp = new WavePlayer(ac, function, Buffer.SINE);
+  WavePlayer wp = new WavePlayer(function, Buffer.SINE);
   /*
    * Connect it all together as before.
    */
-  Gain g = new Gain(ac, 1, 0.1);
+  Gain g = new Gain(1, 0.1);
   g.addInput(wp);
   ac.out.addInput(g);
   ac.start();

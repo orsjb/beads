@@ -6,7 +6,7 @@ AudioContext ac;
 void setup() {
 frameRate(200);
 size(300,300);
-ac = new AudioContext();
+ac = AudioContext.getDefaultContext();
  /*
   * How do you trigger events to happen in the future? 
   *
@@ -18,22 +18,22 @@ ac = new AudioContext();
   /*
    * Here is the master gain object.
    */
-  Gain masterGain = new Gain(ac, 1, 1);
+  Gain masterGain = new Gain(1, 1);
   
   /*
    * Now two things. Firstly, a WavePlayer with an Envelope controlling
    * its frequency, connected to a Gain.
    */
-  Envelope freqEnv = new Envelope(ac, 250);
-  WavePlayer wp = new WavePlayer(ac, freqEnv, Buffer.SINE);
-  Gain g1 = new Gain(ac, 1, 0.3);
+  Envelope freqEnv = new Envelope(250);
+  WavePlayer wp = new WavePlayer(freqEnv, Buffer.SINE);
+  Gain g1 = new Gain(1, 0.3);
   g1.addInput(wp);
   
   /*
    * Secondly, just another WavePlayer connected to a Gain (no Envelope).
    */
-  WavePlayer wp2 = new WavePlayer(ac, 255, Buffer.SQUARE);
-  Gain g2 = new Gain(ac, 1, 0.1);
+  WavePlayer wp2 = new WavePlayer(255, Buffer.SQUARE);
+  Gain g2 = new Gain(1, 0.1);
   g2.addInput(wp2);
   
   /*

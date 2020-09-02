@@ -1,5 +1,7 @@
 
 
+import org.jaudiolibs.beads.AudioServerIO;
+
 import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.ugens.Gain;
@@ -12,6 +14,7 @@ import net.beadsproject.beads.ugens.Static;
 public class Lesson04_SamplePlayer {
 
 	public static void main(String[] args) {
+	    AudioContext ac = AudioContext.getDefaultContext();
 		/*
 		 * Here's how to play back a sample.
 		 * 
@@ -26,18 +29,13 @@ public class Lesson04_SamplePlayer {
 		// SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
 		SamplePlayer player = new SamplePlayer(SampleManager
 				.sample(audioFile));
-		player.setLoopType(LoopType.LOOP_FORWARDS);
-		player.setLoopCrossFade(200f);
-		player.setEnvelopeType(EnvelopeType.FINE);	
 		
-		player.setLoopStart(new Static(100f));
-		player.setLoopEnd(new Static(1650f));
 		/*
 		 * And as before...
 		 */
 		Gain g = new Gain(2, 0.2f);
 		g.addInput(player);
-		AudioContext.getDefaultContext().out.addInput(g);
-		AudioContext.getDefaultContext().start();
+		ac.out.addInput(g);
+		ac.start();
 	}
 }
