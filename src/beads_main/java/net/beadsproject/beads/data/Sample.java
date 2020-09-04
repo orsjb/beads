@@ -506,7 +506,20 @@ public class Sample {
 	 *            The total number of frames the sample should have.
 	 */
 	public void resizeWithZeros(long frames) {
-		nFrames = frames;
+        int framesToCopy = (int) Math.min(frames, nFrames);
+        float[][] olddata = theSampleData;
+        theSampleData = new float[nChannels][(int) frames];
+        
+        // Initialise all 0
+        for (float[] row : theSampleData) {
+            Arrays.fill(row, 0f);
+        }
+        
+        //Copy across sample data
+        for (int i = 0; i < nChannels; i++)
+            System.arraycopy(olddata[i], 0, theSampleData[i], 0,
+                    framesToCopy);
+        nFrames = frames;
 	}
 
 	/**

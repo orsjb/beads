@@ -5,6 +5,7 @@ package net.beadsproject.beads.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -76,11 +77,10 @@ public class SampleManager {
 			try {
 				sample = new Sample(fn);
 				samples.put(ref, sample);
-				if(verbose) System.out.println("Loaded " + fn);
-			} catch (Exception e) {
-			    System.out.println("Sample not found " + fn);
-				//swallow exception
-			}
+				if(verbose) System.out.println("Sample loaded " + fn);
+			} catch (IOException e) {
+			    System.out.println("Sample not found/supported " + fn);
+			}	
 		}
 		return sample;
 	}
