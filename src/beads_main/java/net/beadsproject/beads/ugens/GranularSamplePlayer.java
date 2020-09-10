@@ -516,14 +516,6 @@ public class GranularSamplePlayer extends SamplePlayer {
 		}
 	}
 	
-    public long totalTime = 0;                    //Test
-    public long maxTime = 0, minTime = 999999;     //Test
-    public int timesRun = 0;                            //Test
-    
-    public long[] getMyStats() {                   //Test
-        return new long[]{totalTime, maxTime, minTime, timesRun};
-    }
-    
 	/**
 	 * Calculate next position for the given Grain.
 	 * 
