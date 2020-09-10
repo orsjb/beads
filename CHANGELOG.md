@@ -12,6 +12,11 @@
     * CrossFade available for forward, backward and alternating loops
     * Crossfade length cannot be less than 0, and if the user sets a value that is too large, it will automatically use the largest allowable length
 
+### **Fixed**
+
+* SampleManager now properly returns error messages & exceptions when failing to load a sample.
+* resizeWithZero() in Sample now poperly allocates a new array while transferring over existing data and zeroes out any extra empty slots.
+
 ### **Changed**
 
 * Implementation has been changed to support JAudioLibs v2 (Released 18/8/20)
