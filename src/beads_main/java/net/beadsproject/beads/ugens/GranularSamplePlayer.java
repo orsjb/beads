@@ -464,6 +464,7 @@ public class GranularSamplePlayer extends SamplePlayer {
 				for (int j = 0; j < outs; j++) {
 					bufOut[j][i] = 0.0f;
 				}
+
 				//gather the output from each grain
 				for(Grain g : grains) {
 					//calculate value of grain window

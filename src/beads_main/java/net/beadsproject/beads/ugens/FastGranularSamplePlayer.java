@@ -4,6 +4,7 @@
 package net.beadsproject.beads.ugens;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,11 +17,13 @@ import net.beadsproject.beads.data.SampleManager;
 import net.beadsproject.beads.data.buffers.CosineWindow;
 
 /**
- * GranularSamplePlayer plays back a {@link Sample} using granular synthesis. GranularSamplePlayer inherits its main behaviour from {@link SamplePlayer} but replaces the direct {@link Sample} lookup with a granular process. 
- * {@link UGen}s can be used to control playback rate, pitch, loop points, grain size, grain interval, grain randomness and position (this last case assumes that the playback rate is zero). 
+ * FastGranularSamplePlayer functions exactly the same as {@link GranularSamplePlayer} but trades off variable automation functionality to reduce
+ * computational costs and allow for more instances to be run simultaneously. As with GranularSamplePlayer, it inherits its main behaviour 
+ * from {@link SamplePlayer} but replaces the direct {@link Sample} lookup with a granular process. {@link UGen}s can be used to control 
+ * playback rate, pitch, loop points, grain size, grain interval, grain randomness and position (this last case assumes that the playback 
+ * rate is zero). 
  * 
  * @see SamplePlayer Sample
- * @author ollie
  */
 public class FastGranularSamplePlayer extends SamplePlayer {
 
@@ -55,9 +58,6 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	/** A list of free grains. */
 	private LinkedList<Grain> freeGrains;
 
-	/** A list of dead grains. */
-	private LinkedList<Grain> deadGrains;
-
 	/** The window used by grains. */
 	private Buffer window;
 
@@ -77,6 +77,9 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 
 		/** The grain size of the grain. Fixed at instantiation. */
 		double grainSize;
+		
+		/** The grain's position in the buffer */
+		int bufferPointer;
 	}
 
 	/**
@@ -89,7 +92,6 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 		super(context, outs);
 		grains = new LinkedList<Grain>();
 		freeGrains = new LinkedList<Grain>();
-		deadGrains = new LinkedList<Grain>();
 		pitchEnvelope = new Static(context, 1f);
         setGrainInterval(new Static(context, 70.0f));
         setGrainSize(new Static(context, 100.0f));
@@ -143,7 +145,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Gets the rate UGen.
+     * Gets the rate value as a UGen.
      * 
      * @return the rate UGen.
      */
@@ -154,7 +156,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     /**
      * Sets the rate envelope.
      * 
-     * @deprecated use {@link #setRate(UGen)} instead.
+     * @deprecated use {@link #setRate(float)} instead.
      * 
      * @param rateEnvelope
      *            the new rate envelope.
@@ -166,7 +168,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Sets the rate to a UGen.
+     * Sets the rate to the UGen's current value.
+     * For better performance, use {@link #setRate(float)}
      * 
      * @param rateUGen
      *            the new rate UGen.
@@ -176,6 +179,16 @@ public class FastGranularSamplePlayer extends SamplePlayer {
         this.rate = rateUGen.getValue();
     }
 
+    /**
+     * Sets the rate.
+     * 
+     * @param rate
+     *            the new rate.
+     */
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+    
 	/**
 	 * Gets the pitch envelope.
 	 * 
@@ -189,7 +202,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	
 
 	/**
-	 * Gets the pitch UGen.
+	 * Gets the pitch value as a UGen.
 	 * 
 	 * @return the pitch UGen.
 	 */
@@ -212,7 +225,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Sets the pitch UGen.
+	 * Sets the pitch to the UGen's value.
 	 * 
 	 * @param pitchUGen
 	 *            the new pitch Ugen.
@@ -235,7 +248,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Gets the loop end UGen.
+     * Gets the loop end value as a UGen.
      * 
      * @return the loop end UGen.
      */
@@ -246,7 +259,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     /**
      * Sets the loop end envelope.
      * 
-     * @deprecated Use {@link #setLoopEnd(UGen)} instead.
+     * @deprecated Use {@link #setLoopEnd(float)} instead.
      * 
      * @param loopEndEnvelope
      *            the new loop end envelope.
@@ -258,7 +271,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Sets the loop end UGen.
+     * Sets the loop end to the UGen's value.
+     * For better performance, use {@link #setLoopEnd(float)} instead.
      * 
      * @param loopEndUGen
      *            the new loop end UGen.
@@ -266,6 +280,16 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     public void setLoopEnd(UGen loopEndUGen) {
         loopEndUGen.update();
         this.loopEnd = loopEndUGen.getValue();
+    }
+    
+    /**
+     * Sets the loop end.
+     * 
+     * @param loopEnd
+     *            the new loop end.
+     */
+    public void setLoopEnd(float loopEnd) {
+        this.loopEnd = loopEnd;
     }
 
     /**
@@ -280,7 +304,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Gets the loop start UGen.
+     * Gets the loop start value as a UGen.
      * 
      * @return the loop start UGen
      */
@@ -291,7 +315,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     /**
      * Sets the loop start envelope.
      * 
-     * @deprecated Use {@link #setLoopStart(UGen)} instead.
+     * @deprecated Use {@link #setLoopStart(float)} instead.
      * 
      * @param loopStartEnvelope
      *            the new loop start envelope.
@@ -303,7 +327,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     }
 
     /**
-     * Sets the loop start UGen.
+     * Sets the loop start as the UGen's value.
+     * For better performance, use {@link #setLoopStart(float)} instead.
      * 
      * @param loopStartUGen
      *            the new loop start UGen.
@@ -311,6 +336,16 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     public void setLoopStart(UGen loopStartUGen) {
         loopStartUGen.update();
         this.loopStart = loopStartUGen.getValue();
+    }
+    
+    /**
+     * Sets the loop start.
+     * 
+     * @param loopStart
+     *            the new loop start.
+     */
+    public void setLoopStart(float loopStart) {
+        this.loopStart = loopStart;
     }
 
     /**
@@ -340,7 +375,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Gets the grain interval UGen.
+	 * Gets the grain interval as a UGen.
 	 * 
 	 * @return the grain interval UGen.
 	 */
@@ -351,7 +386,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	/**
 	 * Sets the grain interval envelope.
 	 * 
-	 * @deprecated Use {@link #setGrainInterval(UGen)} instead.
+	 * @deprecated Use {@link #setGrainInterval(float)} instead.
 	 * 
 	 * @param grainIntervalEnvelope
 	 *            the new grain interval envelope.
@@ -363,7 +398,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Sets the grain interval UGen.
+	 * Sets the grain interval as the UGen's value.
+	 * For better performance, use {@link #setGrainInterval(float)} instead.
 	 * 
 	 * @param grainIntervalUGen
 	 *            the new grain interval UGen.
@@ -372,6 +408,16 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	    grainIntervalUGen.update();
 		this.grainIntervalEnvelope = grainIntervalUGen.getValue();
 	}
+	
+	 /**
+     * Sets the grain interval.
+     * 
+     * @param grainInterval
+     *            the new grain interval.
+     */
+    public void setGrainInterval(float grainInterval) {
+        this.grainIntervalEnvelope = grainInterval;
+    }
 
 	/**
 	 * Gets the grain size envelope.
@@ -387,7 +433,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	
 
 	/**
-	 * Gets the grain size UGen.
+	 * Gets the grain size as a UGen.
 	 * 
 	 * @return the grain size UGen.
 	 */
@@ -398,7 +444,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	/**
 	 * Sets the grain size envelope.
 	 * 
-	 * @deprecated Use {@link #setGrainSize(UGen)} instead.
+	 * @deprecated Use {@link #setGrainSize(float)} instead.
 	 * 
 	 * @param grainSizeEnvelope the new grain size envelope.
 	 */
@@ -409,7 +455,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Sets the grain size UGen.
+	 * Sets the grain size as the UGen's value.
+	 * For better performance, use {@link #setGrainSize(float)} instead.
 	 * 
 	 * @param grainSizeUGen the new grain size UGen.
 	 */
@@ -418,6 +465,15 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 		this.grainSizeEnvelope = grainSizeUGen.getValue();
 	}
 	
+	 /**
+     * Sets the grain size.
+     * 
+     * @param grainSize the new grain size.
+     */
+    public void setGrainSize(float grainSize) {
+        this.grainSizeEnvelope = grainSize;
+    }
+    
 	public Buffer getWindow() {
 		return window;
 	}
@@ -440,7 +496,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Gets the randomness UGen.
+	 * Gets the randomness as a UGen.
 	 * 
 	 * @return the randomness UGen.
 	 */
@@ -451,7 +507,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	/**
 	 * Sets the randomness envelope.
 	 * 
-	 * @deprecated Use {@link #setRandomness(UGen)} instead.
+	 * @deprecated Use {@link #setRandomness(float)} instead.
 	 * 
 	 * @param randomnessEnvelope the new randomness envelope.
 	 */
@@ -462,7 +518,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	}
 	
 	/**
-	 * Sets the randomness UGen.
+	 * Sets the randomness as the UGen's value.
+	 * For better performance, use {@link #setRandomness(float)} instead.
 	 * 
 	 * @param randomnessUGen the new randomness UGen.
 	 */
@@ -470,6 +527,15 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	    randomnessUGen.update();
 		this.randomnessEnvelope = randomnessUGen.getValue();
 	}
+	
+	 /**
+     * Sets the randomness.
+     * 
+     * @param randomness the new randomness value.
+     */
+    public void setRandomness(float randomness) {
+        this.randomnessEnvelope = randomness;
+    }
 
 	/**
 	 * @deprecated Use {@link #setSample(Sample)} instead.
@@ -503,14 +569,13 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	 * Sets the given Grain to start immediately.
 	 * 
 	 * @param g
-	 *            the g
-	 * @param time
-	 *            the time
+	 *            the grain
 	 */
-	private void resetGrain(Grain g) {
-		g.position = position + grainSizeEnvelope * randomnessEnvelope* (Math.random() * 2.0 - 1.0);
+	private void resetGrain(Grain g, int bufferPointer) {
+		g.position = position + grainSizeEnvelope * randomnessEnvelope * (Math.random() * 2.0 - 1.0);
 		g.age = 0f;
 		g.grainSize = grainSizeEnvelope;
+		g.bufferPointer = bufferPointer;
 	}   
 
 	@Override
@@ -532,6 +597,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 			grains.add(g);
 			firstGrain = false;
 			timeSinceLastGrain = grainIntervalEnvelope / 2f;
+			g.bufferPointer = 0;
 		}
 	}
 
@@ -548,7 +614,8 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 			} 
 			pitchEnvelope.update();
 			firstGrain();
-			//now loop through the buffer
+			
+			//now loop through the buffer and calculate the required grains
 			for (int i = 0; i < bufferSize; i++) {
 				//determine if we need a new grain
 				if (timeSinceLastGrain > grainIntervalEnvelope) {
@@ -558,59 +625,69 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 					} else {
 						g = new Grain();
 					}
-					resetGrain(g);
+					resetGrain(g, i);
 					grains.add(g);
 					timeSinceLastGrain = 0f;
 				}
 				//for mono channel, start by resetting current output frame
 				bufOut[0][i] = 0.0f;
 				
-				//gather the output from each grain
-				for(Grain g : grains) {
-					//calculate value of grain window
-					float windowScale = window.getValueFraction((float)(g.age / g.grainSize));
-					//get position in sample for this grain
-					//get the frame for this grain
-					switch (interpolationType) {
-					case ADAPTIVE: 
-						if(pitch > ADAPTIVE_INTERP_HIGH_THRESH) {
-							sample.getFrameNoInterp(g.position, frame);
-						} else if(pitch > ADAPTIVE_INTERP_LOW_THRESH) {
-							sample.getFrameLinear(g.position, frame);
-						} else {
-							sample.getFrameCubic(g.position, frame);
-						}
-						break;
-					case LINEAR:
-						sample.getFrameLinear(g.position, frame);
-						break;
-					case CUBIC:
-						sample.getFrameCubic(g.position, frame);
-						break;
-					case NONE:
-						sample.getFrameNoInterp(g.position, frame);
-						break;
-					}
-					//add it to the current output frame
-					bufOut[0][i] += windowScale * frame[0 % sample.getNumChannels()];
-				}
-				//increment time and stuff
-				calculateNextPosition(i);
-				pitch = Math.abs(pitchEnvelope.getValue(0, i));
-				for(Grain g : grains) {
-					calculateNextGrainPosition(g);
-				}
-				//increment timeSinceLastGrain
-				timeSinceLastGrain += msPerSample;
-				//finally, see if any grains are dead
-				for(Grain g : grains) {
-					if(g.age > g.grainSize) {
-						freeGrains.add(g);
-						deadGrains.add(g);
-					}
-				}
-				grains.removeAll(deadGrains);
-				deadGrains.clear();
+                //increment time and stuff
+                calculateNextPosition(i);
+
+                //increment timeSinceLastGrain
+                timeSinceLastGrain += msPerSample;
+			}
+
+			//gather the output from each grain
+			Iterator<Grain> currentGrain = grains.iterator();
+			while (currentGrain.hasNext()) {
+				//calculate value of grain window
+			    Grain g = currentGrain.next();
+	    
+			    while (g.age <= g.grainSize) {
+    				float windowScale = window.getValueFraction((float)(g.age / g.grainSize));
+    				//get position in sample for this grain
+    				//get the frame for this grain
+    				switch (interpolationType) {
+    				case ADAPTIVE: 
+    					if(pitch > ADAPTIVE_INTERP_HIGH_THRESH) {
+    						sample.getFrameNoInterp(g.position, frame);
+    					} else if(pitch > ADAPTIVE_INTERP_LOW_THRESH) {
+    						sample.getFrameLinear(g.position, frame);
+    					} else {
+    						sample.getFrameCubic(g.position, frame);
+    					}
+    					break;
+    				case LINEAR:
+    					sample.getFrameLinear(g.position, frame);
+    					break;
+    				case CUBIC:
+    					sample.getFrameCubic(g.position, frame);
+    					break;
+    				case NONE:
+    					sample.getFrameNoInterp(g.position, frame);
+    					break;
+    				}
+    				//add it to the current output frame
+    				bufOut[0][g.bufferPointer++] += windowScale * frame[0 % sample.getNumChannels()];
+    				
+    				//if grain's buffer position exceeds bufferSize,
+    				//exit loop at start at index 0 of next buffer.
+    				if (g.bufferPointer >= bufferSize) {
+    				    g.bufferPointer = 0;
+    				    break;
+    				}
+
+    				//increment time and stuff
+    				pitch = Math.abs(pitchEnvelope.getValue(0, g.bufferPointer));
+    				calculateNextGrainPosition(g);
+			    }
+				//see if this grain is dead
+			    if (g.age > g.grainSize) {
+    		        freeGrains.add(g);
+    		        currentGrain.remove();
+			    }
 			}
         }
     }
