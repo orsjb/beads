@@ -42,8 +42,10 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 	/** The time in milliseconds since the last grain was activated. */
 	private float timeSinceLastGrain;
 
+	/** The starting point of the loop as a float. */
 	private float loopStart;
 	
+	/** The starting point of the loop as a float. */
 	private float loopEnd;
 
 	/** The length of one sample in milliseconds. */
@@ -644,6 +646,7 @@ public class FastGranularSamplePlayer extends SamplePlayer {
 			while (currentGrain.hasNext()) {
 				//calculate value of grain window
 			    Grain g = currentGrain.next();
+			    pitch = Math.abs(pitchEnvelope.getValue(0, g.bufferPointer));
 	    
 			    while (g.age <= g.grainSize) {
     				float windowScale = window.getValueFraction((float)(g.age / g.grainSize));
@@ -669,9 +672,10 @@ public class FastGranularSamplePlayer extends SamplePlayer {
     					sample.getFrameNoInterp(g.position, frame);
     					break;
     				}
+
     				//add it to the current output frame
     				bufOut[0][g.bufferPointer++] += windowScale * frame[0 % sample.getNumChannels()];
-    				
+			        
     				//if grain's buffer position exceeds bufferSize,
     				//exit loop at start at index 0 of next buffer.
     				if (g.bufferPointer >= bufferSize) {
