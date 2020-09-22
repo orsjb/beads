@@ -10,6 +10,7 @@ import net.beadsproject.beads.events.KillTrigger;
 import net.beadsproject.beads.ugens.Clock;
 import net.beadsproject.beads.ugens.Envelope;
 import net.beadsproject.beads.ugens.Gain;
+import net.beadsproject.beads.ugens.SamplePlayer.EnvelopeType;
 
 /**
  * A UGen is the main base class for implementing signal generation and processing units (unit generators). UGens can have any number of audio input and output channels, which adopt the audio format of the {@link AudioContext} used to construct the UGen. Any UGen output can be connected to any other UGen input, using {@link #addInput(int, UGen, int)} (or use {@link #addInput(UGen)} to connect all outputs of one UGen to all inputs of another). UGens are constructed using an
@@ -49,10 +50,10 @@ public abstract class UGen extends Bead {
 	protected int bufferSize;
 	
 	/** An collection of pointers to the output buffers of UGens connected to this UGen's inputs. */
-	private ArrayList<BufferPointer>[] inputsAtChannel;
+	private List<BufferPointer>[] inputsAtChannel;
 		
 	/** A collection of UGens that should be triggered by this one. */
-	private ArrayList<UGen> dependents;
+	private List<UGen> dependents;
 	
 	/** Flag used to avoid calling {@link #pullInputs()} unless required. */
 	private boolean noInputs;
@@ -70,13 +71,34 @@ public abstract class UGen extends Bead {
 	
 	protected enum OutputPauseRegime {ZERO, RETAIN, NULL};
 	protected OutputPauseRegime outputPauseRegime;
+	
+	/**
+	 * Used to determine what data structure is used by the UGen's internal storage list, either
+	 * {@link UGenStorageType#LINKEDLIST} for increased sequential access efficiency, or 
+	 * {@link UGenStorageType#ARRAYLIST} for increased random access efficiency.
+	 */
+	public static enum UGenStorageType {
+		/**
+		 * Faster random access speeds for specific ugens in the list, but
+		 * adding or removing ugens incurs more performance penalties.
+		 */
+		ARRAYLIST, 
+		
+		/**
+		 * Slower access speeds for specific ugens in the list, but
+		 * has better addition and removal performance than arraylists.
+		 */
+		LINKEDLIST
+	};
+	
+	private UGenStorageType ugenStorageType;
 
 	/**
-	 * Get the default AudioContext to use in UGen objects
+	 * Get the default AudioContext used in UGen objects
 	 * @return the default AudioContext
 	 */
 	public static AudioContext getDefaultContext() {
-		return defaultContext;
+		return AudioContext.getDefaultContext();
 	}
 
 	/**
@@ -84,11 +106,8 @@ public abstract class UGen extends Bead {
 	 * @param defaultContext the default UGen object to use for specialised class constructors
 	 */
 	public static void setDefaultContext(AudioContext defaultContext) {
-		UGen.defaultContext = defaultContext;
+	    AudioContext.setDefaultContext(defaultContext);
 	}
-
-	/** A default audio context to to remove the requirement of adding an AudioContext to every constructor */
-	static  AudioContext defaultContext = null;
 
 	/**
 	 * Create a new UGen from the given AudioContext but with no inputs or
@@ -120,7 +139,6 @@ public abstract class UGen extends Bead {
 	 * @param outs number of outputs.
 	 */
 	public UGen(AudioContext context, int ins, int outs) {
-		dependents = new ArrayList<UGen>();
 		noInputs = true;
 		lastTimeStep = -1;
 		outputInitializationRegime = OutputInitializationRegime.JUNK;
@@ -128,8 +146,9 @@ public abstract class UGen extends Bead {
 		timerMode = false;
 		timeTemp = 0;
 //		inputProxy = outputProxy = null;
-		setIns(ins);
+		setIns(ins, UGenStorageType.ARRAYLIST);
 		setOuts(outs);
+		setDependents(UGenStorageType.ARRAYLIST);
 		setContext(context);
 	}
 	
@@ -163,16 +182,39 @@ public abstract class UGen extends Bead {
 	}
 
 	/**
-	 * Set the number of inputs.
+	 * Set the number of inputs and the {@link UGenStorageType}. The value
+	 * {@link UGenStorageType#ARRAYLIST} means that the BufferPointer List
+	 * will use an ArrayList structure. The value {@link UGenStorageType#LINKEDLIST}
+	 * means that the BufferPointer List will use a LinkedList structure.
+	 * A new, empty list structure will be made if no previous one exists. If a 
+	 * previous list exists, a copy of it will be made in the new List structure.
 	 * 
 	 * @param ins number of inputs.
+	 * @param ugenType the {@link UGenStorageType}.
 	 */
 	@SuppressWarnings("unchecked")
-	private synchronized void setIns(int ins) {
+	private synchronized void setIns(int ins, UGenStorageType ugenType) {
 		this.ins = ins;
-		inputsAtChannel = new ArrayList[ins];
-		for (int i = 0; i < ins; i++) {
-			inputsAtChannel[i] = new ArrayList<BufferPointer>();
+		
+		switch(ugenType) {
+		case LINKEDLIST:
+			inputsAtChannel = new LinkedList[ins];
+			for (int i = 0; i < ins; i++) {
+				inputsAtChannel[i] = (inputsAtChannel[i] == null) ? 
+						new LinkedList<BufferPointer>() : new LinkedList<BufferPointer>(inputsAtChannel[i]);
+			}
+			ugenStorageType = UGenStorageType.LINKEDLIST;
+			break;
+		
+		default:
+		case ARRAYLIST:
+			inputsAtChannel = new ArrayList[ins];
+			for (int i = 0; i < ins; i++) {
+				inputsAtChannel[i] = (inputsAtChannel[i] == null) ? 
+						new ArrayList<BufferPointer>() : new ArrayList<BufferPointer>(inputsAtChannel[i]);
+			}
+			ugenStorageType = UGenStorageType.ARRAYLIST;
+			break;
 		}
 	}
 	
@@ -201,6 +243,53 @@ public abstract class UGen extends Bead {
 	 */
 	public int getOuts() {
 		return outs;
+	}
+	
+	/**
+	 * Initialise and set the storage type for the list of dependents. The value
+	 * {@link UGenStorageType#ARRAYLIST} means that the list will use an ArrayList 
+	 * structure. The value {@link UGenStorageType#LINKEDLIST}
+	 * means that the list will use a LinkedList structure. If a previous dependents
+	 * list exists, a copy of that will be made in the new specified list structure.
+	 * If not, a new blank list structure will be made and assigned to dependents.
+	 * 
+	 * @param ugenType the {@link UGenStorageType}.
+	 */
+	@SuppressWarnings("unchecked")
+	private synchronized void setDependents(UGenStorageType ugenType) {
+		switch(ugenType) {
+		case LINKEDLIST:
+			dependents = (dependents == null) ? new LinkedList<UGen>() : new LinkedList<UGen>(dependents);
+			break;
+		
+		default:
+		case ARRAYLIST:
+			dependents = (dependents == null) ? new ArrayList<UGen>() : new ArrayList<UGen>(dependents);
+			break;
+		}
+	}
+
+	/**
+	 * Set the storage structure type for UGen.
+	 * 
+	 * @param ugenType the {@link UGenStorageType}.
+	 */
+	public void setStorageType(UGenStorageType ugenType) {
+		switch(ugenType) {
+		case LINKEDLIST:
+			setIns(this.ins, UGenStorageType.LINKEDLIST);
+			setDependents(UGenStorageType.LINKEDLIST);
+			break;
+		default:
+		case ARRAYLIST:
+			setIns(this.ins, UGenStorageType.ARRAYLIST);
+			setDependents(UGenStorageType.ARRAYLIST);
+			break;
+		}
+	}
+	
+	public UGenStorageType getStorageType() {
+		return ugenStorageType;
 	}
 	
 	/**
@@ -287,13 +376,12 @@ public abstract class UGen extends Bead {
 		//ArrayList<UGen> dependentsClone = (ArrayList<UGen>) dependents.clone(); //this may be slow, but avoids concurrent mod exceptions
 		//don't need to clone the array any more; we'll just be careful how we traverse the array.
 		int size = dependents.size();
-		for(int index = 0; index < size; index++) {
-			UGen dependent = dependents.get(index);
+		Iterator<UGen> it1 = dependents.iterator();
+		while (it1.hasNext()) {
+			UGen dependent = it1.next();
 			if (dependent.isDeleted()) {
 				// don't need to work with a cloned ArrayList if we adjust our indices properly
-				dependents.remove(index);
-				index--;
-				size--;
+				it1.remove();
 			} else {
 				dependent.update();
 			}
@@ -309,7 +397,7 @@ public abstract class UGen extends Bead {
 				if(size == 1) {
 					BufferPointer bp = inputsAtChannel[i].get(0);
 					if (bp.ugen.isDeleted()) {
-						removeInputAtChannel(i, bp);
+						inputsAtChannel[i].remove(0);
 					} else {
 						bp.ugen.update();
 						noInputs = false;	//we actually updated something, so we must have inputs
@@ -327,13 +415,12 @@ public abstract class UGen extends Bead {
 					}
 				} else if(size != 0) {
 					float[] bi = bufIn[i] = context.getCleanBuf();
-					for (int index = 0; index < size; index++) {
-						BufferPointer bp = inputsAtChannel[i].get(index);
+					Iterator<BufferPointer> it2 = inputsAtChannel[i].iterator();
+					while (it2.hasNext()) {
+						BufferPointer bp = it2.next();
 						if (bp.ugen.isDeleted()) {
 							// don't need to work with a cloned array if we adjust our indices properly
-							removeInputAtChannel(i, bp);
-							size--;
-							index--;
+							it2.remove();
 						} else {
 							bp.ugen.update();
 							noInputs = false;	//we actually updated something, so we must have inputs
@@ -363,6 +450,7 @@ public abstract class UGen extends Bead {
 				if(timerMode) {
 					timeTemp = System.nanoTime();
 				}
+
 				lastTimeStep = context.getTimeStep(); // do this first to break call chain loops
 				pullInputs();
 				//this sets up the output buffers - default behaviour is to use dirty buffers from the AudioContexts
@@ -546,7 +634,7 @@ public abstract class UGen extends Bead {
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized List<UGen> getDependents() {
-		return (List<UGen>) dependents.clone();
+		return dependents;
 	}
 
 	/**
@@ -560,7 +648,14 @@ public abstract class UGen extends Bead {
 			return false;
 		} else {
 			for (int i = 0; i < inputsAtChannel.length; i++) {
-				ArrayList<BufferPointer> bplist = (ArrayList<BufferPointer>) inputsAtChannel[i].clone();
+				
+				List<BufferPointer> bplist;
+				if(ugenStorageType == UGenStorageType.ARRAYLIST) {
+					bplist = new ArrayList<BufferPointer>(inputsAtChannel[i]);
+				} else {
+					bplist = new LinkedList<BufferPointer>(inputsAtChannel[i]);
+				}
+				
 				for (BufferPointer bp : bplist) {
 					if (ugen.equals(bp.ugen)) {
 						return true;
@@ -595,7 +690,7 @@ public abstract class UGen extends Bead {
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized List<BufferPointer> getBufferPointers(int index) {
-		return (List<BufferPointer>) inputsAtChannel[index].clone();
+		return inputsAtChannel[index];
 	}
 
 	private static Hashtable<Class<?>, Hashtable<String, Method>> envelopeGetterMethods = new Hashtable<Class<?>, Hashtable<String,Method>>();
@@ -650,13 +745,17 @@ public abstract class UGen extends Bead {
 		if (!noInputs) {
 				int inputCount = 0;
 				for (int i = 0; i < inputsAtChannel.length; i++) {
-					ArrayList<BufferPointer> bplist = (ArrayList<BufferPointer>) inputsAtChannel[i].clone();
-					for (BufferPointer bp : bplist) {
+					
+					Iterator<BufferPointer> bplist = inputsAtChannel[i].iterator();
+					while (bplist.hasNext()) {
+						BufferPointer bp = bplist.next();
 						if (sourceUGen.equals(bp.ugen)) {
-							removeInputAtChannel(i,bp);
-						} else
+							bplist.remove();
+						} else {
 							inputCount++;
+						}
 					}
+
 				}
 				if (inputCount == 0) {
 					noInputs = true;
@@ -683,19 +782,24 @@ public abstract class UGen extends Bead {
 		if (!noInputs) {
 			int inputCount = 0;
 			boolean ret = false;
-			ArrayList<BufferPointer> bplist = (ArrayList<BufferPointer>) inputsAtChannel[inputChannel].clone();
-			for (BufferPointer bp : bplist) {
+
+			List<BufferPointer> bplist = inputsAtChannel[inputChannel];
+			
+			Iterator<BufferPointer> it = bplist.iterator();
+			while (it.hasNext()) {
+				BufferPointer bp = it.next();
 				if (sourceUGen.equals(bp.ugen)
 						&& bp.index == sourceOutputChannel) {
-					removeInputAtChannel(inputChannel, bp);
+					it.remove();
 					ret = true;
+					break;
 				} else {
 					inputCount++;
 				}
 			}
 			if (inputCount == 0) {
 				// include inputs on all channels in count
-				for (ArrayList<BufferPointer> ch : inputsAtChannel)
+				for (List<BufferPointer> ch : inputsAtChannel)
 					inputCount += ch.size();
 			}
 			if (inputCount == 0) {
@@ -708,16 +812,68 @@ public abstract class UGen extends Bead {
 		}
 	}
 	
+    /**
+     * Disconnects the connection of the UGen at the specified index from this UGen's buffer.
+     * 
+     * @param inputChannel
+     *            The channel of this UGen to check.
+     * @param index
+     *            The index of the UGen to disconnect.
+     * @param sourceOutputChannel
+     *            The channel of the source UGen.
+     * @return True if a connection was removed; false otherwise.
+     */	
+	@SuppressWarnings("unchecked")
+	public synchronized boolean removeConnectionAtIndex(int inputChannel,
+	            int index, int sourceOutputChannel) {
+        if (!noInputs) {
+            int inputCount = 0;
+            boolean ret = false;
+
+            List<BufferPointer> bplist = inputsAtChannel[inputChannel];
+            
+            int i = -1;
+            Iterator<BufferPointer> it = bplist.iterator();
+            while (it.hasNext()) {
+                BufferPointer bp = it.next();
+                i ++;
+                if (index == i && bp.index == sourceOutputChannel) {
+                    it.remove();
+                    ret = true;
+                    break;
+                } else {
+                    inputCount++;
+                }
+            }
+            if (inputCount == 0) {
+                // include inputs on all channels in count
+                for (List<BufferPointer> ch : inputsAtChannel)
+                    inputCount += ch.size();
+            }
+            if (inputCount == 0) {
+                System.out.println("CHEATED");
+                noInputs = true;
+                zeroIns();
+            }
+            return ret;
+        } else {
+            return false;
+        }
+    }
+	
 	/**
 	 * Clear all of this UGen's input connections.
 	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void clearInputConnections() {
 		for(int i = 0; i < inputsAtChannel.length; i++) {
-			ArrayList<BufferPointer> bplist = (ArrayList<BufferPointer>) inputsAtChannel[i].clone();
-			for (BufferPointer bp : bplist) {
-				removeInputAtChannel(i, bp);
+
+			Iterator<BufferPointer> bplist = inputsAtChannel[i].iterator();
+			while (bplist.hasNext()) {
+				bplist.next();
+				bplist.remove();
 			}
+
 			noInputs = true;
 			zeroIns();
 		}

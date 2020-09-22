@@ -6,7 +6,7 @@ PowerSpectrum ps;
 
 void setup() {
   size(300,300);
-  ac = new AudioContext();
+  ac = AudioContext.getDefaultContext();
   selectInput("Select an audio file:", "fileSelected");
 }
 
@@ -16,8 +16,8 @@ void fileSelected(File selection) {
    */
   String audioFileName = selection.getAbsolutePath();
   Sample sample = SampleManager.sample(audioFileName);
-  SamplePlayer player = new SamplePlayer(ac, sample);
-  Gain g = new Gain(ac, 2, 0.2);
+  SamplePlayer player = new SamplePlayer(sample);
+  Gain g = new Gain(2, 0.2);
   g.addInput(player);
   ac.out.addInput(g);
   /*

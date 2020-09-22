@@ -6,7 +6,7 @@ AudioContext ac;
 void setup() {
 frameRate(200);
 size(300,300);
-ac = new AudioContext();
+ac = AudioContext.getDefaultContext();
  /*
   * In this example a Clock is used to trigger events. We do this
   * by adding a listener to the Clock (which is of type Bead).
@@ -17,7 +17,7 @@ ac = new AudioContext();
   * This example is more sophisticated than the previous
   * ones. It uses nested code.
   */
- Clock clock = new Clock(ac, 700);
+ Clock clock = new Clock(700);
  clock.addMessageListener(
   //this is the on-the-fly bead
   new Bead() {
@@ -30,8 +30,8 @@ ac = new AudioContext();
           if(random(1) < 0.5) return;
           pitch = Pitch.forceToScale((int)random(12), Pitch.dorian);
           float freq = Pitch.mtof(pitch + (int)random(5) * 12 + 32);
-          WavePlayer wp = new WavePlayer(ac, freq, Buffer.SINE);
-          Gain g = new Gain(ac, 1, new Envelope(ac, 0));
+          WavePlayer wp = new WavePlayer(freq, Buffer.SINE);
+          Gain g = new Gain(1, new Envelope(0));
           g.addInput(wp);
           ac.out.addInput(g);
           ((Envelope)g.getGainEnvelope()).addSegment(0.1, random(200));
@@ -42,20 +42,20 @@ ac = new AudioContext();
           int pitchAlt = pitch;
           if(random(1) < 0.2) pitchAlt = Pitch.forceToScale((int)random(12), Pitch.dorian) + (int)random(2) * 12;
           float freq = Pitch.mtof(pitchAlt + 32);
-          WavePlayer wp = new WavePlayer(ac, freq, Buffer.SQUARE);
-          Gain g = new Gain(ac, 1, new Envelope(ac, 0));
+          WavePlayer wp = new WavePlayer(freq, Buffer.SQUARE);
+          Gain g = new Gain(1, new Envelope(0));
           g.addInput(wp);
-          Panner p = new Panner(ac, random(1));
+          Panner p = new Panner(random(1));
           p.addInput(g);
           ac.out.addInput(p);
           ((Envelope)g.getGainEnvelope()).addSegment(random(0.1), random(50));
           ((Envelope)g.getGainEnvelope()).addSegment(0, random(400), new KillTrigger(p));
        }
        if(c.getCount() % 8 == 0) {
-          Noise n = new Noise(ac);
-          Gain g = new Gain(ac, 1, new Envelope(ac, 0.05));
+          Noise n = new Noise();
+          Gain g = new Gain(1, new Envelope(0.05));
           g.addInput(n);
-          Panner p = new Panner(ac, random(0.5, 1));
+          Panner p = new Panner(random(0.5, 1));
           p.addInput(g);
           ac.out.addInput(p);
           ((Envelope)g.getGainEnvelope()).addSegment(0, random(100), new KillTrigger(p));

@@ -149,12 +149,12 @@ public class JavaSoundAudioFile implements AudioFileReader, AudioFileWriter {
 	private void prepareForReading() throws IOException {
 		
 		finished = false;
-
 		try {
 			encodedStream = getStream();
 		} catch (UnsupportedAudioFileException e) {
 			throw (new IOException(e.getMessage())); // converts UnsupportedAudioFileException, which is JavaSound specific, to more generic IOException.
 		}
+
 		encodedFormat = encodedStream.getFormat();
 
 		int bitDepth = 16;

@@ -11,6 +11,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import net.beadsproject.beads.data.audiofile.AudioFileReader;
 import net.beadsproject.beads.data.audiofile.AudioFileType;
 import net.beadsproject.beads.data.audiofile.AudioFileWriter;
+import net.beadsproject.beads.data.audiofile.FileFormatException;
+import net.beadsproject.beads.data.audiofile.OperationUnsupportedException;
 
 /**
  * A Sample encapsulates audio data, either loaded from an audio file (such as
@@ -80,7 +82,7 @@ public class Sample {
 			try {
 				defaultAudioFileWriterClass = (Class<? extends AudioFileWriter>) Class.forName("net.beadsproject.beads.data.audiofile.WavFileReaderWriter");
 			} catch (ClassNotFoundException e2) {
-				defaultAudioFileReaderClass = null;
+				defaultAudioFileWriterClass = null;
 			}
 		}
 	}
@@ -141,7 +143,7 @@ public class Sample {
 	 *
 	 * @throws IOException
 	 */
-	public Sample(String filename) throws IOException {
+	public Sample(String filename) throws IOException, OperationUnsupportedException, FileFormatException {
 		loadAudioFile(filename);
 		this.filename = filename;
 	}
@@ -506,7 +508,20 @@ public class Sample {
 	 *            The total number of frames the sample should have.
 	 */
 	public void resizeWithZeros(long frames) {
-		nFrames = frames;
+        int framesToCopy = (int) Math.min(frames, nFrames);
+        float[][] olddata = theSampleData;
+        theSampleData = new float[nChannels][(int) frames];
+        
+        // Initialise all 0
+        for (float[] row : theSampleData) {
+            Arrays.fill(row, 0f);
+        }
+        
+        //Copy across sample data
+        for (int i = 0; i < nChannels; i++)
+            System.arraycopy(olddata[i], 0, theSampleData[i], 0,
+                    framesToCopy);
+        nFrames = frames;
 	}
 
 	/**
@@ -618,10 +633,10 @@ public class Sample {
 	 * @throws IOException
 	 * 
 	 */
-	private void loadAudioFile(String file) throws IOException {
+	private void loadAudioFile(String file) throws IOException, OperationUnsupportedException, FileFormatException {
 		//we have to deal with a bug in Tritonus: JavaSound doesn't accept 24-bit wav but strangely Tritonus 
 		//interprets 24-bit wavs as mp3s. So we intercept all wavs and send them to the WavFileReaderWriter.
-		//In the first instance we can only use the file suffix as a clue to this, not the header.		
+		//In the first instance we can only use the file suffix as a clue to this, not the header.
 		Class<? extends AudioFileReader> theRealAudioFileReaderClass = audioFileReaderClass == null ? defaultAudioFileReaderClass : audioFileReaderClass;
 		if(file.endsWith(".wav") || file.endsWith(".WAV")) {
 			try {
@@ -639,7 +654,7 @@ public class Sample {
 		try {
 			this.theSampleData = audioFileReader.readAudioFile(file);
 		} catch (Exception e) {
-			throw new IOException(e);
+			throw e;
 		}
 		this.sampleRate = audioFileReader.getSampleAudioFormat().sampleRate;
 		this.nChannels = theSampleData.length;

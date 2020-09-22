@@ -5,6 +5,7 @@ package net.beadsproject.beads.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -15,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import net.beadsproject.beads.data.audiofile.FileFormatException;
+import net.beadsproject.beads.data.audiofile.OperationUnsupportedException;
 
 /**
  * SampleManager provides a static repository for {@link Sample} data and provides methods to organise samples into groups.
@@ -76,10 +80,14 @@ public class SampleManager {
 			try {
 				sample = new Sample(fn);
 				samples.put(ref, sample);
-				if(verbose) System.out.println("Loaded " + fn);
-			} catch (Exception e) {
-				//swallow exception
-			}
+				if(verbose) System.out.println("Sample loaded " + fn);
+			} catch (OperationUnsupportedException e) {
+			    System.out.println("OperationUnsupportedException: The reading operation failed " + fn);
+			} catch (FileFormatException e) {
+			    System.out.println("FileFormatException: Sample format malformed " + fn);
+			} catch (IOException e) {
+			    System.out.println("IOException: Sample not found/supported " + fn);
+			}	
 		}
 		return sample;
 	}

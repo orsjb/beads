@@ -6,7 +6,7 @@ AudioContext ac;
 void setup() {
 frameRate(200);
 size(300,300);
-ac = new AudioContext();
+ac = AudioContext.getDefaultContext();
  /*
   * This is a boring example. See Lesson_07_Music for 
   * something more complex.
@@ -21,7 +21,7 @@ ac = new AudioContext();
   * 
   * So we begin with the envelope as before.
   */
-  Envelope intervalEnvelope = new Envelope(ac, 1000);
+  Envelope intervalEnvelope = new Envelope(1000);
   intervalEnvelope.addSegment(600, 10000);
   intervalEnvelope.addSegment(1000, 10000);
   intervalEnvelope.addSegment(400, 10000);
@@ -30,7 +30,7 @@ ac = new AudioContext();
    * Then the clock, which gets initialised with the
    * envelope. 
    */
-  Clock clock = new Clock(ac, intervalEnvelope);
+  Clock clock = new Clock(intervalEnvelope);
   /*
    * Tell the clock to tick (you probably don't want
    * to do this except for debugging.

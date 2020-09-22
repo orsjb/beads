@@ -19,6 +19,9 @@ public class Lesson01_AudioContext {
 		 * Beads project. You need it to define various things to do with audio
 		 * processing. It also connects the the JavaSound system and provides
 		 * you with an output device.
+		 * 
+		 * UPDATE: As of Beads (v3.2), Default Audio Contexts (defaultcontext)
+		 * can now be used. Please see below for more details.
 		 */
 		ac = new AudioContext();
 		/*
@@ -52,6 +55,19 @@ public class Lesson01_AudioContext {
 		 * Finally, start things running.
 		 */
 		ac.start();
+		
+		/*
+		 * UPDATE: As of Beads v3.2, all UGens have a shared default Audio
+		 * Context in them that can be accessed through AudioContext.getDefaultContext().
+		 * You will no longer need to explicitly create AudioContext ac and insert this
+		 * when making new UGen objects. This defaultcontext will provide the same effects
+		 * as creating a new AudioContext without any information. If you want to specify
+		 * particular information such as the device or AudioIO you want to use, you will
+		 * need to make your own AudioContext object for that, as shown in this lesson.
+		 * 
+		 * Lesson02_EnvelopeAndWavePlayer onwards will instead be using the 
+		 * defaultcontext.  
+		 */
 	}
 
 }

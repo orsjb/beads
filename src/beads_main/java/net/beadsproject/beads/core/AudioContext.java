@@ -31,6 +31,9 @@ import net.beadsproject.beads.ugens.RecordToSample;
 public class AudioContext {
 
 	public static final int DEFAULT_BUFFER_SIZE = 512;
+	
+	/** The default context, for using UGens without explicitly declaring context **/
+	private static AudioContext defaultContext;
 
 	/** The audio IO device. */
 	private AudioIO audioIO;
@@ -96,7 +99,9 @@ public class AudioContext {
 		//attempt to find the default (JavaSound) AudioIO by reflection
 		AudioIO ioSystem = null;
 		try {
-			Class javaSoundAudioIOClass = Class.forName("net.beadsproject.beads.core.io.JavaSoundAudioIO");		//alt choice is org.jaudiolibs.beads.AudioServerIO$JavaSound.
+			Class javaSoundAudioIOClass = Class.forName("net.beadsproject.beads.core.io.JavaSoundAudioIO");		
+		    //alt choice is org.jaudiolibs.beads.AudioServerIO$JavaSound.
+		    //Class javaSoundAudioIOClass = Class.forName("org.jaudiolibs.beads.AudioServerIO$JavaSound");
 			Constructor noArgsConstructor = javaSoundAudioIOClass.getConstructor();
 			ioSystem = (AudioIO)noArgsConstructor.newInstance();
 			System.out.println("AudioContext : no AudioIO specified, using default => " + javaSoundAudioIOClass.getName() + ".");
@@ -687,4 +692,27 @@ public class AudioContext {
 			bead.message(null);
 		}
 	}
+	
+    /**
+     * Get the default AudioContext. If none exists, create a new one.
+     * 
+     * @return the default AudioContext
+     */	
+	public static AudioContext getDefaultContext() {
+	    if (defaultContext == null) 
+	        defaultContext = new AudioContext();
+	    return defaultContext;
+	}
+	
+    /**
+     * Set the default AudioContext. 
+     * If you are using a custom defaultcontext, make sure setDefaultContext 
+     * is always called before getDefaultContext and any UGen constructors 
+     * that will use the custom defaultcontext.
+     * 
+     * @param defaultContext the default AudioContext object to use
+     */	
+    public static void setDefaultContext(AudioContext newContext) {
+        defaultContext = newContext;
+    }
 }
