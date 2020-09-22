@@ -11,6 +11,9 @@
     * Users must set a loop start and loop end point for crossfade to work
     * CrossFade available for forward, backward and alternating loops
     * Crossfade length cannot be less than 0, and if the user sets a value that is too large, it will automatically use the largest allowable length
+* Fast Granular Sample Player has now been added.
+    * This UGen provides the same base functionality as Granular Sample Player, except it trades away some automation capabilities for performance boosts.
+    * ie Rate, Grain Size and Grain Interval are treated as floats and any subsequent Envelope Segments will not be used.
 
 ### **Fixed**
 

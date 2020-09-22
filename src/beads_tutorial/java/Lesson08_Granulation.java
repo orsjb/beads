@@ -39,6 +39,7 @@ public class Lesson08_Granulation {
 		player.setRate(rateEnvelope);
 		// a bit of noise can be nice
 		player.getRandomnessUGen().setValue(0.01f);
+        
 		/*
 		 * And as before...
 		 */
