@@ -1,7 +1,7 @@
 
+
 # The Beads Project
-
-
+![](http://www.beadsproject.net/minimalismheader.jpeg)
 
 This is the Beads project, a Java library for creative realtime audio and music, which is also available as a library for Processing.
 
@@ -9,7 +9,7 @@ Written by Ollie Bown, with contributions from Ben Porter, Benito, Aengus Martin
 
 The library is licensed under the Gnu Public License (GPL v3). Contact ollie at icarus.nu if you have any questions.
 
-
+For examples on how to use this library, see the [tutorials.](https://github.com/orsjb/beads/tree/master/src/beads_tutorial/java)
 For all other information, see http://www.beadsproject.net.
 
 
