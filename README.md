@@ -5,14 +5,9 @@
 
 This is the Beads project, a Java library for creative realtime audio and music, which is also available as a library for Processing.
 
-
-
 Written by Ollie Bown, with contributions from Ben Porter, Benito, Aengus Martin, Neil Smith, Evan Merz, Angelo Fraietta and Charlton Wong. It also uses some code from other Java projects including MEAP and JASS. For convenience it wraps Java dependencies Tritonus, JavaZOOM, mp3spi and JAudioLibs.
 
-
-
 The library is licensed under the Gnu Public License (GPL v3). Contact ollie at icarus.nu if you have any questions.
-
 
 
 For all other information, see http://www.beadsproject.net.
@@ -27,7 +22,7 @@ Beads uses the Tritonus library found in the clojars repository.<br>
 
 
 
-#### Maven    \[Current Release: [3.1](https://search.maven.org/artifact/net.beadsproject/beads/3.1/jar)\]
+#### Maven    \[Current Release: [3.2](https://search.maven.org/artifact/net.beadsproject/beads/3.2/jar)\]
 
 Add the following to pom.xml:
 
@@ -55,7 +50,7 @@ Add the following to pom.xml:
 
     <artifactId>beads</artifactId>
 
-    <version>3.1</version>
+    <version>3.2</version>
 
   </dependency>
 
@@ -87,7 +82,7 @@ repositories {
 
 dependencies {
 
-    implementation 'net.beadsproject:beads:3.1'
+    implementation 'net.beadsproject:beads:3.2'
 
 }
 
@@ -97,7 +92,7 @@ dependencies {
 
 #### Manual Installation
 
-Please visit [beadsproject.net](http://www.beadsproject.net) for beads.jar and manual installation intructions for Eclipse or Processing.
+Please visit [beadsproject.net](http://www.beadsproject.net) for beads.jar and manual installation instructions for Eclipse or Processing.
 
 
 
@@ -105,8 +100,4 @@ Please visit [beadsproject.net](http://www.beadsproject.net) for beads.jar and m
 
 
 
-[Development Version: 3.2](https://github.com/orsjb/beads/blob/master/CHANGELOG.md)
-
-
-
-[Latest Release: 3.1](https://github.com/orsjb/beads/blob/migrate_to_gradle/CHANGELOG.md)
+[Latest Version: 3.2](https://github.com/orsjb/beads/blob/master/CHANGELOG.md)

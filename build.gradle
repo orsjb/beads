@@ -1,0 +1,221 @@
+//gradle build file for Beads
+
+buildscript {
+    repositories {
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://clojars.org/repo" }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version="3.3-SNAPSHOT"   // Add '-SNAPSHOT' at the end for non-release uploads
+group='net.beadsproject'
+archivesBaseName = "beads"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/beads_main/java', 'src/beads_io/java']
+        }
+    }
+}
+
+dependencies {
+    //implementation fileTree(dir: 'libs', include: '*.jar') // - Thin Jar
+    //compile fileTree(dir: 'libs', include: '*.jar') // - Fat Jar
+    
+    implementation 'javazoom:jlayer:1.0.1'
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    implementation 'org.clojars.automata:tritonus-aos:1.0.0'
+    implementation 'org.clojars.automata:tritonus-share:1.0.0'
+    implementation 'org.jaudiolibs:audioservers-javasound:2.0.0'
+    implementation 'org.jaudiolibs:audioservers-jack:2.0.0'
+    implementation 'org.jaudiolibs:jnajack:1.4.0'
+}
+
+shadowJar {
+    baseName = 'beads'
+    classifier = null
+    version = null
+}
+
+javadoc {
+    failOnError(false)
+}
+
+//Add javadocs and sourceJars as artifact
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+// Import ShadowJar plugin and create custom shadowJar task
+// to flatten package structure for Processing
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+task flattenShadowJar (type: ShadowJar, dependsOn: 'shadowJar') {
+    from sourceSets.main.output
+    configurations = [project.configurations.runtime]
+    
+    classifier = 'flat'
+    version = null
+    
+    relocate 'org.jaudiolibs.beads', 'beads'
+    
+    //Flatten hierarchical structure, starting from leaves
+    relocate 'net.beadsproject.beads.analysis.featureextractors', 'beads'
+    relocate 'net.beadsproject.beads.analysis.segmenters', 'beads'
+    relocate 'net.beadsproject.beads.analysis', 'beads'
+    
+    relocate 'net.beadsproject.beads.core.io', 'beads'
+    relocate 'net.beadsproject.beads.core', 'beads'
+    
+    relocate 'net.beadsproject.beads.data.audiofile', 'beads'
+    relocate 'net.beadsproject.beads.data.buffers', 'beads'
+    relocate 'net.beadsproject.beads.data', 'beads'
+    
+    relocate 'net.beadsproject.beads.events', 'beads'
+    relocate 'net.beadsproject.beads.ugens', 'beads'
+}
+
+task generateProcessingLibrary(dependsOn: ['javadoc','flattenShadowJar']) {
+    doLast {
+        copy {
+            from("${buildDir}/docs/javadoc")
+            into("${buildDir}/processing/beads/reference")
+        }
+        copy {
+            from("packages/Processing/examples")
+            into("${buildDir}/processing/beads/examples")
+        }
+        copy {
+            from("src")
+            into("${buildDir}/processing/beads/src")
+        }
+        // Transfer flat .jar to Processing folder
+        copy {
+            from("${buildDir}/libs/beads-flat.jar")
+            into("${buildDir}/processing/beads/library")
+            rename('beads-flat.jar', 'beads.jar')
+        }
+        // Copy all dependencies over to Processing
+        copy {
+            from configurations.compileClasspath
+            into("${buildDir}/libs")
+        }
+        copy {
+            from configurations.compileClasspath
+            into("${buildDir}/processing/beads/library")
+        }
+        copy {
+            from("packages/Processing/library.properties")
+            into("${buildDir}/processing/beads")
+        }
+    }
+
+    task zipProcessingLibrary(type: Zip, dependsOn: 'generateProcessingLibrary') {
+        from("${buildDir}/processing/")
+	    exclude("*.DS_Store")
+        archiveName("beads.zip")
+        destinationDir(file("${buildDir}"))
+    }
+    
+    // Delete leftover original flat .jar file, as only Processing will need it
+    task deleteTemporaryFiles(type: Delete, dependsOn: 'generateProcessingLibrary') {
+        delete("${buildDir}/libs/beads-flat.jar")
+    }
+}
+
+task deployJarAndJavaDocToHappyBrackets (dependsOn: ['javadoc', 'shadowJar']) {
+    copy {
+        from 'build/docs/javadoc/net/beadsproject'
+        into '../HappyBrackets/HappyBrackets/libs/docs/net/beadsproject'
+    }
+
+    copy {
+        from 'build/libs/'
+        into '../HappyBrackets/HappyBrackets/libs'
+    }
+
+    println "copied jars"
+}
+
+// Add POM metadata to artifact for Central Maven upload
+// NOTE: You will need a gradle.properties file with the following:
+//       - signing.keyId=pubkey ID, signing.password=privkey passphrase, signing.secretKeyRingFile= /path/to/SecretKeyringFile.gpg
+//       - ossrhUsername=user, ossrhPassword=pass
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Beads'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'A software library written in Java for realtime audio.'
+        url 'http://www.beadsproject.net'
+
+        scm {
+          connection 'scm:git:git://github.com/orsjb/beads.git'
+          developerConnection 'scm:git:git@github.com:orsjb/beads.git'
+          url 'https://github.com/orsjb/beads/'
+        }
+
+        licenses {
+          license {
+            name 'GNU General Public License, Version 3'
+            url 'https://www.gnu.org/licenses/gpl-3.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'orsjb'
+            name 'Ollie Bown'
+            email 'ollie@icarus.nu'
+          }
+        }
+      }
+    }
+  }
+}
+
+task deploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles'])
+
+task fullDeploy(dependsOn: ['zipProcessingLibrary', 'deleteTemporaryFiles', 'uploadArchives'])
