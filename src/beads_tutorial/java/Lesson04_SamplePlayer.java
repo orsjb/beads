@@ -23,7 +23,7 @@ public class Lesson04_SamplePlayer {
          * SampleManager is a utility which keeps track of loaded audio files according
          * to their file names, so you don't have to load them again.
          */
-        String audioFile = "audio/lesson_09_out.wav";
+        String audioFile = "audio/kick_back.wav";
         // SampleManager.setBufferingRegime(Sample.Regime.newStreamingRegime(1000));
 
         SamplePlayer player = new SamplePlayer(SampleManager.sample(audioFile));

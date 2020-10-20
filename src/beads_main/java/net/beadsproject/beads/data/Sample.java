@@ -134,6 +134,7 @@ public class Sample {
         current = new float[nChannels];
         next = new float[nChannels];
         nFrames = (long) msToSamples(length);
+        theSampleData = new float[nChannels][(int) nFrames];
         length = 1000f * nFrames / this.sampleRate;
     }
 
