@@ -9,23 +9,24 @@ import net.beadsproject.beads.data.Buffer;
 import net.beadsproject.beads.data.BufferFactory;
 
 /**
- * Creates a {@link Buffer} of the constant 1/bufferSize over [0,1]. The convolution of the MeanFilter with data gives the mean.
+ * Creates a {@link Buffer} of the constant 1/bufferSize over [0,1]. The
+ * convolution of the MeanFilter with data gives the mean.
  * 
  * @author ben
  *
  */
 public class MeanFilter extends BufferFactory {
 
-	@Override
-	public Buffer generateBuffer(int bufferSize) {
-		Buffer b = new Buffer(bufferSize);
-		Arrays.fill(b.buf,1.f/bufferSize);
-		return b;
-	}
+    @Override
+    public Buffer generateBuffer(int bufferSize) {
+        Buffer b = new Buffer(bufferSize);
+        Arrays.fill(b.buf, 1.f / bufferSize);
+        return b;
+    }
 
-	@Override
-	public String getName() {
-		return "MeanFilter";
-	}
+    @Override
+    public String getName() {
+        return "MeanFilter";
+    }
 
 }

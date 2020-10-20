@@ -7,38 +7,40 @@ import net.beadsproject.beads.core.AudioContext;
 import net.beadsproject.beads.core.UGen;
 
 /**
- * MonoPlug performs the simple task of channelling a single output from a multi-channel 
- * {@link UGen}.
+ * MonoPlug performs the simple task of channelling a single output from a
+ * multi-channel {@link UGen}.
  *
  * @author ollie
  */
 public class MonoPlug extends UGen {
 
-	/**
-	 * Instantiates a new MonoPlug.
-	 * 
-	 * @param context the AudioContext.
-	 */
-	public MonoPlug(AudioContext context) {
-		super(context, 1, 1);
-		outputInitializationRegime = OutputInitializationRegime.RETAIN;
-		outputPauseRegime = OutputPauseRegime.ZERO;
-	}
+    /**
+     * Instantiates a new MonoPlug.
+     * 
+     * @param context the AudioContext.
+     */
+    public MonoPlug(AudioContext context) {
+        super(context, 1, 1);
+        outputInitializationRegime = OutputInitializationRegime.RETAIN;
+        outputPauseRegime = OutputPauseRegime.ZERO;
+    }
 
-	/**
-	 * Instantiates a new MonoPlug.
-	 *
-	 */
-	public MonoPlug() {
-		this(getDefaultContext());
-	}
+    /**
+     * Instantiates a new MonoPlug.
+     *
+     */
+    public MonoPlug() {
+        this(getDefaultContext());
+    }
 
-	/* (non-Javadoc)
-	 * @see net.beadsproject.beads.core.UGen#calculateBuffer()
-	 */
-	@Override
-	public void calculateBuffer() {
-		bufOut[0] = bufIn[0];
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.beadsproject.beads.core.UGen#calculateBuffer()
+     */
+    @Override
+    public void calculateBuffer() {
+        bufOut[0] = bufIn[0];
+    }
 
 }

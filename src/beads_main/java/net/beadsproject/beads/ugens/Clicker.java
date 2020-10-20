@@ -13,41 +13,43 @@ import net.beadsproject.beads.core.UGen;
  */
 public class Clicker extends UGen {
 
-	private boolean done;
-	private float strength;
-	
-	/**
-	 * Instantiates a new Clicker.
-	 * 
-	 * @param context
-	 *            the AudioContext.
-	 * @param strength the volume of the click (max = 1).
-	 */
-	public Clicker(AudioContext context, float strength) {
-		super(context, 0, 1);
-		this.strength = Math.min(1f, Math.abs(strength));
-		done = false;
-	}
+    private boolean done;
+    private float strength;
 
-	/**
-	 * Instantiates a new Clicker.
-	 *
-	 * @param strength the volume of the click (max = 1).
-	 */
-	public Clicker(float strength) {
-		this(getDefaultContext(), strength);
-	}
+    /**
+     * Instantiates a new Clicker.
+     * 
+     * @param context  the AudioContext.
+     * @param strength the volume of the click (max = 1).
+     */
+    public Clicker(AudioContext context, float strength) {
+        super(context, 0, 1);
+        this.strength = Math.min(1f, Math.abs(strength));
+        done = false;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.olliebown.beads.core.UGen#calculateBuffer()
-	 */
-	@Override
-	public void calculateBuffer() {
-		if(done) kill();
-		else {
-			bufOut[0][0] = strength;
-			done = true;
-		}
-	}
+    /**
+     * Instantiates a new Clicker.
+     *
+     * @param strength the volume of the click (max = 1).
+     */
+    public Clicker(float strength) {
+        this(getDefaultContext(), strength);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.olliebown.beads.core.UGen#calculateBuffer()
+     */
+    @Override
+    public void calculateBuffer() {
+        if (done)
+            kill();
+        else {
+            bufOut[0][0] = strength;
+            done = true;
+        }
+    }
 
 }

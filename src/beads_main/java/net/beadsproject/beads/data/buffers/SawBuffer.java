@@ -14,23 +14,26 @@ import net.beadsproject.beads.data.BufferFactory;
  */
 public class SawBuffer extends BufferFactory {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#generateBuffer(int)
      */
     public Buffer generateBuffer(int bufferSize) {
-    	Buffer b = new Buffer(bufferSize);
-        for(int i = 0; i < bufferSize; i++) {
-            b.buf[i] = (float)i / (float)bufferSize * 2.0f - 1.0f;
+        Buffer b = new Buffer(bufferSize);
+        for (int i = 0; i < bufferSize; i++) {
+            b.buf[i] = (float) i / (float) bufferSize * 2.0f - 1.0f;
         }
-    	return b;
+        return b;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#getName()
      */
     public String getName() {
-    	return "Saw";
+        return "Saw";
     }
 
-    
 }

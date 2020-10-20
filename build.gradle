@@ -23,7 +23,7 @@ apply plugin: 'signing'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version="3.3-SNAPSHOT"   // Add '-SNAPSHOT' at the end for non-release uploads
+version="3.3"   // Add '-SNAPSHOT' at the end for non-release uploads
 group='net.beadsproject'
 archivesBaseName = "beads"
 
@@ -36,9 +36,6 @@ sourceSets {
 }
 
 dependencies {
-    //implementation fileTree(dir: 'libs', include: '*.jar') // - Thin Jar
-    //compile fileTree(dir: 'libs', include: '*.jar') // - Fat Jar
-    
     implementation 'javazoom:jlayer:1.0.1'
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
     implementation 'org.clojars.automata:tritonus-aos:1.0.0'

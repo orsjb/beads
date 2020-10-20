@@ -16,50 +16,47 @@ import net.beadsproject.beads.core.UGen;
  */
 public class RangeLimiter extends UGen {
 
-	/**
-	 * Instantiates a new RangeLimiter.
-	 * 
-	 * @param context
-	 *            The audio context.
-	 * @param channels
-	 *            The number of channels.
-	 */
-	public RangeLimiter(AudioContext context, int channels) {
-		super(context, channels, channels);
-	}
+    /**
+     * Instantiates a new RangeLimiter.
+     * 
+     * @param context  The audio context.
+     * @param channels The number of channels.
+     */
+    public RangeLimiter(AudioContext context, int channels) {
+        super(context, channels, channels);
+    }
 
-	/**
-	 * Instantiates a new RangeLimiter.
-	 *
-	 * @param channels
-	 *            The number of channels.
-	 */
-	public RangeLimiter(int channels) {
-		this(getDefaultContext(), channels);
-	}
+    /**
+     * Instantiates a new RangeLimiter.
+     *
+     * @param channels The number of channels.
+     */
+    public RangeLimiter(int channels) {
+        this(getDefaultContext(), channels);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.olliebown.beads.core.UGen#calculateBuffer()
-	 */
-	@Override
-	public void calculateBuffer() {
-		float y;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.olliebown.beads.core.UGen#calculateBuffer()
+     */
+    @Override
+    public void calculateBuffer() {
+        float y;
 
-		for (int j = 0; j < ins; j++) {
-			float[] bi = bufIn[j];
-			float[] bo = bufOut[j];
-			for (int i = 0; i < bufferSize; i++) {
-				if ((y = bi[i]) > 1.0f) {
-					bo[i] = 1f;
-				} else if (y < -1f) {
-					bo[i] = -1f;
-				} else {
-					bo[i] = y;
-				}
-			}
-		}
-	}
+        for (int j = 0; j < ins; j++) {
+            float[] bi = bufIn[j];
+            float[] bo = bufOut[j];
+            for (int i = 0; i < bufferSize; i++) {
+                if ((y = bi[i]) > 1.0f) {
+                    bo[i] = 1f;
+                } else if (y < -1f) {
+                    bo[i] = -1f;
+                } else {
+                    bo[i] = y;
+                }
+            }
+        }
+    }
 
 }

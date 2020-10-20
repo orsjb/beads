@@ -10,11 +10,12 @@ import net.beadsproject.beads.core.TimeStamp;
  */
 public interface SegmentListener {
 
-	/**
-	 * newSegment even, called by any {@link SegmentMaker}s that this SegmentListener is listening to.
-	 * 
-	 * @param start the start time.
-	 * @param end the end time.
-	 */
-	void newSegment(TimeStamp start, TimeStamp end);
+    /**
+     * newSegment even, called by any {@link SegmentMaker}s that this
+     * SegmentListener is listening to.
+     * 
+     * @param start the start time.
+     * @param end   the end time.
+     */
+    void newSegment(TimeStamp start, TimeStamp end);
 }

@@ -14,22 +14,25 @@ import net.beadsproject.beads.data.BufferFactory;
  */
 public class SineBuffer extends BufferFactory {
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#generateBuffer(int)
      */
     public Buffer generateBuffer(int bufferSize) {
-    	Buffer b = new Buffer(bufferSize);
-        for(int i = 0; i < bufferSize; i++) {
-            b.buf[i] = (float)Math.sin(2.0 * Math.PI * (double)i / (double)bufferSize);
+        Buffer b = new Buffer(bufferSize);
+        for (int i = 0; i < bufferSize; i++) {
+            b.buf[i] = (float) Math.sin(2.0 * Math.PI * (double) i / (double) bufferSize);
         }
-    	return b;
+        return b;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#getName()
      */
     public String getName() {
-    	return "Sine";
+        return "Sine";
     }
 }

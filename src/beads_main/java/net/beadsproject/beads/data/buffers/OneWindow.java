@@ -16,19 +16,23 @@ import net.beadsproject.beads.data.BufferFactory;
  */
 public class OneWindow extends BufferFactory {
 
-	 /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#generateBuffer(int)
      */
     public Buffer generateBuffer(int bufferSize) {
-    	Buffer b = new Buffer(bufferSize);
-    	Arrays.fill(b.buf, 1.f);    	
-    	return b;
+        Buffer b = new Buffer(bufferSize);
+        Arrays.fill(b.buf, 1.f);
+        return b;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.beadsproject.beads.data.BufferFactory#getName()
      */
     public String getName() {
-    	return "Ones";
+        return "Ones";
     }
 }

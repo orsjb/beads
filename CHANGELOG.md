@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.3 (Development) - 20/10/2020
+
+### **Changed**
+
+* The method for storing data into Samples has been changed. (Affected files: Sample.Java, WavFileReaderWriter.java, JavaSoundAudioFile.java, AudioFileReader.java)
+    * When reading data from raw samples, the old implementation bloated the stored values to fit 32 bit-depth.
+    * This has been changed so bloating no longer happens when reading sample data, but instead happens during runtime when frames are read.
+    * While there is no improvement in memory usage efficiency (instead downside of increased cpu usage), further changes towards a dynamic data storage structure will allow for greatly improved memory utilisation. 
+
 ## 3.2 (Release) - 22/9/2020
 
 ### **Added**

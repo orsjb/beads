@@ -14,25 +14,24 @@ package net.beadsproject.beads.data;
  */
 public interface DataBeadReceiver {
 
-	/**
-	 * The method through which a class receives and parses DataBeads. By
-	 * convention, a class that implements this interface will return the
-	 * DataBeadReceiver instance.
-	 * <p>
-	 * Example usage:
-	 * <p>
-	 * <code>public DataBeadReceiver sendData(DataBead db) {<br>
-	 * &nbsp;&nbsp;&nbsp;someParameter = db.getFloat("someparameter", defaultValue);<br>
-	 * &nbsp;&nbsp;&nbsp;someOtherParameter = db.getUGen("otherparameter");<br>
-	 * &nbsp;&nbsp;&nbsp;// etc...<br>
-	 * &nbsp;&nbsp;&nbsp;return this;
-	 * }</code>
-	 * 
-	 * @param db
-	 *            The DataBead message.
-	 * @return Typically, the object instance: <code>this</code>.
-	 */
+    /**
+     * The method through which a class receives and parses DataBeads. By
+     * convention, a class that implements this interface will return the
+     * DataBeadReceiver instance.
+     * <p>
+     * Example usage:
+     * <p>
+     * <code>public DataBeadReceiver sendData(DataBead db) {<br>
+     * &nbsp;&nbsp;&nbsp;someParameter = db.getFloat("someparameter", defaultValue);<br>
+     * &nbsp;&nbsp;&nbsp;someOtherParameter = db.getUGen("otherparameter");<br>
+     * &nbsp;&nbsp;&nbsp;// etc...<br>
+     * &nbsp;&nbsp;&nbsp;return this;
+     * }</code>
+     * 
+     * @param db The DataBead message.
+     * @return Typically, the object instance: <code>this</code>.
+     */
 
-	public DataBeadReceiver sendData(DataBead db);
+    public DataBeadReceiver sendData(DataBead db);
 
 }

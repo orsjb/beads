@@ -17,7 +17,6 @@ public final class BuildVersion {
         return BUILD;
     }
 
-
     /**
      * Gets the text to display minimum compatibility between device and plugin
      *
@@ -28,7 +27,6 @@ public final class BuildVersion {
         return ret;
 
     }
-
 
     /**
      * Get The full version info as a string

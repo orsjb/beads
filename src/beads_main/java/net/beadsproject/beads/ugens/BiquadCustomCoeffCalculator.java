@@ -21,61 +21,56 @@ package net.beadsproject.beads.ugens;
  * @version .9.1
  */
 public class BiquadCustomCoeffCalculator {
-	public float a0 = 1;
-	public float a1 = 0;
-	public float a2 = 0;
-	public float b0 = 0;
-	public float b1 = 0;
-	public float b2 = 0;
-	/**
-	 * The sampling frequency.
-	 */
-	protected float sampFreq;
-	/**
-	 * Two * pi / sampling frequency.
-	 */
-	protected float two_pi_over_sf;
+    public float a0 = 1;
+    public float a1 = 0;
+    public float a2 = 0;
+    public float b0 = 0;
+    public float b1 = 0;
+    public float b2 = 0;
+    /**
+     * The sampling frequency.
+     */
+    protected float sampFreq;
+    /**
+     * Two * pi / sampling frequency.
+     */
+    protected float two_pi_over_sf;
 
-	/**
-	 * Constructor for a given sampling frequency.
-	 * 
-	 * @param sf
-	 *            The sampling frequency, in Hertz.
-	 */
-	BiquadCustomCoeffCalculator(float sf) {
-		setSamplingFrequency(sf);
-	}
+    /**
+     * Constructor for a given sampling frequency.
+     * 
+     * @param sf The sampling frequency, in Hertz.
+     */
+    BiquadCustomCoeffCalculator(float sf) {
+        setSamplingFrequency(sf);
+    }
 
-	/**
-	 * Constructor with default sampling frequency of 44100.
-	 */
-	BiquadCustomCoeffCalculator() {
-		setSamplingFrequency(44100);
-	}
+    /**
+     * Constructor with default sampling frequency of 44100.
+     */
+    BiquadCustomCoeffCalculator() {
+        setSamplingFrequency(44100);
+    }
 
-	/**
-	 * Sets the sampling frequency.
-	 * 
-	 * @param sf
-	 *            The sampling frequency in Hertz.
-	 */
-	public void setSamplingFrequency(float sf) {
-		sampFreq = sf;
-		two_pi_over_sf = (float) (Math.PI * 2 / sf);
-	}
+    /**
+     * Sets the sampling frequency.
+     * 
+     * @param sf The sampling frequency in Hertz.
+     */
+    public void setSamplingFrequency(float sf) {
+        sampFreq = sf;
+        two_pi_over_sf = (float) (Math.PI * 2 / sf);
+    }
 
-	/**
-	 * Override this function with code that sets a0, a1, etc.&nbsp;in terms of
-	 * frequency, Q, and sampling frequency.
-	 * 
-	 * @param freq
-	 *            The frequency of the filter in Hertz.
-	 * @param q
-	 *            The Q-value of the filter.
-	 * @param gain
-	 *            The gain of the filter.
-	 */
-	public void calcCoeffs(float freq, float q, float gain) {
-		// override with coefficient calculations
-	}
+    /**
+     * Override this function with code that sets a0, a1, etc.&nbsp;in terms of
+     * frequency, Q, and sampling frequency.
+     * 
+     * @param freq The frequency of the filter in Hertz.
+     * @param q    The Q-value of the filter.
+     * @param gain The gain of the filter.
+     */
+    public void calcCoeffs(float freq, float q, float gain) {
+        // override with coefficient calculations
+    }
 }

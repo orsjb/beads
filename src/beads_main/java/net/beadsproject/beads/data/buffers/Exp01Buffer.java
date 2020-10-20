@@ -11,25 +11,29 @@ import net.beadsproject.beads.data.BufferFactory;
  */
 public class Exp01Buffer extends BufferFactory {
 
-	/* (non-Javadoc)
-	 * @see net.beadsproject.beads.data.BufferFactory#generateBuffer(int)
-	 */
-	@Override
-	public Buffer generateBuffer(int bufferSize) {
-		Buffer b = new Buffer(bufferSize);
-		for(int i = 0; i < bufferSize; i++) {
-			float fract = (float)i / (float)(bufferSize - 1);
-			b.buf[i] = (float)Math.exp(1f - 1f / fract);
-		}
-		return b;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.beadsproject.beads.data.BufferFactory#generateBuffer(int)
+     */
+    @Override
+    public Buffer generateBuffer(int bufferSize) {
+        Buffer b = new Buffer(bufferSize);
+        for (int i = 0; i < bufferSize; i++) {
+            float fract = (float) i / (float) (bufferSize - 1);
+            b.buf[i] = (float) Math.exp(1f - 1f / fract);
+        }
+        return b;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.beadsproject.beads.data.BufferFactory#getName()
-	 */
-	@Override
-	public String getName() {
-		return "Exp01";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.beadsproject.beads.data.BufferFactory#getName()
+     */
+    @Override
+    public String getName() {
+        return "Exp01";
+    }
 
 }

@@ -12,18 +12,17 @@ import net.beadsproject.beads.data.BufferFactory;
  * @author ben
  *
  */
-public class NoiseBuffer extends BufferFactory
-{
-  public Buffer generateBuffer(int bufferSize) {
-    Buffer b = new Buffer(bufferSize);
-    for(int i = 0; i < bufferSize; i++) {
-      b.buf[i] = (float)(1.-2.*Math.random());
+public class NoiseBuffer extends BufferFactory {
+    public Buffer generateBuffer(int bufferSize) {
+        Buffer b = new Buffer(bufferSize);
+        for (int i = 0; i < bufferSize; i++) {
+            b.buf[i] = (float) (1. - 2. * Math.random());
+        }
+        return b;
     }
-    return b;
-  }
 
-  public String getName() {
-    return "Noise";
-  }
+    public String getName() {
+        return "Noise";
+    }
 
 };

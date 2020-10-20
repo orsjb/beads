@@ -8,11 +8,11 @@ package net.beadsproject.beads.events;
  */
 public interface IntegerBead {
 
-	/**
-	 * Gets the intger value.
-	 * 
-	 * @return the integer value.
-	 */
-	public int getInt();
-	
+    /**
+     * Gets the intger value.
+     * 
+     * @return the integer value.
+     */
+    public int getInt();
+
 }

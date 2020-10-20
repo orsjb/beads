@@ -25,34 +25,31 @@ import org.jaudiolibs.audioservers.javasound.JSTimingMode;
  * @author Neil C Smith http://neilcsmith.net
  */
 public abstract class AudioServerIO extends AudioIO implements AudioClient {
-  
+
     protected AudioServer server;
-    protected AudioConfiguration config;   
+    protected AudioConfiguration config;
     private List<FloatBuffer> inputs;
-    
+
     public AudioServerIO() {
     }
-   
+
     @Override
     protected UGen getAudioInput(int[] channels) {
         return new RTInput(context, channels);
     }
 
     public void configure(AudioConfiguration ac) throws Exception {
-        if (config.getSampleRate() != ac.getSampleRate()
-                || config.getInputChannelCount() != ac.getInputChannelCount()
+        if (config.getSampleRate() != ac.getSampleRate() || config.getInputChannelCount() != ac.getInputChannelCount()
                 || config.getOutputChannelCount() != ac.getOutputChannelCount()
-                || config.getMaxBufferSize() != ac.getMaxBufferSize()
-                || !ac.isFixedBufferSize()) {
+                || config.getMaxBufferSize() != ac.getMaxBufferSize() || !ac.isFixedBufferSize()) {
             System.out.println("Unexpected audio configuration");
             throw new IllegalArgumentException("Unexpected audio configuration");
         }
     }
-	
-	
-	protected boolean runThread() {
+
+    protected boolean runThread() {
         Thread audioThread = new Thread(new Runnable() {
-			
+
             public void run() {
                 try {
                     server.run();
@@ -72,7 +69,7 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
         }
         this.inputs = inputs;
         update();
-        for (int i=0; i < outputs.size(); i++ ) {
+        for (int i = 0; i < outputs.size(); i++) {
             outputs.get(i).put(context.out.getOutBuffer(i));
         }
         this.inputs = null;
@@ -82,166 +79,148 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
     public void shutdown() {
         // no op
     }
-    
+
     private class RTInput extends UGen {
 
-		private int[] channels;
+        private int[] channels;
 
         /**
          * Create UGen with default AudioContext
+         * 
          * @param channels number of channels
          */
-        RTInput(int[] channels){
+        RTInput(int[] channels) {
             this(getDefaultContext(), channels);
         }
 
-		RTInput(AudioContext context, int[] channels) {
-			super(context, channels.length);
-			this.channels = channels;
-		}
+        RTInput(AudioContext context, int[] channels) {
+            super(context, channels.length);
+            this.channels = channels;
+        }
 
-		@Override
-		public void calculateBuffer() {
-			for (int i=0; i < channels.length; i++) {
-                            inputs.get(channels[i]-1).get(bufOut[i]);
-                        }
-		}
-		
-	}
-    
+        @Override
+        public void calculateBuffer() {
+            for (int i = 0; i < channels.length; i++) {
+                inputs.get(channels[i] - 1).get(bufOut[i]);
+            }
+        }
+
+    }
+
     /**
-    *
-    * @author Neil C Smith http://neilcsmith.net
-    */
+     *
+     * @author Neil C Smith http://neilcsmith.net
+     */
     public static class Jack extends AudioServerIO {
-	   
-    	private String name = "Beads";
-         
-       	public Jack() {
-       		super();
-       	}
-       	
-       	public Jack(String name) {
-       		super();
-       		this.name = name;
-       	}
-    
-        protected boolean start() {
-           System.out.println("Starting Jack implementation of AudioServerIO");
-           config = new AudioConfiguration(
-                   context.getSampleRate(),
-                   context.getAudioFormat().inputs,
-                   context.getAudioFormat().outputs,
-                   context.getBufferSize(),
-                   new ClientID(name),
-                   Connections.ALL);
-           
-           String jaudioLib = "JACK";
-           
-           AudioServerProvider provider = null;
-           for (AudioServerProvider p : ServiceLoader.load(AudioServerProvider.class)) {
-               if (jaudioLib.equals(p.getLibraryName())) {
-                   provider = p;
-                   break;
-               }
-           }
-           if (provider == null) {
-               throw new NullPointerException("No AudioServer found that matches : " + jaudioLib);
-           }
-           
-   		   try {
-               server = provider.createServer(config, this);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-   		   
-           return runThread();
-       }
-    }
-   
-    public static class JavaSound extends AudioServerIO {
-	   
-       JSTimingMode jsTiming = JSTimingMode.FramePosition;
-	   String device = null;
-	   String name = "Beads";
-	   
-	   /**
-	    * Creates Javasound Server object as the audio output format,
-	    * using JAudioLibs interface. The default audio output device
-	    * will be used.
-	    */
-	   public JavaSound() {
-		   super();
-		   // If user's OS is Windows, change JSTiming to Estimated for better performance.
-		   if (System.getProperty("os.name").toLowerCase().contains("win")) 
-		       jsTiming = JSTimingMode.Estimated;
-	   }
 
-       /**
-        * Creates Javasound Server object as the audio output format,
-        * using JAudioLibs interface.
-        * 
-        * @param device the name of the output device
-        */
-	   public JavaSound(String device) {
-		   super();
-		   this.device = device;
-	       // If user's OS is Windows, change JSTiming to Estimated for better performance.
-           if (System.getProperty("os.name").toLowerCase().contains("win")) 
-               jsTiming = JSTimingMode.Estimated;
-	   }
-	   
-	   protected boolean start() {
-		   System.out.println("Starting JavaSound implementation of AudioServerIO");
-		   
-		   if (device != null) {
-    		   config = new AudioConfiguration(
-                       context.getSampleRate(),
-                       context.getAudioFormat().inputs,
-                       context.getAudioFormat().outputs,
-                       context.getBufferSize(),
-                       new ClientID(name),
-                       Connections.ALL,
-                       jsTiming,
-                       new audioDevice(device)
-                       );
-		   } else {
-	           config = new AudioConfiguration(
-	                   context.getSampleRate(),
-	                   context.getAudioFormat().inputs,
-	                   context.getAudioFormat().outputs,
-	                   context.getBufferSize(),
-	                   new ClientID(name),
-	                   Connections.ALL,
-	                   jsTiming
-	                   );		       
-		   }
-		   
-           String jaudioLib = "JavaSound";
-           
-           AudioServerProvider provider = null;
-           for (AudioServerProvider p : ServiceLoader.load(AudioServerProvider.class)) {
-               if (jaudioLib.equals(p.getLibraryName())) {
-                   provider = p;
-                   break;
-               }
-           }
-           if (provider == null) {
-               throw new NullPointerException("No AudioServer found that matches : " + jaudioLib);
-           }
-           
-           try {
-               server = provider.createServer(config, this);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-           
-		   return runThread();
-	   }
+        private String name = "Beads";
+
+        public Jack() {
+            super();
+        }
+
+        public Jack(String name) {
+            super();
+            this.name = name;
+        }
+
+        protected boolean start() {
+            System.out.println("Starting Jack implementation of AudioServerIO");
+            config = new AudioConfiguration(context.getSampleRate(), context.getAudioFormat().inputs,
+                    context.getAudioFormat().outputs, context.getBufferSize(), new ClientID(name), Connections.ALL);
+
+            String jaudioLib = "JACK";
+
+            AudioServerProvider provider = null;
+            for (AudioServerProvider p : ServiceLoader.load(AudioServerProvider.class)) {
+                if (jaudioLib.equals(p.getLibraryName())) {
+                    provider = p;
+                    break;
+                }
+            }
+            if (provider == null) {
+                throw new NullPointerException("No AudioServer found that matches : " + jaudioLib);
+            }
+
+            try {
+                server = provider.createServer(config, this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return runThread();
+        }
     }
-    
+
+    public static class JavaSound extends AudioServerIO {
+
+        JSTimingMode jsTiming = JSTimingMode.FramePosition;
+        String device = null;
+        String name = "Beads";
+
+        /**
+         * Creates Javasound Server object as the audio output format, using JAudioLibs
+         * interface. The default audio output device will be used.
+         */
+        public JavaSound() {
+            super();
+            // If user's OS is Windows, change JSTiming to Estimated for better performance.
+            if (System.getProperty("os.name").toLowerCase().contains("win"))
+                jsTiming = JSTimingMode.Estimated;
+        }
+
+        /**
+         * Creates Javasound Server object as the audio output format, using JAudioLibs
+         * interface.
+         * 
+         * @param device the name of the output device
+         */
+        public JavaSound(String device) {
+            super();
+            this.device = device;
+            // If user's OS is Windows, change JSTiming to Estimated for better performance.
+            if (System.getProperty("os.name").toLowerCase().contains("win"))
+                jsTiming = JSTimingMode.Estimated;
+        }
+
+        protected boolean start() {
+            System.out.println("Starting JavaSound implementation of AudioServerIO");
+
+            if (device != null) {
+                config = new AudioConfiguration(context.getSampleRate(), context.getAudioFormat().inputs,
+                        context.getAudioFormat().outputs, context.getBufferSize(), new ClientID(name), Connections.ALL,
+                        jsTiming, new audioDevice(device));
+            } else {
+                config = new AudioConfiguration(context.getSampleRate(), context.getAudioFormat().inputs,
+                        context.getAudioFormat().outputs, context.getBufferSize(), new ClientID(name), Connections.ALL,
+                        jsTiming);
+            }
+
+            String jaudioLib = "JavaSound";
+
+            AudioServerProvider provider = null;
+            for (AudioServerProvider p : ServiceLoader.load(AudioServerProvider.class)) {
+                if (jaudioLib.equals(p.getLibraryName())) {
+                    provider = p;
+                    break;
+                }
+            }
+            if (provider == null) {
+                throw new NullPointerException("No AudioServer found that matches : " + jaudioLib);
+            }
+
+            try {
+                server = provider.createServer(config, this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return runThread();
+        }
+    }
+
     /**
-     * Creates a Device object containing information about the desired output 
+     * Creates a Device object containing information about the desired output
      * device. AudioDevices may be used as inputs when creating a JavaSound server
      * if you want to specify an output that is not your system's default output
      * device.
@@ -252,7 +231,7 @@ public abstract class AudioServerIO extends AudioIO implements AudioClient {
         protected audioDevice(String name, int maxInputChannels, int maxOutputChannels) {
             super(name, maxInputChannels, maxOutputChannels);
         }
-        
+
         protected audioDevice(String name) {
             super(name, 1, 1);
         }
