@@ -52,7 +52,6 @@ public class WavePlayer extends UGen {
 		super(context, 1);
 		this.buffer = buffer;
 		phase = 0;
-		System.out.println(context);
 		one_over_sr = 1f / context.getSampleRate();
 	}
 
