@@ -23,7 +23,7 @@ apply plugin: 'signing'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version="3.3-SNAPSHOT"   // Add '-SNAPSHOT' at the end for non-release uploads
+version="4.1"   // Add '-SNAPSHOT' at the end for non-release uploads
 group='net.beadsproject'
 archivesBaseName = "beads"
 
