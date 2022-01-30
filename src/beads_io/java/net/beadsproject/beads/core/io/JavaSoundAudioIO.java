@@ -73,7 +73,7 @@ public class JavaSoundAudioIO extends AudioIO {
 						* audioFormat.getFrameSize() * 2;
 
 				sourceDataLine.open(audioFormat, sound_output_buffer_size);
-				System.out.println("Beads Output buffer size=" + sound_output_buffer_size);
+				System.out.println("Beads Output buffer size=" + sound_output_buffer_size + " (bytes)");
 			}
 		} catch (LineUnavailableException ex) {
 			System.out
