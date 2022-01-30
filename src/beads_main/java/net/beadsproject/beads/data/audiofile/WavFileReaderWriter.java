@@ -41,6 +41,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 	// Compression Codes
 	private final static int WAVE_FORMAT_PCM = 0x0001;
 	private final static int WAVE_FORMAT_IEEE_FLOAT = 0x0003;
+	private final static int WAVE_FORMAT_EXTENSIBLE = 0xFFFE;
 
 	private File file;						// File that will be read from or written to
 	private int bytesPerSample;				// Number of bytes required to store a single sample
@@ -341,7 +342,7 @@ public class WavFileReaderWriter implements AudioFileReader, AudioFileWriter {
 
 				// Check this is uncompressed data
 				int compressionCode = (int) getLE(buffer, 0, 2);
-				if (compressionCode != WAVE_FORMAT_PCM && compressionCode != WAVE_FORMAT_IEEE_FLOAT ) {
+				if (compressionCode != WAVE_FORMAT_PCM && compressionCode != WAVE_FORMAT_IEEE_FLOAT && compressionCode != WAVE_FORMAT_EXTENSIBLE) {
 					throw new OperationUnsupportedException("Compression Code " + compressionCode + " not supported");
 				}
 				this.compressionCode = compressionCode;
